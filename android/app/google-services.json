@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "223116259535",
+    "project_id": "thoth-d7a83",
+    "storage_bucket": "thoth-d7a83.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:223116259535:android:7175baa29581770a48c7ba",
+        "android_client_info": {
+          "package_name": "com.example.projeto_thoth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "223116259535-vvusgdf3gmi1l6kjn3fe5qqnun9v1l4r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYzR2PFi9eBJC77kDd1Df_E774x3iGqLg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "223116259535-vvusgdf3gmi1l6kjn3fe5qqnun9v1l4r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "223116259535-04tt3np01sq26nf0fc3d7i35716708jn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.projetoThoth"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:223116259535:android:102cad8eecaae21648c7ba",
+        "android_client_info": {
+          "package_name": "com.example.thoth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "223116259535-vvusgdf3gmi1l6kjn3fe5qqnun9v1l4r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYzR2PFi9eBJC77kDd1Df_E774x3iGqLg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "223116259535-vvusgdf3gmi1l6kjn3fe5qqnun9v1l4r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "223116259535-04tt3np01sq26nf0fc3d7i35716708jn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.projetoThoth"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

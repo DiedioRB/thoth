@@ -1,6 +1,4 @@
-import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
-import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/usuario.dart';
 
 class Perfil extends StatelessWidget {
@@ -9,6 +7,11 @@ class Perfil extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(usuario.nome);
+    return Container(
+        padding: const EdgeInsets.all(5),
+        child: Text(
+          usuario.nome,
+          style: const TextStyle(fontSize: 20),
+        ));
   }
 }

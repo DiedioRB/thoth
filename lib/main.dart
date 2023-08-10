@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             Perfil(usuario: usuario),
-            ListaCards(perguntas: _perguntas)
+            Expanded(child: ListaCards(perguntas: _perguntas))
           ],
         ),
       ),

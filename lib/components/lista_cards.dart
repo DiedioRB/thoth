@@ -9,6 +9,8 @@ class ListaCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
       crossAxisCount: 2,
       children: List.generate(perguntas.length, (index) {
         return Center(

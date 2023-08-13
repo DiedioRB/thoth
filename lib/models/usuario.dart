@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:thoth/helpers/hash_helper.dart';
 
 class Usuario {
   static const String collection = "usuarios";
@@ -8,6 +13,24 @@ class Usuario {
   final List<String> salas;
 
   Usuario({required this.nome, required this.email, required this.salas});
+
+  static Future<Usuario?> login(String email, String senha) async {
+    final FirebaseApp app = Firebase.app();
+    final FirebaseFirestore db = FirebaseFirestore.instanceFor(app: app);
+    Usuario? usuario;
+
+    //Criptografia de senha
+    senha = HashHelper.sha256Encrypt(senha);
+    await getCollection(db)
+        .where("email", isEqualTo: email)
+        .where("senha", isEqualTo: senha)
+        .get()
+        .then((event) {
+      usuario =
+          (event.docs.isNotEmpty ? event.docs.first.data() : null) as Usuario?;
+    });
+    return usuario;
+  }
 
   static CollectionReference getCollection(FirebaseFirestore db) {
     return db.collection(collection).withConverter<Usuario>(

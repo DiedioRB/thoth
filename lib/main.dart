@@ -6,8 +6,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/components/lista_cards.dart';
 import 'package:thoth/components/perfil.dart';
+import 'package:thoth/components/login.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/usuario.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,9 +44,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo.shade700),
         useMaterial3: true,
       ),
-      home: const MyHomePage(
-        title: 'Projeto Thoth - Flashcards',
-      ),
+      home: Login(),
     );
   }
 }

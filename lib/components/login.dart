@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:thoth/models/usuario.dart';
 
 class Login extends StatelessWidget {
-  const Login({super.key});
+   Login({super.key});
 
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   void _login(String email, String senha) async {
     Usuario? usuario = await Usuario.login(email, senha);
@@ -39,14 +41,16 @@ class Login extends StatelessWidget {
                   top: 100.0,
                   bottom: 35.0
                 ),
-                child: const Column(
+                child: Column(
                   children: [
                     TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         labelText: "Email"
                       ),
                     ),
                     TextField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: "Password"
@@ -67,7 +71,8 @@ class Login extends StatelessWidget {
                   color: Colors.blue[50]
                 ),
                 child: TextButton(
-                    onPressed: () => _login("andreribas0511@gmail.com", "yosenha123"),
+                    //onPressed: () => _login("andreribas0511@gmail.com", "yosenha123"),
+                  onPressed: () => _login(emailController.text, passwordController.text),
                     child: const Text(
                         "Entrar",
                         style: TextStyle(
@@ -86,7 +91,9 @@ class Login extends StatelessWidget {
                           "Não tem acesso? Cadastre-se "
                       ),
                       TextButton(
-                          onPressed: () => {print("Cadastrado!")},
+                          onPressed: () => {
+                            Navigator.pushNamed(context, '/tela_cadastro')
+                          },
                           child: Text(
                             "Aqui",
                             style: TextStyle(

@@ -9,6 +9,7 @@ import 'package:thoth/components/perfil.dart';
 import 'package:thoth/components/login.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/usuario.dart';
+import 'package:thoth/views/tela_cadastro.dart';
 
 
 Future<void> main() async {
@@ -25,6 +26,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Projeto Thoth',
+      routes: {
+        '/': (context) => Login(),
+        '/tela_cadastro': (context) => Cadastro()
+      },
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -44,7 +49,6 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo.shade700),
         useMaterial3: true,
       ),
-      home: Login(),
     );
   }
 }

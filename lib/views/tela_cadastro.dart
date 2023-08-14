@@ -65,14 +65,14 @@ class Cadastro extends StatelessWidget {
                         controller: passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
-                            labelText: "Password"
+                            labelText: "Senha"
                         ),
                       ),
                       TextField(
                         controller: passwordRepeatController,
                         obscureText: true,
                         decoration: InputDecoration(
-                          labelText: "Repeat Password"
+                          labelText: "Repita a senha"
                         )
                       )
                     ],

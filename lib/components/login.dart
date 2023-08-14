@@ -53,7 +53,7 @@ class Login extends StatelessWidget {
                       controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        labelText: "Password"
+                        labelText: "Senha"
                       ),
                     )
                   ],

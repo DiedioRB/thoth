@@ -13,7 +13,7 @@ class Cadastro extends StatelessWidget {
   void _cadastrar(String nome, String email, String senha, String senhaRepetida) async {
     //adicionar validador de campos em branco
     //adicionar validador de campo de email
-    //adicionar limite mínimo de caracteres pra senha
+    // adicionar limite mínimo de caracteres pra senha
     //adicionar erros vindos em snackbar. Para isso, transformar Material em Scaffold
     if (senha == senhaRepetida) {
       print("Okay");
@@ -90,7 +90,6 @@ class Cadastro extends StatelessWidget {
                       color: Colors.blue[50]
                   ),
                   child: TextButton(
-                    //onPressed: () => _login("andreribas0511@gmail.com", "yosenha123"),
                       onPressed: () => _cadastrar(
                           nameController.text,
                           emailController.text,

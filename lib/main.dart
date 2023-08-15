@@ -6,11 +6,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/components/lista_cards.dart';
 import 'package:thoth/components/perfil.dart';
-import 'package:thoth/components/login.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/usuario.dart';
 import 'package:thoth/views/tela_cadastro.dart';
-
+import 'package:thoth/views/tela_login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/usuario.dart';
@@ -8,7 +7,7 @@ class Login extends StatelessWidget {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  FormBuilder form = FormBuilder(Usuario.getFields());
+  final FormBuilder form = FormBuilder(Usuario.getFields());
 
   void _login(String email, String senha) async {
     Usuario? usuario = await Usuario.login(email, senha);
@@ -39,7 +38,7 @@ class Login extends StatelessWidget {
                   child: form.build(),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 100.0),
+                  margin: const EdgeInsets.only(top: 100.0),
                   height: 60,
                   width: 250,
                   decoration: BoxDecoration(
@@ -51,24 +50,24 @@ class Login extends StatelessWidget {
                       // onPressed: () =>
                       //     _login(emailController.text, passwordController.text),
                       onPressed: () {
-                        print(form.values.toString());
+                        _login(form.values['email'], form.values['senha']);
                       },
                       child: const Text("Entrar",
                           style: TextStyle(
                               color: Colors.blueAccent, fontSize: 20.0))),
                 ),
                 Container(
-                    margin: EdgeInsets.only(top: 25.0),
+                    margin: const EdgeInsets.only(top: 25.0),
                     child: Center(
                       child: Row(
                         children: [
-                          Text("Não tem acesso? Cadastre-se "),
+                          const Text("Não tem acesso? Cadastre-se "),
                           TextButton(
                               onPressed: () => {
                                     Navigator.pushNamed(
                                         context, '/tela_cadastro')
                                   },
-                              child: Text(
+                              child: const Text(
                                 "Aqui",
                                 style: TextStyle(color: Colors.blueAccent),
                               ))

@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:thoth/models/usuario.dart';
 
 class Cadastro extends StatelessWidget {
   Cadastro({super.key});
@@ -44,16 +42,16 @@ class Cadastro extends StatelessWidget {
                     children: [
                       TextField(
                         controller: nameController,
-                        decoration: InputDecoration(labelText: "Nome"),
+                        decoration: const InputDecoration(labelText: "Nome"),
                       ),
                       TextField(
                         controller: emailController,
-                        decoration: InputDecoration(labelText: "Email"),
+                        decoration: const InputDecoration(labelText: "Email"),
                       ),
                       TextField(
                         controller: passwordController,
                         obscureText: true,
-                        decoration: InputDecoration(labelText: "Senha"),
+                        decoration: const InputDecoration(labelText: "Senha"),
                       ),
                       TextField(
                           controller: passwordRepeatController,

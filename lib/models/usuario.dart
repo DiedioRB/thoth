@@ -3,16 +3,42 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:thoth/helpers/hash_helper.dart';
+import 'package:thoth/models/interfaces/item_form.dart';
+import 'package:thoth/models/interfaces/item_form_model.dart';
 
-class Usuario {
+class Usuario implements ItemFormModel {
   static const String collection = "usuarios";
 
   final String nome;
   final String email;
   final List<String> salas;
 
-  Usuario({required this.nome, required this.email, required this.salas});
+  static List<ItemForm> getFields({Usuario? usuario}) {
+    return [
+      ItemForm.build(
+          descricao: "nome",
+          valor: usuario?.nome,
+          icon: const Icon(Icons.person),
+          modificadores: [ItemFormModifiers.naoNulo]),
+      ItemForm.build(
+          descricao: "email",
+          valor: usuario?.email,
+          icon: const Icon(Icons.email),
+          modificadores: [ItemFormModifiers.naoNulo]),
+      ItemForm.build(
+          descricao: "senha",
+          icon: const Icon(Icons.password),
+          modificadores: [ItemFormModifiers.naoNulo, ItemFormModifiers.senha])
+    ];
+  }
+
+  Usuario({
+    required this.nome,
+    required this.email,
+    required this.salas,
+  });
 
   static Future<Usuario?> login(String email, String senha) async {
     final FirebaseApp app = Firebase.app();

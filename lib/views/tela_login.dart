@@ -1,21 +1,52 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/usuario.dart';
+import 'package:thoth/routes.dart';
 
-class Login extends StatelessWidget {
-  Login({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final FormBuilder form = FormBuilder(Usuario.getFields());
+  @override
+  State<Login> createState() => _LoginState();
+}
 
-  void _login(String email, String senha) async {
-    Usuario? usuario = await Usuario.login(email, senha);
-    if (usuario != null) {
-      print(usuario);
-    } else {
-      print("Usuário não encontrado");
+class _LoginState extends State<Login> {
+  late StreamSubscription userListener;
+
+  void _setUpFirebaseAuth() {
+    userListener = FirebaseAuth.instance.userChanges().listen((User? user) {
+      if (user != null) {
+        //Caso encontre o login, redireciona para o menu
+        Navigator.of(context, rootNavigator: true)
+            .pushReplacementNamed(Routes.menu);
+      }
+    });
+  }
+
+  final FormBuilder form = FormBuilder(Usuario.getFields(
+      usuario:
+          Usuario(nome: "", email: "andreribas0511@gmail.com", salas: [])));
+
+  void _login(String? email, String? senha) async {
+    if (email != null && senha != null) {
+      await Usuario.login(email, senha);
     }
+  }
+
+  @override
+  void initState() {
+    //Adiciona um observer para verificar se o login funcionou
+    _setUpFirebaseAuth();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    userListener.cancel();
+    super.dispose();
   }
 
   @override
@@ -65,7 +96,7 @@ class Login extends StatelessWidget {
                           TextButton(
                               onPressed: () => {
                                     Navigator.pushNamed(
-                                        context, '/tela_cadastro')
+                                        context, Routes.cadastro)
                                   },
                               child: const Text(
                                 "Aqui",
@@ -73,7 +104,17 @@ class Login extends StatelessWidget {
                               ))
                         ],
                       ),
-                    ))
+                    )),
+                InkWell(
+                  onTap: () => {
+                    FirebaseAuth.instance.sendPasswordResetEmail(
+                        email: "andreribas0511@gmail.com")
+                  },
+                  child: const Text(
+                    "Esqueci minha senha",
+                    style: TextStyle(color: Colors.blueAccent),
+                  ),
+                )
               ],
             )));
   }

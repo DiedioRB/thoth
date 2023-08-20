@@ -5,8 +5,7 @@ import 'package:thoth/components/lista_cards.dart';
 import 'package:thoth/components/perfil.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/usuario.dart';
-import 'package:thoth/views/tela_cadastro.dart';
-import 'package:thoth/views/tela_login.dart';
+import 'package:thoth/routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,10 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Projeto Thoth',
-      routes: {
-        '/': (context) => Login(),
-        '/tela_cadastro': (context) => Cadastro()
-      },
+      routes: Routes.routes,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -97,6 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        automaticallyImplyLeading: false,
         title: Text(widget.title),
       ),
       body: Center(

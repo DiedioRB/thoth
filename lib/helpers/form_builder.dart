@@ -29,7 +29,10 @@ class FormBuilder {
   }
 
   TextFormField _createTextFormField(ItemForm item) {
-    TextEditingController newController = TextEditingController();
+    TextEditingController newController =
+        TextEditingController(text: item.valor);
+    values.update(item.descricaoForm, (value) => item.valor,
+        ifAbsent: () => item.valor);
 
     newController.addListener(() {
       String val = newController.text;
@@ -39,7 +42,6 @@ class FormBuilder {
         ifAbsent: () => val,
       );
     });
-    print(item.modificadores.toString());
     TextFormField newField = TextFormField(
       validator: item.validator,
       decoration:

@@ -23,7 +23,6 @@ class Cadastro extends StatelessWidget {
         AuthHelper.registerUsingEmailAndPassword(
             nome: nome, email: email, senha: senha
         );
-        AuthHelper.saveUser(name: nome, email: email);
       } catch (e){
         print("Erro no try: $e");
       }

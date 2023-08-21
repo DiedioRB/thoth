@@ -15,14 +15,15 @@ class AuthHelper {
     await user.reload();
     user = auth.currentUser;
 
+    saveUser(name: nome, email: email, uid: FirebaseAuth.instance.currentUser!.uid);
+
     return user;
   }
 
-  static void saveUser({required String name, required String email}) async {
+  static void saveUser({required String name, required String email, required String uid}) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    firestore.collection('usuarios').doc('userid:$timestamp').set({
+    firestore.collection('usuarios').doc(uid).set({
       'nome':name,
       'email':email,
     });

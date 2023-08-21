@@ -24,9 +24,53 @@ class Menu extends StatelessWidget {
             )
           ]),
       body: Center(
-        child: TextButton(
+        child:Column (
+          children: [
+            Container(margin: const EdgeInsets.only(top: 100.0),
+              height: 60,
+              width: 250,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black54),
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.amber[50]),
+              child: TextButton(
+                  onPressed: () {},
+                  child: const Text("Temas",
+                      style: TextStyle(
+                          color: Colors.black, fontSize: 20.0))),
+            ),
+            Container(margin: const EdgeInsets.only(top: 50.0),
+              height: 60,
+              width: 250,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black54),
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.deepPurpleAccent[100]),
+              child: TextButton(
+                  onPressed: () {},
+                  child: const Text("Rankings",
+                      style: TextStyle(
+                          color: Colors.black, fontSize: 20.0))),
+            ),
+            Container(margin: const EdgeInsets.only(top: 50.0, bottom: 50.0),
+              height: 60,
+              width: 250,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black54),
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.lightGreen[100]),
+              child: TextButton(
+                  onPressed: () {},
+                  child: const Text("Temas Recorrentes",
+                      style: TextStyle(
+                          color: Colors.black, fontSize: 20.0))),
+            ),
+            TextButton(
             onPressed: () => _logout(context), child: const Text("logout")),
-      ),
-    ));
+
+          ],
+        )
+
+    )));
   }
 }

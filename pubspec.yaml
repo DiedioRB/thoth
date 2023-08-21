@@ -38,6 +38,8 @@ dependencies:
   firebase_core: ^2.14.0
   cloud_firestore: ^4.8.2
   flip_card: ^0.7.0
+  crypto: ^3.0.3
+  firebase_auth: ^4.7.3
 
 dev_dependencies:
   flutter_test:

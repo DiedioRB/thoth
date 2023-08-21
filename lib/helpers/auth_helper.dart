@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthHelper {
   static Future<User?> registerUsingEmailAndPassword(
@@ -15,6 +16,17 @@ class AuthHelper {
     user = auth.currentUser;
 
     return user;
+  }
+
+  static void saveUser({required String name, required String email}) async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    firestore.collection('usuarios').doc('userid:$timestamp').set({
+      'nome':name,
+      'email':email,
+    });
+
   }
 
   static Future<User?> signIn(

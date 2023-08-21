@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:thoth/helpers/auth_helper.dart';
+
 
 class Cadastro extends StatelessWidget {
   Cadastro({super.key});
@@ -10,12 +12,22 @@ class Cadastro extends StatelessWidget {
 
   void _cadastrar(
       String nome, String email, String senha, String senhaRepetida) async {
+
     //adicionar validador de campos em branco
     //adicionar validador de campo de email
     // adicionar limite mínimo de caracteres pra senha
     //adicionar erros vindos em snackbar. Para isso, transformar Material em Scaffold
     if (senha == senhaRepetida) {
       print("Okay");
+      try {
+        AuthHelper.registerUsingEmailAndPassword(
+            nome: nome, email: email, senha: senha
+        );
+        AuthHelper.saveUser(name: nome, email: email);
+      } catch (e){
+        print("Erro no try: $e");
+      }
+
     } else {
       print("Não Okay.");
     }

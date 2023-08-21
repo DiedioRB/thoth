@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thoth/components/menu_lateral.dart';
 import 'package:thoth/helpers/auth_helper.dart';
 import 'package:thoth/routes.dart';
 
@@ -14,63 +15,67 @@ class Menu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
         child: Scaffold(
-      appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          actions: [
-            IconButton(
-              onPressed: () => _logout(context),
-              icon: const Icon(Icons.logout),
-              tooltip: "Desconectar",
-            )
-          ]),
-      body: Center(
-        child:Column (
-          children: [
-            Container(margin: const EdgeInsets.only(top: 100.0),
-              height: 60,
-              width: 250,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black54),
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.amber[50]),
-              child: TextButton(
-                  onPressed: () {},
-                  child: const Text("Temas",
-                      style: TextStyle(
-                          color: Colors.black, fontSize: 20.0))),
+            drawer: const Drawer(
+              child: MenuLateral(),
             ),
-            Container(margin: const EdgeInsets.only(top: 50.0),
-              height: 60,
-              width: 250,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black54),
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.deepPurpleAccent[100]),
-              child: TextButton(
-                  onPressed: () {},
-                  child: const Text("Rankings",
-                      style: TextStyle(
-                          color: Colors.black, fontSize: 20.0))),
-            ),
-            Container(margin: const EdgeInsets.only(top: 50.0, bottom: 50.0),
-              height: 60,
-              width: 250,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black54),
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.lightGreen[100]),
-              child: TextButton(
-                  onPressed: () {},
-                  child: const Text("Temas Recorrentes",
-                      style: TextStyle(
-                          color: Colors.black, fontSize: 20.0))),
-            ),
-            TextButton(
-            onPressed: () => _logout(context), child: const Text("logout")),
-
-          ],
-        )
-
-    )));
+            appBar: AppBar(
+                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                actions: [
+                  IconButton(
+                    onPressed: () => _logout(context),
+                    icon: const Icon(Icons.logout),
+                    tooltip: "Desconectar",
+                  )
+                ]),
+            body: Center(
+                child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 100.0),
+                  height: 60,
+                  width: 250,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black54),
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.amber[50]),
+                  child: TextButton(
+                      onPressed: () {},
+                      child: const Text("Temas",
+                          style:
+                              TextStyle(color: Colors.black, fontSize: 20.0))),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 50.0),
+                  height: 60,
+                  width: 250,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black54),
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.deepPurpleAccent[100]),
+                  child: TextButton(
+                      onPressed: () {},
+                      child: const Text("Rankings",
+                          style:
+                              TextStyle(color: Colors.black, fontSize: 20.0))),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 50.0, bottom: 50.0),
+                  height: 60,
+                  width: 250,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black54),
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.lightGreen[100]),
+                  child: TextButton(
+                      onPressed: () {},
+                      child: const Text("Temas Recorrentes",
+                          style:
+                              TextStyle(color: Colors.black, fontSize: 20.0))),
+                ),
+                TextButton(
+                    onPressed: () => _logout(context),
+                    child: const Text("logout")),
+              ],
+            ))));
   }
 }

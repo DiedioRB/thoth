@@ -84,10 +84,10 @@ class Menu extends StatelessWidget {
                       color: Colors.lightGreen[100]),
                   child: TextButton(
                       onPressed: () {
-
-                        Navigator.of(context).pushNamed(Routes.perguntasTeste);
+                          print("Ha, just kidding");
+                        //Navigator.of(context).pushNamed(Routes.perguntasTeste);
                       },
-                      child: const Text("AGR É TESTE",
+                      child: const Text("Temas recorrentes",
                           style:
                               TextStyle(color: Colors.black, fontSize: 20.0))),
                 ),

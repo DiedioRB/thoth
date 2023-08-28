@@ -76,7 +76,10 @@ class _ItemQuizState extends State<ItemQuiz> {
                                             "Quiz atualizado com sucesso!")));
                                 Navigator.of(context).pop();
                               },
-                              child: const Text("Salvar"))
+                              child: const Text("Salvar")),
+                          IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () => _deleteModal(context)),
                         ],
                       )
                     ],

@@ -6,8 +6,8 @@ import 'package:thoth/helpers/auth_helper.dart';
 import 'package:thoth/routes.dart';
 import 'package:thoth/models/pergunta.dart';
 
-class Quiz extends StatelessWidget {
-  const Quiz({super.key});
+class PerguntaTeste extends StatelessWidget {
+  const PerguntaTeste({super.key});
 
   void _logout(BuildContext context) {
     AuthHelper.logout();

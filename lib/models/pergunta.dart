@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Pergunta {
@@ -47,4 +48,37 @@ class Pergunta {
   String toString() {
     return pergunta;
   }
+
+  static Future<Pergunta?> create(String perg, List<String> resp, int corretas) async {
+    final FirebaseApp app = Firebase.app();
+    final FirebaseFirestore db = FirebaseFirestore.instanceFor(app: app);
+    final perguntaCollection = getCollection(db);
+
+    final pergunta = Pergunta(pergunta: perg, respostas: resp, respostaCorreta: corretas);
+
+
+
+    perguntaCollection.add(pergunta).then((documentSnapshot) => {
+      print("adicionado!")
+    });
+
+  }
+
+  static Future<Pergunta?> update(String perg, List<String> resp, int corretas) async {
+    //MUST GET SNAPSHOT
+    final FirebaseApp app = Firebase.app();
+    final FirebaseFirestore db = FirebaseFirestore.instanceFor(app: app);
+    final perguntaCollection = getCollection(db);
+
+    final pergunta = Pergunta(pergunta: perg, respostas: resp, respostaCorreta: corretas);
+
+
+
+    perguntaCollection.add(pergunta).then((documentSnapshot) => {
+      print("Modificado!")
+    });
+
+  }
+
+
 }

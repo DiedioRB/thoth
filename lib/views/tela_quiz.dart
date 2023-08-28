@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/components/menu_lateral.dart';
 import 'package:thoth/helpers/auth_helper.dart';
@@ -12,9 +14,21 @@ class Quiz extends StatelessWidget {
     Navigator.of(context).pushReplacementNamed(Routes.home);
   }
 
-  void _teste() {
-    print('IRRÃ');
-    Pergunta.getCollection(db).where(field);
+  void _teste() async {
+    //final FirebaseApp app = Firebase.app();
+    //final FirebaseFirestore db = FirebaseFirestore.instanceFor(app: app);
+    List<String> teste = ["um", "dois", "três"];
+    await Pergunta.create("teste", teste, 8);
+    //var perg;
+    //Pergunta.getCollection(db)
+    //    .get()
+    //    .then((value) {
+    //      perg = value.docs.first.data();
+    //      print("\n\n t== ${perg}");
+   //});
+
+    //print("\n\n TESTE: ${perg}");
+
   }
 
   @override
@@ -45,7 +59,9 @@ class Quiz extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.tealAccent),
                       child: TextButton(
-                          onPressed: () => _teste(),
+                          onPressed: () => {
+                              _teste(),
+                          },
                           child: const Text("Temas",
                               style:
                               TextStyle(color: Colors.black, fontSize: 20.0))),

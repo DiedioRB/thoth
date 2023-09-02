@@ -5,13 +5,13 @@ import 'package:thoth/helpers/auth_helper.dart';
 class Cadastro extends StatelessWidget {
   Cadastro({super.key});
 
+
+
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordRepeatController = TextEditingController();
-
-  void _cadastrar(
-      String nome, String email, String senha, String senhaRepetida) async {
+  void _cadastrar(String nome, String email, String senha, String senhaRepetida) async {
 
     //adicionar validador de campos em branco
     //adicionar validador de campo de email

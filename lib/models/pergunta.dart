@@ -67,6 +67,7 @@ class Pergunta {
 
   }
 
+
   static Future<Pergunta?> update(String perg, List<String> resp, int corretas) async {
     //MUST GET SNAPSHOT
     final FirebaseApp app = Firebase.app();

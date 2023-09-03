@@ -4,6 +4,7 @@ import 'package:thoth/components/item_quiz.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
+import 'package:thoth/routes.dart';
 
 class Quizzes extends StatefulWidget {
   const Quizzes({super.key});
@@ -135,8 +136,9 @@ class _QuizzesState extends State<Quizzes> {
                 return ItemQuiz(quiz: _quizzes[index]);
               })),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _novoModal(context),
-        tooltip: 'Novo quiz',
+        onPressed: () {
+          Navigator.of(context).pushNamed(Routes.cadastroQuiz);
+        },
         child: const Icon(Icons.add),
       ),
     );

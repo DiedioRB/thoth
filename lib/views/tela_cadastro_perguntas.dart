@@ -27,12 +27,13 @@ class CadastroPerguntas extends StatelessWidget {
 
   }
 
-  //TODO: USE A SNACKBAR
-  //TODO: WRAP CONTENTS IN A CONTAINER WITH MARGIN
+  //TODO: USE A SNACKBAR; DONE!
+  //TODO: WRAP CONTENTS IN A CONTAINER WITH MARGIN; DONE!
   //TODO: GET ANWSER AND INSERT IT IN A LIST
   //TODO: CALL CREATE METHOD WITH QUESTION AND ANSWER
   //TODO: MAKE ANSWERS TEXTFIELD AUTO-GENERATED
   //TODO: INSERT ANSWERS IN THE LIST. CALL CREATE
+  //TODO: INSERT CONTENT IN A SCOLLABLE CONTAINER, LIKE LISTVIEW (OR CHANGE MARGIN SETTINGS)
   //TODO: DONE!
 
   void _cadastrarPergunta(context, pergunta, resposta) {
@@ -47,39 +48,39 @@ class CadastroPerguntas extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text ("Cadastar perguntas"),
       ),
-        body: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(
-                bottom: 35.0
-              ),
-            ),
-            TextField(
-              controller: questionController,
-              decoration: const InputDecoration(labelText: "Pergunta"),
-            ),
-            TextField(
-              controller: answerController,
-              decoration: const InputDecoration(labelText: "Resposta"),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 100.0),
-              height: 60,
-              width: 250,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black54),
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.blue[50]),
-              child: TextButton(
-                  onPressed: () => _cadastrarPergunta(
-                      context,
-                      questionController.text,
-                      answerController.text),
-                  child: const Text("Cadastrar Pergunta",
-                      style: TextStyle(
-                          color: Colors.blueAccent, fontSize: 20.0))),
-            ),
-          ]
+        body: Container(
+          margin: const EdgeInsets.only(
+              top: 100.0, left: 42.0, right: 42.0, bottom: 35.0
+          ),
+          child: Column(
+              children: [
+                TextField(
+                  controller: questionController,
+                  decoration: const InputDecoration(labelText: "Pergunta"),
+                ),
+                TextField(
+                  controller: answerController,
+                  decoration: const InputDecoration(labelText: "Resposta"),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 100.0),
+                  height: 60,
+                  width: 250,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black54),
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.blue[50]),
+                  child: TextButton(
+                      onPressed: () => _cadastrarPergunta(
+                          context,
+                          questionController.text,
+                          answerController.text),
+                      child: const Text("Cadastrar Pergunta",
+                          style: TextStyle(
+                              color: Colors.blueAccent, fontSize: 20.0))),
+                ),
+              ]
+          )
         )
     );
   }

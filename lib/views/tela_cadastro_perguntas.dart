@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thoth/models/pergunta.dart';
+import 'package:thoth/components/nossa_snackbar.dart';
 
 
 
@@ -26,8 +27,17 @@ class CadastroPerguntas extends StatelessWidget {
 
   }
 
-  void _cadastrarPergunta(pergunta, resposta) {
-    print("\nPegunta ${pergunta} e a sua resposta: ${resposta}");
+  //TODO: USE A SNACKBAR
+  //TODO: WRAP CONTENTS IN A CONTAINER WITH MARGIN
+  //TODO: GET ANWSER AND INSERT IT IN A LIST
+  //TODO: CALL CREATE METHOD WITH QUESTION AND ANSWER
+  //TODO: MAKE ANSWERS TEXTFIELD AUTO-GENERATED
+  //TODO: INSERT ANSWERS IN THE LIST. CALL CREATE
+  //TODO: DONE!
+
+  void _cadastrarPergunta(context, pergunta, resposta) {
+    //print("\nPegunta ${pergunta} e a sua resposta: ${resposta}");
+    NossaSnackbar.mostrar(context, "\nPegunta ${pergunta} e a sua resposta: ${resposta}");
   }
 
   @override
@@ -62,6 +72,7 @@ class CadastroPerguntas extends StatelessWidget {
                   color: Colors.blue[50]),
               child: TextButton(
                   onPressed: () => _cadastrarPergunta(
+                      context,
                       questionController.text,
                       answerController.text),
                   child: const Text("Cadastrar Pergunta",

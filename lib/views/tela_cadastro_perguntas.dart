@@ -29,16 +29,23 @@ class CadastroPerguntas extends StatelessWidget {
 
   //TODO: USE A SNACKBAR; DONE!
   //TODO: WRAP CONTENTS IN A CONTAINER WITH MARGIN; DONE!
-  //TODO: GET ANWSER AND INSERT IT IN A LIST
-  //TODO: CALL CREATE METHOD WITH QUESTION AND ANSWER
+  //TODO: GET ANWSER AND INSERT IT IN A LIST; DONE!
+  //TODO: CALL CREATE METHOD WITH QUESTION AND ANSWER; DONE!
   //TODO: MAKE ANSWERS TEXTFIELD AUTO-GENERATED
   //TODO: INSERT ANSWERS IN THE LIST. CALL CREATE
   //TODO: INSERT CONTENT IN A SCOLLABLE CONTAINER, LIKE LISTVIEW (OR CHANGE MARGIN SETTINGS)
   //TODO: DONE!
 
-  void _cadastrarPergunta(context, pergunta, resposta) {
+  void _cadastrarPergunta(context, pergunta, resposta) async {
+    List<String> respostas = [];
+    respostas.add(resposta);
+
+    await Pergunta.create(pergunta, respostas, 0).then(
+            (value) =>
+                NossaSnackbar.mostrar(context, "Criada a pegunta ${pergunta} e a suas respostas: ${respostas[0]}")
+    );
     //print("\nPegunta ${pergunta} e a sua resposta: ${resposta}");
-    NossaSnackbar.mostrar(context, "\nPegunta ${pergunta} e a sua resposta: ${resposta}");
+
   }
 
   @override

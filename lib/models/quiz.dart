@@ -24,7 +24,8 @@ class Quiz {
     ];
   }
 
-  Quiz({required this.nome, required this.perguntasReferences, this.id});
+  Quiz({required this.nome, required this.
+  perguntasReferences, this.id});
 
   static CollectionReference getCollection(FirebaseFirestore db) {
     return db.collection(collection).withConverter<Quiz>(

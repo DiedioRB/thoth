@@ -10,8 +10,7 @@ class Cadastro extends StatelessWidget {
   final passwordController = TextEditingController();
   final passwordRepeatController = TextEditingController();
 
-  void _cadastrar(
-      String nome, String email, String senha, String senhaRepetida) async {
+  void _cadastrar(String nome, String email, String senha, String senhaRepetida) async {
 
     //adicionar validador de campos em branco
     //adicionar validador de campo de email

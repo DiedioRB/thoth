@@ -101,8 +101,10 @@ class Menu extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.lightGreen[100]),
                   child: TextButton(
-                      onPressed: () {},
-                      child: const Text("Temas recorrentes",
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(Routes.cadastroPerguntas);
+                      },
+                      child: const Text("Cadastrar Perguntas",
                           style:
                               TextStyle(color: Colors.black, fontSize: 20.0))),
                 ),

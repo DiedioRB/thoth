@@ -3,14 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:thoth/models/interfaces/item_form.dart';
 import 'package:thoth/models/pergunta.dart';
 
-/// ESSA CLASSE SERVE APENAS PARA REFERÊNCIA PARA CRIAÇÃO DE OUTRAS CLASSES
-/// ISSO FOI FEITO PORQUE MÉTODOS ESTÁTICOS NÃO SÃO IMPLEMENTADOS, PORTANTO
-/// A CRIAÇÃO DOS MÉTODOS E FACTORIES FICA PARA OS FILHOS
 class Quiz {
   static const String collection = "quizzes";
 
   final DocumentReference? id;
-  final String nome;
+  String nome;
   final List<DocumentReference> perguntasReferences;
   final List<Pergunta> _perguntas = [];
 
@@ -52,7 +49,7 @@ class Quiz {
   }
 
   Future<List<Pergunta>> get perguntas async {
-    if (_perguntas.isEmpty) {
+    if (_perguntas.isEmpty && perguntasReferences.isNotEmpty) {
       FirebaseFirestore db = FirebaseFirestore.instance;
       await Pergunta.getCollection(db)
           .where(FieldPath.documentId, whereIn: perguntasReferences)

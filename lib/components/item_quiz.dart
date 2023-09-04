@@ -21,8 +21,10 @@ class _ItemQuizState extends State<ItemQuiz> {
   List<Pergunta> perguntas = [];
 
   void _updateModal(context) async {
+    FormBuilder _form = FormBuilder(Quiz.getFields(quiz: widget.quiz));
     FirebaseFirestore db = FirebaseFirestore.instance;
     await Pergunta.getCollection(db).get().then((value) => {
+          todasPerguntas.clear(),
           for (var pergunta in value.docs)
             {todasPerguntas.add(pergunta.data() as Pergunta)}
         });
@@ -39,7 +41,7 @@ class _ItemQuizState extends State<ItemQuiz> {
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      FormBuilder(Quiz.getFields(quiz: widget.quiz)).build(),
+                      _form.build(),
                       Expanded(
                         child: ListView.builder(
                             itemCount: todasPerguntas.length,
@@ -48,13 +50,13 @@ class _ItemQuizState extends State<ItemQuiz> {
                               return CheckboxListTile(
                                 title: Text(p.pergunta),
                                 value: perguntas.any(
-                                  (element) => element.pergunta == p.pergunta,
+                                  (element) => element.id == p.id,
                                 ),
                                 onChanged: (value) => {
                                   setState(() {
                                     if (value == false) {
                                       perguntas.removeWhere((element) {
-                                        return element.pergunta == p.pergunta;
+                                        return element.id == p.id;
                                       });
                                     } else {
                                       perguntas.add(p);
@@ -68,6 +70,8 @@ class _ItemQuizState extends State<ItemQuiz> {
                         children: [
                           TextButton(
                               onPressed: () async {
+                                widget.quiz.nome = _form.values['nome'];
+                                // widget.quiz.nome = _form.values['nome'];
                                 widget.quiz.atualizaReferencias(perguntas);
                                 widget.quiz.update();
                                 ScaffoldMessenger.maybeOf(context)

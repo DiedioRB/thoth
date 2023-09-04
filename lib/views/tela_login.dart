@@ -26,9 +26,7 @@ class _LoginState extends State<Login> {
     });
   }
 
-  final FormBuilder form = FormBuilder(Usuario.getFields(
-      usuario:
-          Usuario(nome: "", email: "andreribas0511@gmail.com", salas: [])));
+  final FormBuilder form = FormBuilder(Usuario.getFieldsLogin());
 
   void _login(String? email, String? senha) async {
     if (email != null && senha != null) {

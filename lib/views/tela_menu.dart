@@ -39,7 +39,9 @@ class Menu extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.amber[50]),
                   child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(Routes.temas);
+                      },
                       child: const Text("Temas",
                           style:
                               TextStyle(color: Colors.black, fontSize: 20.0))),
@@ -83,10 +85,7 @@ class Menu extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.lightGreen[100]),
                   child: TextButton(
-                      onPressed: () {
-                          print("Ha, just kidding");
-                        //Navigator.of(context).pushNamed(Routes.perguntasTeste);
-                      },
+                      onPressed: () {},
                       child: const Text("Temas recorrentes",
                           style:
                               TextStyle(color: Colors.black, fontSize: 20.0))),

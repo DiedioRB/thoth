@@ -47,39 +47,23 @@ class Pergunta {
     };
   }
 
+  create() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Pergunta.getCollection(db).doc(id?.id).set(this);
+  }
+
+  update() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Pergunta.getCollection(db).doc(id?.id).update(toFirestore());
+  }
+
+  delete() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Pergunta.getCollection(db).doc(id?.id).delete();
+  }
+
   @override
   String toString() {
     return pergunta;
   }
-
-  static Future<Pergunta?> create(String perg, List<String> resp, int corretas) async {
-    final FirebaseApp app = Firebase.app();
-    final FirebaseFirestore db = FirebaseFirestore.instanceFor(app: app);
-    final perguntaCollection = getCollection(db);
-
-    final pergunta = Pergunta(pergunta: perg, respostas: resp, respostaCorreta: corretas);
-
-
-
-    perguntaCollection.add(pergunta).then((documentSnapshot) => {
-      print("adicionado!")
-    });
-
-  }
-
-  static Future<Pergunta?> update(String perg, List<String> resp, int corretas) async {
-    //MUST GET SNAPSHOT
-    final FirebaseApp app = Firebase.app();
-    final FirebaseFirestore db = FirebaseFirestore.instanceFor(app: app);
-    final perguntaCollection = getCollection(db);
-
-    final pergunta = Pergunta(pergunta: perg, respostas: resp, respostaCorreta: corretas);
-    
-    perguntaCollection.add(pergunta).then((documentSnapshot) => {
-      print("Modificado!")
-    });
-
-  }
-
-
 }

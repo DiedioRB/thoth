@@ -18,17 +18,18 @@ class PerguntaTeste extends StatelessWidget {
     //final FirebaseApp app = Firebase.app();
     //final FirebaseFirestore db = FirebaseFirestore.instanceFor(app: app);
     List<String> teste = ["um", "dois", "três"];
-    await Pergunta.create("teste", teste, 8);
+    Pergunta pergunta =
+        Pergunta(pergunta: "teste", respostas: teste, respostaCorreta: 2);
+    pergunta.create();
     //var perg;
     //Pergunta.getCollection(db)
     //    .get()
     //    .then((value) {
     //      perg = value.docs.first.data();
     //      print("\n\n t== ${perg}");
-   //});
+    //});
 
     //print("\n\n TESTE: ${perg}");
-
   }
 
   @override
@@ -49,27 +50,24 @@ class PerguntaTeste extends StatelessWidget {
                 ]),
             body: Center(
                 child: Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 250.0),
-                      height: 60,
-                      width: 250,
-                      decoration: BoxDecoration(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 250.0),
+                  height: 60,
+                  width: 250,
+                  decoration: BoxDecoration(
                       border: Border.all(color: Colors.black54),
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.tealAccent),
-                      child: TextButton(
-                          onPressed: () => {
-                              _teste(),
+                  child: TextButton(
+                      onPressed: () => {
+                            _teste(),
                           },
-                          child: const Text("Temas",
-                              style:
+                      child: const Text("Temas",
+                          style:
                               TextStyle(color: Colors.black, fontSize: 20.0))),
-                    )
-                  ],
                 )
-            )
-        )
-    );
+              ],
+            ))));
   }
 }

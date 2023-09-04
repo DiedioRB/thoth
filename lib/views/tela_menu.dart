@@ -31,7 +31,7 @@ class Menu extends StatelessWidget {
                 child: Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.only(top: 100.0),
+                  margin: const EdgeInsets.only(top: 50.0),
                   height: 60,
                   width: 250,
                   decoration: BoxDecoration(
@@ -47,7 +47,23 @@ class Menu extends StatelessWidget {
                               TextStyle(color: Colors.black, fontSize: 20.0))),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 100.0),
+                  margin: const EdgeInsets.only(top: 50.0),
+                  height: 60,
+                  width: 250,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black54),
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.amber[50]),
+                  child: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(Routes.topicos);
+                      },
+                      child: const Text("Tópicos",
+                          style:
+                              TextStyle(color: Colors.black, fontSize: 20.0))),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 50.0),
                   height: 60,
                   width: 250,
                   decoration: BoxDecoration(

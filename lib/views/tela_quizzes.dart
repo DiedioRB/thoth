@@ -28,7 +28,7 @@ class _QuizzesState extends State<Quizzes> {
   void initState() {
     super.initState();
 
-    formBuilder = FormBuilder(Quiz.getFields(quiz: novoQuiz));
+    formBuilder = FormBuilder(Quiz.getFields());
 
     FirebaseFirestore db = FirebaseFirestore.instance;
     watcher = Quiz.getCollection(db).snapshots().listen(listen);
@@ -134,9 +134,6 @@ class _QuizzesState extends State<Quizzes> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      _quizzes = _quizzes;
-    });
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,

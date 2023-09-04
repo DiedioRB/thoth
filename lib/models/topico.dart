@@ -1,13 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:thoth/models/interfaces/item_form.dart';
 import 'package:thoth/models/pergunta.dart';
 
 class Topico {
   static const String collection = "topicos";
 
   final DocumentReference? id;
-  final String descricao;
+  String descricao;
   final List<DocumentReference> perguntasReferences;
   final List<Pergunta> _perguntas = [];
+
+  static List<ItemForm> getFields({Topico? topico}) {
+    return [
+      ItemForm.build(
+          descricao: "nome",
+          valor: topico?.descricao,
+          icon: const Icon(Icons.edit),
+          modificadores: [ItemFormModifiers.naoNulo]),
+    ];
+  }
 
   Topico({required this.descricao, required this.perguntasReferences, this.id});
 

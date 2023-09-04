@@ -2,25 +2,25 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:thoth/components/item_tema.dart';
+import 'package:thoth/components/item_topico.dart';
 import 'package:thoth/helpers/form_builder.dart';
-import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
+import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/routes.dart';
 
-class Temas extends StatefulWidget {
-  const Temas({super.key});
+class Topicos extends StatefulWidget {
+  const Topicos({super.key});
 
   @override
-  State<Temas> createState() => _TemasState();
+  State<Topicos> createState() => _TopicosState();
 }
 
-class _TemasState extends State<Temas> {
-  List<Tema> _temas = [];
-  List<Topico> todosTopicos = [];
-  List<Topico> topicos = [];
+class _TopicosState extends State<Topicos> {
+  List<Topico> _topicos = [];
+  List<Pergunta> todasPerguntas = [];
+  List<Pergunta> perguntas = [];
 
-  Tema novoTema = Tema(descricao: "", topicosReferences: [], id: null);
+  Topico novoTopico = Topico(descricao: "", perguntasReferences: [], id: null);
   late FormBuilder formBuilder;
   StreamSubscription? watcher;
 
@@ -28,21 +28,21 @@ class _TemasState extends State<Temas> {
   void initState() {
     super.initState();
 
-    formBuilder = FormBuilder(Tema.getFields());
+    formBuilder = FormBuilder(Topico.getFields());
 
     FirebaseFirestore db = FirebaseFirestore.instance;
-    watcher = Tema.getCollection(db).snapshots().listen(listen);
+    watcher = Topico.getCollection(db).snapshots().listen(listen);
   }
 
   void listen(value) {
-    List<Tema> temas = [];
+    List<Topico> topicos = [];
     if (value.docs.isNotEmpty) {
-      for (var tema in value.docs) {
-        temas.add(tema.data() as Tema);
+      for (var topico in value.docs) {
+        topicos.add(topico.data() as Topico);
       }
-      _temas.clear();
+      _topicos.clear();
       setState(() {
-        _temas = temas;
+        _topicos = topicos;
       });
     }
   }
@@ -53,22 +53,22 @@ class _TemasState extends State<Temas> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         automaticallyImplyLeading: false,
-        title: const Text("Temas"),
+        title: const Text("Tópicos"),
       ),
       body: Center(
           child: ListView.builder(
-              itemCount: _temas.length,
-              prototypeItem: ItemTema(
-                tema: Tema(descricao: "", topicosReferences: []),
+              itemCount: _topicos.length,
+              prototypeItem: ItemTopico(
+                topico: Topico(descricao: "", perguntasReferences: []),
                 modifiable: true,
               ),
               //TODO: atualizar a lista quando der create, update ou delete
               itemBuilder: (context, index) {
-                return ItemTema(tema: _temas[index]);
+                return ItemTopico(topico: _topicos[index]);
               })),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pushNamed(Routes.cadastroTema);
+          Navigator.of(context).pushNamed(Routes.cadastroTopico);
         },
         child: const Icon(Icons.add),
       ),

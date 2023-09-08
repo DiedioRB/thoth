@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:thoth/helpers/auth_helper.dart';
 
 
-class Cadastro extends StatelessWidget {
-  Cadastro({super.key});
+class CadastroUsuario extends StatelessWidget {
+  CadastroUsuario({super.key});
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();

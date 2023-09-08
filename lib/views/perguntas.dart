@@ -1,12 +1,11 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:thoth/models/interfaces/item_form.dart';
 import 'package:thoth/helpers/form_builder.dart';
-
 import 'package:thoth/models/pergunta.dart';
-import 'package:thoth/components/nossa_snackbar.dart';
+
 
 
 
@@ -18,11 +17,22 @@ class Perguntas extends StatefulWidget {
 }
 
 class _PerguntasState extends State<Perguntas> {
-  //TODO: PLANEJO CARREGAR TODAS AS PERGUNTAS, COLOCAR NESSA LISTA E MOSTRAR
+  //TODO: PEGAR AS RESPECTIVAS PERGUNTAS DE CADA QUIZ: Necessita link
+  //TODO: PEGAR ESSAS PERGUNTAS E COLOCAR NUMA LISTA TOTAL: Done!
+  //TODO: PEGAR ALGUMAS DESSAS PERGUNTAS E COLOCAR NUMA LISTA PARA O QUIZ: Done!
+  //TODO: PEGAR A PRIMEIRA PEGUNTA DA LISTA PARA QUIZ E MOSTRAR NA TELA, A PERGUNTA E SUAS RESPOSTAS
+  //TODO: VERIFICAR RESPOSTA CERTA/ERRADA
+  //TODO: IMPLEMENTAR LÓGICA DE REPETIR ESSE PROCESSO ATÉ AS PERGUNTAS ACABAREM
+  //TODO: IMPLEMENTAR PONTUAÇÃO
+  //TODO: ESTILIZAR
   List<Pergunta> _todasPerguntas = [];
-  List<ItemForm> _itemForm = Pergunta.getFields();
+  List<Pergunta> _perguntasQuiz = [];
+  int _qtdPerguntas = 5; //Quantidade de perguntas por quiz
   late FormBuilder formBuilder1;
   StreamSubscription? watcher;
+
+  Random rand = Random();
+
   
   @override
   void initState() {
@@ -40,8 +50,22 @@ class _PerguntasState extends State<Perguntas> {
         perguntas.add(perg.data() as Pergunta);
       }
       _todasPerguntas.clear();
+      _perguntasQuiz.clear();
       setState(() {
         _todasPerguntas = perguntas;
+
+        //Não sei se deveria ficar no setState.
+        if (_qtdPerguntas <= _todasPerguntas.length) {
+          while(_perguntasQuiz.length < _qtdPerguntas) {
+            int randIndex = rand.nextInt(_todasPerguntas.length);
+            Pergunta perguntaEscolhida = _todasPerguntas[randIndex];
+            if(!_perguntasQuiz.contains(perguntaEscolhida)) {
+              _perguntasQuiz.add(perguntaEscolhida);
+            }
+          }
+        } else {
+          print("erro de que tamanho de lista");
+        }
       });
     }
   }
@@ -53,16 +77,17 @@ class _PerguntasState extends State<Perguntas> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text ("Lista de Todas as perguntas"),
         ),
-        body: Column(
-          children: [
-            formBuilder1.build(),
-            FloatingActionButton(
-              onPressed: () {
-                formBuilder1.addFields(_itemForm);
-              },
-              child: const Icon(Icons.add),
-            ),
-          ],
+        body: Center(
+          child: ListView.builder(
+            itemCount: _perguntasQuiz.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text('${_perguntasQuiz[index].pergunta}')
+              );
+            }
+          )
+
+
         )
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
+import 'package:thoth/routes.dart';
 
 class ItemQuiz extends StatefulWidget {
   ItemQuiz({super.key, required this.quiz, this.modifiable = false});
@@ -140,6 +141,9 @@ class _ItemQuizState extends State<ItemQuiz> {
               onPressed: () => _deleteModal(context)),
         ],
       ),
+      onTap: () {
+        Navigator.of(context).pushNamed(Routes.perguntas);
+      }
     );
   }
 }

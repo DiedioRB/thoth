@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:thoth/models/interfaces/item_form.dart';
 
 class Pergunta {
   static const String collection = "perguntas";
@@ -8,6 +9,19 @@ class Pergunta {
   final String pergunta;
   final List<String> respostas;
   final int respostaCorreta;
+
+  static List<ItemForm> getFields({Pergunta? pergunta}) {
+    return[
+      ItemForm.build(
+        descricao: "Um teste de Pergunta",
+        valor: pergunta?.pergunta
+      ),
+      ItemForm.build(
+        descricao: "Talvez uma Resposta",
+        valor: pergunta?.respostas
+      )
+    ];
+  }
 
   String get resposta {
     return respostas[respostaCorreta];

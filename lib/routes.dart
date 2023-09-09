@@ -9,6 +9,7 @@ import 'package:thoth/views/temas.dart';
 import 'package:thoth/views/cadastro_quiz.dart';
 import 'package:thoth/views/topicos.dart';
 import 'package:thoth/views/cadastro_perguntas.dart';
+import 'package:thoth/views/perguntas.dart';
 
 class Routes {
   static const String home = "/";
@@ -22,8 +23,8 @@ class Routes {
   static const String cadastroTema = "/temas/cadastro";
   static const String topicos = "/topicos";
   static const String cadastroTopico = "/topicos/cadastro";
-  static const String cadastroPerguntas = "perguntas/cadastro";
-  //static const String editarQuiz = "/quizzes/editar"; - Comentado para verificar a necessidade
+  static const String cadastroPerguntas = "/perguntas/cadastro";
+  static const String perguntas = "/perguntas";
 
   static var routes = <String, WidgetBuilder>{
     home: (context) => const Login(),
@@ -36,6 +37,7 @@ class Routes {
     cadastroTema: (context) => const CadastroTema(),
     topicos: (context) => const Topicos(),
     cadastroTopico: (context) => const CadastroTopico(),
-    cadastroPerguntas: (context) => CadastroPerguntas()
+    cadastroPerguntas: (context) => CadastroPerguntas(),
+    perguntas: (context) => Perguntas()
   };
 }

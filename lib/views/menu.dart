@@ -102,7 +102,7 @@ class Menu extends StatelessWidget {
                       color: Colors.lightGreen[100]),
                   child: TextButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed(Routes.cadastroPerguntas);
+                        Navigator.of(context).pushNamed(Routes.perguntas);
                       },
                       child: const Text("Cadastrar Perguntas",
                           style:

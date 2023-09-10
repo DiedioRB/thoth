@@ -142,7 +142,7 @@ class _ItemQuizState extends State<ItemQuiz> {
         ],
       ),
       onTap: () {
-        Navigator.of(context).pushNamed(Routes.perguntas);
+        Navigator.of(context).pushNamed(Routes.atividadeQuiz);
       }
     );
   }

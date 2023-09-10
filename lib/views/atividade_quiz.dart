@@ -16,10 +16,15 @@ class AtividadeQuiz extends StatefulWidget {
 
 class _AtividadeQuizState extends State<AtividadeQuiz> {
   List<Pergunta> _todasPerguntas = [];
-  List<Pergunta> _quizPerguntas = [];
+  List<Pergunta> _perguntasQuiz = [];
   Random aleatorio = Random();
-  Quiz? _quiz = Quiz(nome: "", perguntasReferences: [], id: null, quantidadePerguntas: 5);
+  int _qtdPerguntas = 5;
   int _count = 0;
+  int _color = 0x00ffffff;
+
+  int _pontos = 0;
+  bool _acertou = false;
+
 
 
 
@@ -29,22 +34,44 @@ class _AtividadeQuizState extends State<AtividadeQuiz> {
   void initState() {
     super.initState();
 
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    Pergunta.getCollection(db).get().then((value) => {
-      if(value.docs.isNotEmpty) {
-        for (var pergunta in value.docs) {
-          _todasPerguntas.add(pergunta.data() as Pergunta)
-        }
-      }
-    });
+    _updatePerguntasQuiz();
 
 
 
   }
 
+  void _updatePerguntasQuiz() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    await Pergunta.getCollection(db).get().then((value) => {
+      _todasPerguntas.clear(),
+      for (var pergunta in value.docs) {
+        _todasPerguntas.add(pergunta.data() as Pergunta)
+      }
+    });
+
+    if(_qtdPerguntas <= _todasPerguntas.length) {
+      while(_perguntasQuiz.length < _qtdPerguntas) {
+        int indiceAleatorio = aleatorio.nextInt(_todasPerguntas.length);
+        Pergunta perguntaSelecionada = _todasPerguntas[indiceAleatorio];
+        if(!_perguntasQuiz.contains(perguntaSelecionada)) {
+          _perguntasQuiz.add(perguntaSelecionada);
+        }
+      }
+    }
+
+    setState(() {});
+
+    print(_perguntasQuiz);
+  }
+
   void attCount() {
     setState(() {
-      _count++;
+      if ((_count + 1) < _perguntasQuiz.length){
+        _count++;
+      } else {
+        _count = _count;
+      }
+
     });
   }
 
@@ -55,28 +82,14 @@ class _AtividadeQuizState extends State<AtividadeQuiz> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text ("EIS O PODEROSO QUIZ! \\o/"),
       ),
-      body: Center(
+      body:
+      _perguntasQuiz.isEmpty?
+          CircularProgressIndicator()
+      : Center(
         child: Container(
           margin: EdgeInsets.all(25.0),
           child: Column(
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(6.0),
-                    child: Text("${_count}",
-                        style: TextStyle(
-                          fontSize: 22.0,
-                        ))
-                  ),
-                  FloatingActionButton.small(
-                      onPressed: () {
-                        attCount();
-                      },
-                      child: const Icon(Icons.add)
-                  )
-                ],
-              ),
               Container(
                 width: double.infinity,
                 height: 150.0,
@@ -87,7 +100,7 @@ class _AtividadeQuizState extends State<AtividadeQuiz> {
                   borderRadius: BorderRadius.circular(18.0)
                 ),
                 child: Center(
-                  child: Text("Pergunta aqui :3",
+                  child: Text("${_perguntasQuiz[_count].pergunta}",
                   style: TextStyle(
                     fontSize: 18.0,
                     color: Colors.white,
@@ -96,73 +109,62 @@ class _AtividadeQuizState extends State<AtividadeQuiz> {
                 ),
               ),
               Divider(height: 25.0),
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  margin: EdgeInsets.only(top: 8.0),
-                  padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 18.0),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black54,
-                      width: 2.5
-                    ),
-                    borderRadius: BorderRadius.circular(18.0)
-                  ),
-                  child: Text("Resposta",
-                      style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold
-                      )),
-                )
-              ),
-              InkWell(
-                  onTap: () {},
-                  child: Container(
-                    margin: EdgeInsets.only(top: 8.0),
-                    padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 18.0),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.black54,
-                            width: 2.5
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: _perguntasQuiz[_count].respostas.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return InkWell(
+                      onTap: () {
+                        if (index == _perguntasQuiz[_count].respostaCorreta) {
+                          setState(() {
+                            _color = 0x7f9FD356;
+                            _acertou = true;
+                          });
+
+                        } else {
+                          setState(() {
+                            _color = 0x7fBD1E1E;
+                            _acertou = false;
+                          });
+
+                        }
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(top: 8.0),
+                        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 18.0),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.black54,
+                                width: 2.5
+                            ),
+                            borderRadius: BorderRadius.circular(18.0),
+                          //color: Color(this._color) TODO: FAZER WIDGETS SEPARADOS PRA CADA UM TER O ESTADO
                         ),
-                        borderRadius: BorderRadius.circular(18.0)
-                    ),
-                    child: Text("Resposta",
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold
-                        )),
-                  )
-              ),
-              InkWell(
-                  onTap: () {},
-                  child: Container(
-                    margin: EdgeInsets.only(top: 8.0),
-                    padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 18.0),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.black54,
-                            width: 2.5
-                        ),
-                        borderRadius: BorderRadius.circular(18.0)
-                    ),
-                    child: Text("Resposta",
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold
-                        )),
-                  )
+                        child: Text("${_perguntasQuiz[_count].respostas[index]}",
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.bold
+                            )),
+                      )
+                  );
+                }
+
               ),
               Divider(height: 25.0),
-              ElevatedButton(onPressed: () {}, child: Text("Próximo"))
-
-
+              ElevatedButton(
+                  onPressed: () {
+                    if(_acertou) {
+                      setState(() {
+                        _pontos ++;
+                      });
+                      print(_pontos);
+                    }
+                    attCount();
+                  },
+                  child: Text("Próximo")
+              )
             ],
           ),
         )

@@ -28,8 +28,6 @@ class _TemasState extends State<Temas> {
   void initState() {
     super.initState();
 
-    formBuilder = FormBuilder(Tema.getFields());
-
     FirebaseFirestore db = FirebaseFirestore.instance;
     watcher = Tema.getCollection(db).snapshots().listen(listen);
   }
@@ -51,7 +49,6 @@ class _TemasState extends State<Temas> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         automaticallyImplyLeading: false,
         title: const Text("Temas"),
       ),
@@ -62,7 +59,6 @@ class _TemasState extends State<Temas> {
                 tema: Tema(descricao: "", topicosReferences: []),
                 modifiable: true,
               ),
-              //TODO: atualizar a lista quando der create, update ou delete
               itemBuilder: (context, index) {
                 return ItemTema(tema: _temas[index]);
               })),

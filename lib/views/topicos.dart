@@ -51,7 +51,6 @@ class _TopicosState extends State<Topicos> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         automaticallyImplyLeading: false,
         title: const Text("Tópicos"),
       ),
@@ -62,7 +61,6 @@ class _TopicosState extends State<Topicos> {
                 topico: Topico(descricao: "", perguntasReferences: []),
                 modifiable: true,
               ),
-              //TODO: atualizar a lista quando der create, update ou delete
               itemBuilder: (context, index) {
                 return ItemTopico(topico: _topicos[index]);
               })),

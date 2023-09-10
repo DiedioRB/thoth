@@ -85,6 +85,18 @@ class Tema {
     Tema.getCollection(db).doc(id?.id).delete();
   }
 
+  static Future<List<Tema>> todos() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    List<Tema> temas = [];
+    await getCollection(db).get().then((value) {
+      temas.clear();
+      for (var tema in value.docs) {
+        temas.add(tema.data() as Tema);
+      }
+    });
+    return temas;
+  }
+
   @override
   String toString() {
     return descricao;

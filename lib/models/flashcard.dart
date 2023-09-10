@@ -3,8 +3,6 @@ import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/tema.dart';
 
 class Flashcard {
-  //TODO: corrigir a obtenção para puxar o tema e as perguntas automaticamente
-  //TODO: criar decks e tópicos
   static const String collection = "flashcards";
 
   final DocumentReference? id;

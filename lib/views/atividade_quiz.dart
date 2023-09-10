@@ -30,7 +30,7 @@ class _AtividadeQuizState extends State<AtividadeQuiz> {
     super.initState();
 
     FirebaseFirestore db = FirebaseFirestore.instance;
-    await Pergunta.getCollection(db).get().then((value) => {
+    Pergunta.getCollection(db).get().then((value) => {
       if(value.docs.isNotEmpty) {
         for (var pergunta in value.docs) {
           _todasPerguntas.add(pergunta.data() as Pergunta)

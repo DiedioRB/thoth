@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
-
+import 'package:thoth/routes.dart';
 
 
 
@@ -78,15 +78,17 @@ class _PerguntasState extends State<Perguntas> {
           title: const Text ("Lista de Todas as perguntas"),
         ),
         body: Center(
-          child: ListView.builder(
-            itemCount: _perguntasQuiz.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text('${_perguntasQuiz[index].pergunta}')
-              );
-            }
-          )
-
+          child:  ListView.builder(
+              itemCount: _perguntasQuiz.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text('${_perguntasQuiz[index].pergunta}'),
+                  onTap: () {
+                    Navigator.of(context).pushNamed(Routes.atividadeQuiz);
+                  },
+                );
+              }
+          ),
 
         )
     );

@@ -10,6 +10,7 @@ class Quiz {
   String nome;
   final List<DocumentReference> perguntasReferences;
   final List<Pergunta> _perguntas = [];
+  final int? quantidadePerguntas;
 
   static List<ItemForm> getFields({Quiz? quiz}) {
     return [
@@ -21,8 +22,11 @@ class Quiz {
     ];
   }
 
-  Quiz({required this.nome, required this.
-  perguntasReferences, this.id});
+  Quiz({
+    required this.nome,
+    required this.perguntasReferences,
+    this.quantidadePerguntas,
+    this.id});
 
   static CollectionReference getCollection(FirebaseFirestore db) {
     return db.collection(collection).withConverter<Quiz>(

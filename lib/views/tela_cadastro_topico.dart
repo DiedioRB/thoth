@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
+import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
 
 class CadastroTopico extends StatefulWidget {
@@ -15,6 +16,9 @@ class CTopicosState extends State<CadastroTopico> {
   List<Topico> cTopicos = [];
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
+
+  List<DropdownMenuItem<Tema>> temas = [];
+  Tema? tema;
 
   Topico novoTopico = Topico(descricao: "", perguntasReferences: [], id: null);
   late FormBuilder formBuilder;
@@ -38,6 +42,23 @@ class CTopicosState extends State<CadastroTopico> {
               })
             }
         });
+
+    fetchTemas();
+  }
+
+  fetchTemas() async {
+    List<Tema> temas = await Tema.todos();
+    this.temas.clear();
+    for (var tema in temas) {
+      this.temas.add(DropdownMenuItem(
+            value: tema,
+            key: Key(tema.id.toString()),
+            child: Text(tema.descricao),
+          ));
+    }
+    setState(() {
+      tema = temas[0];
+    });
   }
 
   void nTopico(context) async {
@@ -54,13 +75,23 @@ class CTopicosState extends State<CadastroTopico> {
     nTopico(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("Criar Topico"),
       ),
       body: Center(
         child: Column(
           children: [
             formBuilder.build(),
+            DropdownButton<Tema>(
+                disabledHint: const Text("Selecione..."),
+                items: temas,
+                onChanged: (Tema? tema) {
+                  if (tema != null) {
+                    setState(() {
+                      this.tema = tema;
+                    });
+                  }
+                },
+                value: tema),
             Expanded(
               child: ListView.builder(
                   itemCount: todasPerguntas.length,
@@ -95,7 +126,8 @@ class CTopicosState extends State<CadastroTopico> {
                       }
                       Topico novoTopico = Topico(
                           descricao: formBuilder.values['nome'],
-                          perguntasReferences: refs);
+                          perguntasReferences: refs,
+                          temaReference: tema?.id);
                       novoTopico.create();
                       ScaffoldMessenger.maybeOf(context)?.showSnackBar(
                           const SnackBar(

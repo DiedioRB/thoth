@@ -136,7 +136,6 @@ class _QuizzesState extends State<Quizzes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         automaticallyImplyLeading: false,
         title: const Text("Quizzes"),
       ),
@@ -147,7 +146,6 @@ class _QuizzesState extends State<Quizzes> {
                 quiz: Quiz(nome: "", perguntasReferences: []),
                 modifiable: true,
               ),
-              //TODO: atualizar a lista quando der create, update ou delete
               itemBuilder: (context, index) {
                 return ItemQuiz(quiz: _quizzes[index]);
               })),

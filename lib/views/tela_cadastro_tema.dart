@@ -53,7 +53,6 @@ class CTemasState extends State<CadastroTema> {
     nTema(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("Criar Tema"),
       ),
       body: Center(

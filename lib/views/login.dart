@@ -94,7 +94,7 @@ class _LoginState extends State<Login> {
                           TextButton(
                               onPressed: () => {
                                     Navigator.pushNamed(
-                                        context, Routes.cadastro)
+                                        context, Routes.cadastroUsuario)
                                   },
                               child: const Text(
                                 "Aqui",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thoth/tema_app.dart';
 
 class MenuLateral extends StatelessWidget {
   const MenuLateral({super.key});
@@ -9,18 +10,17 @@ class MenuLateral extends StatelessWidget {
       padding: EdgeInsets.zero,
       children: [
         DrawerHeader(
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.inversePrimary),
-            child: const Text("Thoth")),
-        const ListTile(
+          child: Text("Thoth"),
+        ),
+        ListTile(
           title: Text("Temas"),
           leading: Icon(Icons.collections_bookmark),
         ),
-        const ListTile(
+        ListTile(
           title: Text("Rankings"),
           leading: Icon(Icons.trending_up),
         ),
-        const ListTile(
+        ListTile(
           title: Text("Salas de aula"),
           leading: Icon(Icons.school),
         )

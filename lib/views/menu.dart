@@ -18,99 +18,71 @@ class Menu extends StatelessWidget {
             drawer: const Drawer(
               child: MenuLateral(),
             ),
-            appBar: AppBar(
-                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                actions: [
-                  IconButton(
-                    onPressed: () => _logout(context),
-                    icon: const Icon(Icons.logout),
-                    tooltip: "Desconectar",
-                  )
-                ]),
+            appBar: AppBar(actions: [
+              IconButton(
+                onPressed: () => _logout(context),
+                icon: const Icon(Icons.logout),
+                tooltip: "Desconectar",
+              )
+            ]),
             body: Center(
-                child: Column(
+                child: GridView.extent(
+              maxCrossAxisExtent: 300,
+              mainAxisSpacing: 4,
+              crossAxisSpacing: 4,
               children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 50.0),
-                  height: 60,
-                  width: 250,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black54),
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.amber[50]),
-                  child: TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(Routes.temas);
-                      },
-                      child: const Text("Temas",
-                          style:
-                              TextStyle(color: Colors.black, fontSize: 20.0))),
+                Card(
+                  child: InkWell(
+                    child: Center(
+                        child: Text(
+                      "Temas",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    )),
+                    onTap: () {
+                      Navigator.of(context).pushNamed(Routes.temas);
+                    },
+                  ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 50.0),
-                  height: 60,
-                  width: 250,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black54),
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.amber[50]),
-                  child: TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(Routes.topicos);
-                      },
-                      child: const Text("Tópicos",
-                          style:
-                              TextStyle(color: Colors.black, fontSize: 20.0))),
+                Card(
+                  child: InkWell(
+                    child: Center(
+                        child: Text(
+                      "Tópicos",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    )),
+                    onTap: () {
+                      Navigator.of(context).pushNamed(Routes.topicos);
+                    },
+                  ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 50.0),
-                  height: 60,
-                  width: 250,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black54),
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.amber[50]),
-                  child: TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(Routes.quizzes);
-                      },
-                      child: const Text("Quizzes",
-                          style:
-                              TextStyle(color: Colors.black, fontSize: 20.0))),
+                Card(
+                  child: InkWell(
+                    child: Center(
+                        child: Text(
+                      "Quizzes",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    )),
+                    onTap: () {
+                      Navigator.of(context).pushNamed(Routes.quizzes);
+                    },
+                  ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 50.0),
-                  height: 60,
-                  width: 250,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black54),
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.deepPurpleAccent[100]),
-                  child: TextButton(
-                      onPressed: () {},
-                      child: const Text("Rankings",
-                          style:
-                              TextStyle(color: Colors.black, fontSize: 20.0))),
+                Card(
+                  child: InkWell(
+                    child: Center(
+                        child: Text(
+                      "Cadastrar Perguntas",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    )),
+                    onTap: () {
+                      Navigator.of(context).pushNamed(Routes.cadastroPerguntas);
+                    },
+                  ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 50.0, bottom: 50.0),
-                  height: 60,
-                  width: 250,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black54),
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.lightGreen[100]),
-                  child: TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(Routes.cadastroPerguntas);
-                      },
-                      child: const Text("Cadastrar Perguntas",
-                          style:
-                              TextStyle(color: Colors.black, fontSize: 20.0))),
-                ),
-                TextButton(
-                    onPressed: () => _logout(context),
-                    child: const Text("logout")),
               ],
             ))));
   }

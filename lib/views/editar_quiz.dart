@@ -7,7 +7,7 @@ import 'package:thoth/models/quiz.dart';
 // Necessário avaliar se é preciso, e como iria funcionar esta tela de edição.
 
 class EditarQuiz extends StatefulWidget {
-  const EditarQuiz ({super.key});
+  const EditarQuiz({super.key});
 
   @override
   State<EditarQuiz> createState() => EQuizzesState();
@@ -26,30 +26,29 @@ class EQuizzesState extends State<EditarQuiz> {
 
     FirebaseFirestore db = FirebaseFirestore.instance;
     Quiz.getCollection(db).get().then((value) => {
-      if (value.docs.isNotEmpty)
-        {
-          for (var quiz in value.docs) {quizzes.add(quiz.data() as Quiz)},
-          setState(() {
-            eQuizzes = quizzes;
-          })
-        }
-    });
+          if (value.docs.isNotEmpty)
+            {
+              for (var quiz in value.docs) {quizzes.add(quiz.data() as Quiz)},
+              setState(() {
+                eQuizzes = quizzes;
+              })
+            }
+        });
   }
 
   void eQuiz(context) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     await Pergunta.getCollection(db).get().then((value) => {
-      for (var pergunta in value.docs)
-        {todasPerguntas.add(pergunta.data() as Pergunta)}
-    });
+          for (var pergunta in value.docs)
+            {todasPerguntas.add(pergunta.data() as Pergunta)}
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text ("Editar Quiz"),
+        title: const Text("Editar Quiz"),
       ),
     );
   }

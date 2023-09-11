@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/models/interfaces/item_form.dart';
 import 'package:thoth/models/pergunta.dart';
+import 'package:thoth/models/tema.dart';
 
 class Topico {
   static const String collection = "topicos";
@@ -10,6 +11,8 @@ class Topico {
   String descricao;
   final List<DocumentReference> perguntasReferences;
   final List<Pergunta> _perguntas = [];
+  DocumentReference? temaReference;
+  Tema? _tema;
 
   static List<ItemForm> getFields({Topico? topico}) {
     return [
@@ -21,7 +24,11 @@ class Topico {
     ];
   }
 
-  Topico({required this.descricao, required this.perguntasReferences, this.id});
+  Topico(
+      {required this.descricao,
+      required this.perguntasReferences,
+      this.id,
+      this.temaReference});
 
   static CollectionReference getCollection(FirebaseFirestore db) {
     return db.collection(collection).withConverter<Topico>(
@@ -41,11 +48,16 @@ class Topico {
     return Topico(
         descricao: data?['descricao'],
         perguntasReferences: perguntas,
-        id: snapshot.reference);
+        id: snapshot.reference,
+        temaReference: data?['tema']);
   }
 
   Map<String, dynamic> toFirestore() {
-    return {"descricao": descricao, "perguntas": perguntasReferences};
+    return {
+      "descricao": descricao,
+      "perguntas": perguntasReferences,
+      "tema": temaReference
+    };
   }
 
   Future<List<Pergunta>> get perguntas async {
@@ -61,6 +73,17 @@ class Topico {
               });
     }
     return _perguntas;
+  }
+
+  Future<Tema?> get tema async {
+    if (_tema == null && temaReference != null) {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      await Tema.getCollection(db)
+          .where(FieldPath.documentId, isEqualTo: temaReference)
+          .get()
+          .then((value) => {_tema = value.docs.first.data() as Tema});
+    }
+    return _tema;
   }
 
   atualizaReferencias(List<Pergunta> perguntas) {
@@ -83,10 +106,5 @@ class Topico {
   delete() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     Topico.getCollection(db).doc(id?.id).delete();
-  }
-
-  @override
-  String toString() {
-    return descricao;
   }
 }

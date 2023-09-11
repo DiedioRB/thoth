@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
+import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
 import 'package:thoth/models/pergunta.dart';
 
@@ -21,6 +22,9 @@ class _ItemTopicoState extends State<ItemTopico> {
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
 
+  List<DropdownMenuItem<Tema>> temas = [];
+  Tema? tema;
+
   void _updateModal(context) async {
     FormBuilder _form = FormBuilder(Topico.getFields(topico: widget.topico));
     FirebaseFirestore db = FirebaseFirestore.instance;
@@ -30,6 +34,7 @@ class _ItemTopicoState extends State<ItemTopico> {
             {todasPerguntas.add(pergunta.data() as Pergunta)}
         });
     perguntas = await widget.topico.perguntas;
+    await fetchTemas();
 
     showDialog(
       context: context,
@@ -43,6 +48,17 @@ class _ItemTopicoState extends State<ItemTopico> {
                   child: Column(
                     children: [
                       _form.build(),
+                      DropdownButton<Tema>(
+                          disabledHint: const Text("Selecione..."),
+                          items: temas,
+                          onChanged: (Tema? tema) {
+                            if (tema != null) {
+                              setState(() {
+                                this.tema = tema;
+                              });
+                            }
+                          },
+                          value: tema),
                       Expanded(
                         child: ListView.builder(
                             itemCount: todasPerguntas.length,
@@ -72,6 +88,7 @@ class _ItemTopicoState extends State<ItemTopico> {
                           TextButton(
                               onPressed: () async {
                                 widget.topico.descricao = _form.values['nome'];
+                                widget.topico.temaReference = tema?.id;
                                 widget.topico.atualizaReferencias(perguntas);
                                 widget.topico.update();
                                 ScaffoldMessenger.maybeOf(context)
@@ -123,6 +140,22 @@ class _ItemTopicoState extends State<ItemTopico> {
         );
       },
     );
+  }
+
+  fetchTemas() async {
+    List<Tema> temas = await Tema.todos();
+    tema = null;
+    this.temas.clear();
+    for (var tema in temas) {
+      this.temas.add(DropdownMenuItem(
+            value: tema,
+            key: Key(tema.id.toString()),
+            child: Text(tema.descricao),
+          ));
+      print(tema.descricao);
+    }
+
+    setState(() {});
   }
 
   @override

@@ -4,12 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/components/item_topico.dart';
 import 'package:thoth/helpers/form_builder.dart';
+import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/routes.dart';
 
 class Topicos extends StatefulWidget {
-  const Topicos({super.key});
+  Tema? tema;
+
+  Topicos({super.key, this.tema});
 
   @override
   State<Topicos> createState() => _TopicosState();
@@ -20,6 +23,8 @@ class _TopicosState extends State<Topicos> {
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
 
+  Tema? tema;
+
   Topico novoTopico = Topico(descricao: "", perguntasReferences: [], id: null);
   late FormBuilder formBuilder;
   StreamSubscription? watcher;
@@ -27,11 +32,19 @@ class _TopicosState extends State<Topicos> {
   @override
   void initState() {
     super.initState();
+    tema = widget.tema;
 
     formBuilder = FormBuilder(Topico.getFields());
 
     FirebaseFirestore db = FirebaseFirestore.instance;
-    watcher = Topico.getCollection(db).snapshots().listen(listen);
+    if (tema == null) {
+      watcher = Topico.getCollection(db).snapshots().listen(listen);
+    } else {
+      watcher = Topico.getCollection(db)
+          .where("tema", isEqualTo: tema!.id)
+          .snapshots()
+          .listen(listen);
+    }
   }
 
   void listen(value) {
@@ -62,7 +75,10 @@ class _TopicosState extends State<Topicos> {
                 modifiable: true,
               ),
               itemBuilder: (context, index) {
-                return ItemTopico(topico: _topicos[index]);
+                return ItemTopico(
+                  topico: _topicos[index],
+                  modifiable: true,
+                );
               })),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

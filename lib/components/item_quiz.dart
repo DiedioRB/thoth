@@ -4,12 +4,13 @@ import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
 import 'package:thoth/routes.dart';
+import 'package:thoth/models/topico.dart';
 
 class ItemQuiz extends StatefulWidget {
-  ItemQuiz({super.key, required this.quiz, this.modifiable = false});
+  const ItemQuiz({super.key, required this.quiz, required this.modifiable});
 
   final Quiz quiz;
-  bool modifiable;
+  final bool modifiable;
 
   @override
   State<ItemQuiz> createState() => _ItemQuizState();
@@ -21,6 +22,9 @@ class _ItemQuizState extends State<ItemQuiz> {
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
 
+  List<DropdownMenuItem<Topico>> topicos = [];
+  Topico? topico;
+
   void _updateModal(context) async {
     FormBuilder _form = FormBuilder(Quiz.getFields(quiz: widget.quiz));
     FirebaseFirestore db = FirebaseFirestore.instance;
@@ -30,6 +34,7 @@ class _ItemQuizState extends State<ItemQuiz> {
             {todasPerguntas.add(pergunta.data() as Pergunta)}
         });
     perguntas = await widget.quiz.perguntas;
+    await fetchTopicos();
 
     showDialog(
       context: context,
@@ -43,6 +48,17 @@ class _ItemQuizState extends State<ItemQuiz> {
                   child: Column(
                     children: [
                       _form.build(),
+                      DropdownButton<Topico>(
+                          disabledHint: const Text("Selecione..."),
+                          items: topicos,
+                          onChanged: (Topico? topico) {
+                            if (topico != null) {
+                              setState(() {
+                                this.topico = topico;
+                              });
+                            }
+                          },
+                          value: topico),
                       Expanded(
                         child: ListView.builder(
                             itemCount: todasPerguntas.length,
@@ -72,7 +88,7 @@ class _ItemQuizState extends State<ItemQuiz> {
                           TextButton(
                               onPressed: () async {
                                 widget.quiz.nome = _form.values['nome'];
-                                // widget.quiz.nome = _form.values['nome'];
+                                widget.quiz.topicoReference = topico?.id;
                                 widget.quiz.atualizaReferencias(perguntas);
                                 widget.quiz.update();
                                 ScaffoldMessenger.maybeOf(context)
@@ -126,24 +142,38 @@ class _ItemQuizState extends State<ItemQuiz> {
     );
   }
 
+  fetchTopicos() async {
+    List<Topico> topicos = await Topico.todos();
+    topico = null;
+    this.topicos.clear();
+    for (var topico in topicos) {
+      this.topicos.add(DropdownMenuItem(
+            value: topico,
+            key: Key(topico.id.toString()),
+            child: Text(topico.descricao),
+          ));
+    }
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.quiz.nome),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () => _updateModal(context)),
-          IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () => _deleteModal(context)),
-        ],
-      ),
-      onTap: () {
-        Navigator.of(context).pushNamed(Routes.atividadeQuiz);
-      }
+      trailing: (widget.modifiable)
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () => _updateModal(context)),
+                IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => _deleteModal(context)),
+              ],
+            )
+          : null,
     );
   }
 }

@@ -21,7 +21,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Projeto Thoth', routes: Routes.routes, theme: TemaApp.tema);
+      title: 'Projeto Thoth',
+      theme: TemaApp.tema,
+      onGenerateRoute: (RouteSettings settings) {
+        var routes = Routes.routes(settings);
+        WidgetBuilder builder = routes[settings.name];
+        return MaterialPageRoute(builder: (context) => builder(context));
+      },
+    );
   }
 }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:thoth/tema_app.dart';
 
 class MenuLateral extends StatelessWidget {
   const MenuLateral({super.key});
@@ -8,7 +7,7 @@ class MenuLateral extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.zero,
-      children: [
+      children: const [
         DrawerHeader(
           child: Text("Thoth"),
         ),

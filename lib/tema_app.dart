@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 abstract class TemaApp {
   //Cores padrão
+  static Color lightPrimary = Colors.deepPurple.shade200;
   static Color darkPrimary = Colors.deepPurple.shade800;
-  static Color darkSecondary = Colors.deepPurple.shade800;
+  static Color darkSecondary = Colors.deepPurple.shade600;
   static Color contrastPrimary = Colors.yellow.shade600;
   static Color contrastSecondary = Colors.yellow.shade600;
   static Color errorPrimary = Colors.red.shade400;

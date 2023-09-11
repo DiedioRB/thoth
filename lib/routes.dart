@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
-import 'package:thoth/views/tela_cadastro.dart';
-import 'package:thoth/views/tela_cadastro_tema.dart';
-import 'package:thoth/views/tela_cadastro_topico.dart';
-import 'package:thoth/views/tela_login.dart';
-import 'package:thoth/views/tela_menu.dart';
-import 'package:thoth/views/tela_quizzes.dart';
-import 'package:thoth/views/tela_temas.dart';
-import 'package:thoth/views/tela_cadastro_quiz.dart';
-import 'package:thoth/views/tela_topicos.dart';
-import 'package:thoth/views/tela_cadastro_perguntas.dart';
+import 'package:thoth/views/cadastro_usuario.dart';
+import 'package:thoth/views/cadastro_tema.dart';
+import 'package:thoth/views/cadastro_topico.dart';
+import 'package:thoth/views/login.dart';
+import 'package:thoth/views/menu.dart';
+import 'package:thoth/views/quizzes.dart';
+import 'package:thoth/views/temas.dart';
+import 'package:thoth/views/cadastro_quiz.dart';
+import 'package:thoth/views/topicos.dart';
+import 'package:thoth/views/cadastro_perguntas.dart';
 
 class Routes {
   static const String home = "/";
   static const String login = "/login";
   static const String menu = "/menu";
-  static const String cadastro = "/cadastro";
+  static const String cadastroUsuario = "/cadastro";
   static const String quizzes = "/quizzes";
   static const String quizzesForm = "/quizzes/form";
   static const String cadastroQuiz = "/quizzes/cadastro";
@@ -31,7 +31,7 @@ class Routes {
     return <String, WidgetBuilder>{
       home: (context) => const Login(),
       login: (context) => const Login(),
-      cadastro: (context) => Cadastro(),
+      cadastroUsuario: (context) => CadastroUsuario(),
       menu: (context) => const Menu(),
       quizzes: (context) => Quizzes(topico: settings.arguments as Topico?),
       cadastroQuiz: (context) => const CadastroQuiz(),

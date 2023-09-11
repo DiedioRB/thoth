@@ -6,10 +6,13 @@ import 'package:thoth/components/item_quiz.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
+import 'package:thoth/models/topico.dart';
 import 'package:thoth/routes.dart';
 
 class Quizzes extends StatefulWidget {
-  const Quizzes({super.key});
+  Topico? topico;
+
+  Quizzes({super.key, this.topico});
 
   @override
   State<Quizzes> createState() => _QuizzesState();
@@ -20,6 +23,8 @@ class _QuizzesState extends State<Quizzes> {
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
 
+  Topico? topico;
+
   Quiz novoQuiz = Quiz(nome: "", perguntasReferences: [], id: null);
   late FormBuilder formBuilder;
   StreamSubscription? watcher;
@@ -28,19 +33,20 @@ class _QuizzesState extends State<Quizzes> {
   void initState() {
     super.initState();
 
+    topico = widget.topico;
+
     formBuilder = FormBuilder(Quiz.getFields());
 
     FirebaseFirestore db = FirebaseFirestore.instance;
-    watcher = Quiz.getCollection(db).snapshots().listen(listen);
-    // Quiz.getCollection(db).get().then((value) => {
-    //       if (value.docs.isNotEmpty)
-    //         {
-    //           for (var quiz in value.docs) {quizzes.add(quiz.data() as Quiz)},
-    //           setState(() {
-    //             _quizzes = quizzes;
-    //           })
-    //         }
-    //     });
+    print(topico);
+    if (topico == null) {
+      watcher = Quiz.getCollection(db).snapshots().listen(listen);
+    } else {
+      watcher = Quiz.getCollection(db)
+          .where("topico", isEqualTo: topico!.id)
+          .snapshots()
+          .listen(listen);
+    }
   }
 
   void listen(value) {
@@ -147,7 +153,10 @@ class _QuizzesState extends State<Quizzes> {
                 modifiable: true,
               ),
               itemBuilder: (context, index) {
-                return ItemQuiz(quiz: _quizzes[index]);
+                return ItemQuiz(
+                  quiz: _quizzes[index],
+                  modifiable: true,
+                );
               })),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

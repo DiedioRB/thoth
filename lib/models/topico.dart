@@ -107,4 +107,16 @@ class Topico {
     FirebaseFirestore db = FirebaseFirestore.instance;
     Topico.getCollection(db).doc(id?.id).delete();
   }
+
+  static Future<List<Topico>> todos() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    List<Topico> topicos = [];
+    await getCollection(db).get().then((value) {
+      topicos.clear();
+      for (var topico in value.docs) {
+        topicos.add(topico.data() as Topico);
+      }
+    });
+    return topicos;
+  }
 }

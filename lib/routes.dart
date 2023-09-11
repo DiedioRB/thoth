@@ -11,6 +11,7 @@ import 'package:thoth/views/temas.dart';
 import 'package:thoth/views/cadastro_quiz.dart';
 import 'package:thoth/views/topicos.dart';
 import 'package:thoth/views/cadastro_perguntas.dart';
+import 'package:thoth/views/flashcards.dart';
 
 class Routes {
   static const String home = "/";
@@ -18,6 +19,7 @@ class Routes {
   static const String menu = "/menu";
   static const String cadastroUsuario = "/cadastro";
   static const String quizzes = "/quizzes";
+  static const String flashcards = "/flashcards";
   static const String quizzesForm = "/quizzes/form";
   static const String cadastroQuiz = "/quizzes/cadastro";
   static const String temas = "/temas";
@@ -34,6 +36,7 @@ class Routes {
       cadastroUsuario: (context) => CadastroUsuario(),
       menu: (context) => const Menu(),
       quizzes: (context) => Quizzes(topico: settings.arguments as Topico?),
+      flashcards: (context) => Flashcards(tema: settings.arguments as Tema?),
       cadastroQuiz: (context) => const CadastroQuiz(),
       temas: (context) => const Temas(),
       cadastroTema: (context) => const CadastroTema(),

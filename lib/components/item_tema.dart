@@ -134,6 +134,12 @@ class _ItemTemaState extends State<ItemTema> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
+                    icon: const Icon(Icons.featured_play_list),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(Routes.flashcards, arguments: widget.tema);
+                    }),
+                IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () => _updateModal(context)),
                 IconButton(

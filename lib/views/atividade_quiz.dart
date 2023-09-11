@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
+import 'package:thoth/routes.dart';
 
 class AtividadeQuiz extends StatefulWidget {
   const AtividadeQuiz({super.key});
@@ -21,6 +22,8 @@ class _AtividadeQuizState extends State<AtividadeQuiz> {
   int _qtdPerguntas = 5;
   int _count = 0;
   int _color = 0x00ffffff;
+  int _indiceListView = -1;
+  Color _cor = Colors.transparent;
 
   int _pontos = 0;
   bool _acertou = false;
@@ -65,6 +68,7 @@ class _AtividadeQuizState extends State<AtividadeQuiz> {
   }
 
   void attCount() {
+    _indiceListView = -1;
     setState(() {
       if ((_count + 1) < _perguntasQuiz.length){
         _count++;
@@ -79,12 +83,15 @@ class _AtividadeQuizState extends State<AtividadeQuiz> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text ("EIS O PODEROSO QUIZ! \\o/"),
+        automaticallyImplyLeading: false,
+        title: Text ("Quiz: ${_count} / ${_perguntasQuiz.length}"),
       ),
       body:
       _perguntasQuiz.isEmpty?
-          CircularProgressIndicator()
+          Center(
+            child: CircularProgressIndicator(),
+          )
+
       : Center(
         child: Container(
           margin: EdgeInsets.all(25.0),
@@ -115,19 +122,17 @@ class _AtividadeQuizState extends State<AtividadeQuiz> {
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
                       onTap: () {
-                        if (index == _perguntasQuiz[_count].respostaCorreta) {
-                          setState(() {
-                            _color = 0x7f9FD356;
-                            _acertou = true;
-                          });
+                        setState(() {
+                         _indiceListView = index;
+                         _cor = Colors.black26;
+                        });
 
+                        if(_perguntasQuiz[_count].respostaCorreta == index) {
+                          _acertou = true;
                         } else {
-                          setState(() {
-                            _color = 0x7fBD1E1E;
-                            _acertou = false;
-                          });
-
+                          _acertou = false;
                         }
+
                       },
                       child: Container(
                         margin: EdgeInsets.only(top: 8.0),
@@ -139,7 +144,7 @@ class _AtividadeQuizState extends State<AtividadeQuiz> {
                                 width: 2.5
                             ),
                             borderRadius: BorderRadius.circular(18.0),
-                          //color: Color(this._color) TODO: FAZER WIDGETS SEPARADOS PRA CADA UM TER O ESTADO
+                          color: index == _indiceListView? _cor : Colors.transparent
                         ),
                         child: Text("${_perguntasQuiz[_count].respostas[index]}",
                             style: TextStyle(
@@ -153,6 +158,7 @@ class _AtividadeQuizState extends State<AtividadeQuiz> {
 
               ),
               Divider(height: 25.0),
+              (_count +1) < _perguntasQuiz.length?
               ElevatedButton(
                   onPressed: () {
                     if(_acertou) {
@@ -164,7 +170,21 @@ class _AtividadeQuizState extends State<AtividadeQuiz> {
                     attCount();
                   },
                   child: Text("Próximo")
-              )
+              ):
+                  ElevatedButton(
+                      onPressed: () {
+                        if(_acertou) {
+                          setState(() {
+                            _pontos ++;
+                          });
+                          print(_pontos);
+                        }
+
+                        Navigator.of(context).pushNamed(
+                            Routes.pontuacaoQuiz,
+                        arguments: _pontos);
+                      },
+                      child: Text("Finalizar"))
             ],
           ),
         )

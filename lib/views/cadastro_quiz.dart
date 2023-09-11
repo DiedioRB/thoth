@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
+import 'package:thoth/models/topico.dart';
 
 class CadastroQuiz extends StatefulWidget {
   const CadastroQuiz({super.key});
@@ -15,6 +16,9 @@ class CQuizzesState extends State<CadastroQuiz> {
   List<Quiz> cQuizzes = [];
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
+
+  List<DropdownMenuItem<Topico>> topicos = [];
+  Topico? topico;
 
   Quiz novoQuiz = Quiz(nome: "", perguntasReferences: [], id: null);
   late FormBuilder formBuilder;
@@ -37,6 +41,23 @@ class CQuizzesState extends State<CadastroQuiz> {
               })
             }
         });
+
+    fetchTopicos();
+  }
+
+  fetchTopicos() async {
+    List<Topico> topicos = await Topico.todos();
+    this.topicos.clear();
+    for (var topico in topicos) {
+      this.topicos.add(DropdownMenuItem(
+            value: topico,
+            key: Key(topico.id.toString()),
+            child: Text(topico.descricao),
+          ));
+    }
+    setState(() {
+      topico = topicos[0];
+    });
   }
 
   void nQuiz(context) async {
@@ -59,6 +80,17 @@ class CQuizzesState extends State<CadastroQuiz> {
         child: Column(
           children: [
             formBuilder.build(),
+            DropdownButton<Topico>(
+                disabledHint: const Text("Selecione..."),
+                items: topicos,
+                onChanged: (Topico? topico) {
+                  if (topico != null) {
+                    setState(() {
+                      this.topico = topico;
+                    });
+                  }
+                },
+                value: topico),
             Expanded(
               child: ListView.builder(
                   itemCount: todasPerguntas.length,

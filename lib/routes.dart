@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:thoth/models/tema.dart';
+import 'package:thoth/models/topico.dart';
 import 'package:thoth/views/cadastro_usuario.dart';
 import 'package:thoth/views/cadastro_tema.dart';
 import 'package:thoth/views/cadastro_topico.dart';
@@ -25,17 +27,19 @@ class Routes {
   static const String cadastroPerguntas = "perguntas/cadastro";
   //static const String editarQuiz = "/quizzes/editar"; - Comentado para verificar a necessidade
 
-  static var routes = <String, WidgetBuilder>{
-    home: (context) => const Login(),
-    login: (context) => const Login(),
-    cadastroUsuario: (context) => CadastroUsuario(),
-    menu: (context) => const Menu(),
-    quizzes: (context) => const Quizzes(),
-    cadastroQuiz: (context) => const CadastroQuiz(),
-    temas: (context) => const Temas(),
-    cadastroTema: (context) => const CadastroTema(),
-    topicos: (context) => const Topicos(),
-    cadastroTopico: (context) => const CadastroTopico(),
-    cadastroPerguntas: (context) => CadastroPerguntas()
-  };
+  static routes(RouteSettings settings) {
+    return <String, WidgetBuilder>{
+      home: (context) => const Login(),
+      login: (context) => const Login(),
+      cadastroUsuario: (context) => CadastroUsuario(),
+      menu: (context) => const Menu(),
+      quizzes: (context) => Quizzes(topico: settings.arguments as Topico?),
+      cadastroQuiz: (context) => const CadastroQuiz(),
+      temas: (context) => const Temas(),
+      cadastroTema: (context) => const CadastroTema(),
+      topicos: (context) => Topicos(tema: settings.arguments as Tema?),
+      cadastroTopico: (context) => const CadastroTopico(),
+      cadastroPerguntas: (context) => CadastroPerguntas()
+    };
+  }
 }

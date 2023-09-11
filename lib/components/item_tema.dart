@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/topico.dart';
 import 'package:thoth/models/tema.dart';
-import 'package:thoth/models/topico.dart';
+import 'package:thoth/routes.dart';
 
 class ItemTema extends StatefulWidget {
-  ItemTema({super.key, required this.tema, this.modifiable = false});
+  const ItemTema({super.key, required this.tema, required this.modifiable});
 
   final Tema tema;
-  bool modifiable;
+  final bool modifiable;
 
   @override
   State<ItemTema> createState() => _ItemTemaState();
@@ -129,21 +129,22 @@ class _ItemTemaState extends State<ItemTema> {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.tema.descricao),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () => _updateModal(context)),
-          IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () => _deleteModal(context)),
-        ],
-      ),
+      trailing: (widget.modifiable)
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () => _updateModal(context)),
+                IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => _deleteModal(context)),
+              ],
+            )
+          : null,
       enabled: true,
       onTap: () {
-        //TODO: navegar para os tópicos do tema
-        print("Visitar tópicos");
+        Navigator.of(context).pushNamed(Routes.topicos, arguments: widget.tema);
       },
     );
   }

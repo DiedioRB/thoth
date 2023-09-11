@@ -4,13 +4,13 @@ import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
-import 'package:thoth/models/pergunta.dart';
+import 'package:thoth/routes.dart';
 
 class ItemTopico extends StatefulWidget {
-  ItemTopico({super.key, required this.topico, this.modifiable = false});
+  const ItemTopico({super.key, required this.topico, required this.modifiable});
 
   final Topico topico;
-  bool modifiable;
+  final bool modifiable;
 
   @override
   State<ItemTopico> createState() => _ItemTopicoState();
@@ -152,7 +152,6 @@ class _ItemTopicoState extends State<ItemTopico> {
             key: Key(tema.id.toString()),
             child: Text(tema.descricao),
           ));
-      print(tema.descricao);
     }
 
     setState(() {});
@@ -162,17 +161,24 @@ class _ItemTopicoState extends State<ItemTopico> {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.topico.descricao),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () => _updateModal(context)),
-          IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () => _deleteModal(context)),
-        ],
-      ),
+      trailing: (widget.modifiable)
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () => _updateModal(context)),
+                IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => _deleteModal(context)),
+              ],
+            )
+          : null,
+      enabled: true,
+      onTap: () {
+        Navigator.of(context)
+            .pushNamed(Routes.quizzes, arguments: widget.topico);
+      },
     );
   }
 }

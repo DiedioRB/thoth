@@ -60,7 +60,10 @@ class _TemasState extends State<Temas> {
                 modifiable: true,
               ),
               itemBuilder: (context, index) {
-                return ItemTema(tema: _temas[index]);
+                return ItemTema(
+                  tema: _temas[index],
+                  modifiable: true,
+                );
               })),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

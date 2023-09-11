@@ -11,6 +11,7 @@ class Quiz {
   String nome;
   final List<DocumentReference> perguntasReferences;
   final List<Pergunta> _perguntas = [];
+  final int? quantidadePerguntas;
   DocumentReference? topicoReference;
   Topico? _topico;
 
@@ -27,6 +28,7 @@ class Quiz {
   Quiz(
       {required this.nome,
       required this.perguntasReferences,
+      this.quantidadePerguntas,
       this.id,
       this.topicoReference});
 

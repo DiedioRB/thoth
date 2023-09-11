@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
+import 'package:thoth/routes.dart';
 import 'package:thoth/models/topico.dart';
 
 class ItemQuiz extends StatefulWidget {

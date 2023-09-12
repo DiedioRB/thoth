@@ -47,7 +47,8 @@ class Routes {
       cadastroTopico: (context) => const CadastroTopico(),
       cadastroPerguntas: (context) => CadastroPerguntas(),
       atividadeQuiz: (context) => const AtividadeQuiz(),
-      pontuacaoQuiz: (context) => PontuacaoQuiz(),
+      pontuacaoQuiz: (context) =>
+          PontuacaoQuiz(pontos: settings.arguments as int?),
     };
   }
 }

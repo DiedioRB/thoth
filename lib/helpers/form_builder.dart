@@ -14,13 +14,17 @@ class FormBuilder {
 
   void addField(ItemForm item) {
     _items.add(item);
-    _fields.add(_createTextFormField(item));
+    if (item.type == ItemFormTypes.text) {
+      _fields.add(_createTextFormField(item));
+    }
   }
 
   void addFields(List<ItemForm> items) {
     for (ItemForm item in items) {
       _items.add(item);
-      _fields.add(_createTextFormField(item));
+      if (item.type == ItemFormTypes.text) {
+        _fields.add(_createTextFormField(item));
+      }
     }
   }
 
@@ -36,6 +40,7 @@ class FormBuilder {
 
     newController.addListener(() {
       String val = newController.text;
+      print(val);
       _values.update(
         item.descricaoForm,
         (value) => val,

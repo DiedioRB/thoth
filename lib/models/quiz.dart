@@ -2,41 +2,43 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/models/interfaces/item_form.dart';
 import 'package:thoth/models/pergunta.dart';
-import 'package:thoth/models/tema.dart';
+import 'package:thoth/models/topico.dart';
 
-class Topico {
-  static const String collection = "topicos";
+class Quiz {
+  static const String collection = "quizzes";
 
   final DocumentReference? id;
-  String descricao;
+  String nome;
   final List<DocumentReference> perguntasReferences;
   final List<Pergunta> _perguntas = [];
-  DocumentReference? temaReference;
-  Tema? _tema;
+  final int? quantidadePerguntas;
+  DocumentReference? topicoReference;
+  Topico? _topico;
 
-  static List<ItemForm> getFields({Topico? topico}) {
+  static List<ItemForm> getFields({Quiz? quiz}) {
     return [
       ItemForm.build(
           descricao: "nome",
-          valor: topico?.descricao,
+          valor: quiz?.nome,
           icon: const Icon(Icons.edit),
           modificadores: [ItemFormModifiers.naoNulo]),
     ];
   }
 
-  Topico(
-      {required this.descricao,
+  Quiz(
+      {required this.nome,
       required this.perguntasReferences,
+      this.quantidadePerguntas,
       this.id,
-      this.temaReference});
+      this.topicoReference});
 
   static CollectionReference getCollection(FirebaseFirestore db) {
-    return db.collection(collection).withConverter<Topico>(
-        fromFirestore: Topico.fromFirestore,
-        toFirestore: (Topico item, _) => item.toFirestore());
+    return db.collection(collection).withConverter<Quiz>(
+        fromFirestore: Quiz.fromFirestore,
+        toFirestore: (Quiz item, _) => item.toFirestore());
   }
 
-  factory Topico.fromFirestore(
+  factory Quiz.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
@@ -45,18 +47,18 @@ class Topico {
     for (var pergunta in data?['perguntas']) {
       perguntas.add(pergunta);
     }
-    return Topico(
-        descricao: data?['descricao'],
+    return Quiz(
+        nome: data?['nome'],
         perguntasReferences: perguntas,
         id: snapshot.reference,
-        temaReference: data?['tema']);
+        topicoReference: data?['topico']);
   }
 
   Map<String, dynamic> toFirestore() {
     return {
-      "descricao": descricao,
+      "nome": nome,
       "perguntas": perguntasReferences,
-      "tema": temaReference
+      "topico": topicoReference
     };
   }
 
@@ -75,15 +77,15 @@ class Topico {
     return _perguntas;
   }
 
-  Future<Tema?> get tema async {
-    if (_tema == null && temaReference != null) {
+  Future<Topico?> get tema async {
+    if (_topico == null && topicoReference != null) {
       FirebaseFirestore db = FirebaseFirestore.instance;
-      await Tema.getCollection(db)
-          .where(FieldPath.documentId, isEqualTo: temaReference)
+      await Topico.getCollection(db)
+          .where(FieldPath.documentId, isEqualTo: topicoReference)
           .get()
-          .then((value) => {_tema = value.docs.first.data() as Tema});
+          .then((value) => {_topico = value.docs.first.data() as Topico});
     }
-    return _tema;
+    return _topico;
   }
 
   atualizaReferencias(List<Pergunta> perguntas) {
@@ -95,28 +97,16 @@ class Topico {
 
   create() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Topico.getCollection(db).doc(id?.id).set(this);
+    Quiz.getCollection(db).doc(id?.id).set(this);
   }
 
   update() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Topico.getCollection(db).doc(id?.id).update(toFirestore());
+    Quiz.getCollection(db).doc(id?.id).update(toFirestore());
   }
 
   delete() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Topico.getCollection(db).doc(id?.id).delete();
-  }
-
-  static Future<List<Topico>> todos() async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    List<Topico> topicos = [];
-    await getCollection(db).get().then((value) {
-      topicos.clear();
-      for (var topico in value.docs) {
-        topicos.add(topico.data() as Topico);
-      }
-    });
-    return topicos;
+    Quiz.getCollection(db).doc(id?.id).delete();
   }
 }

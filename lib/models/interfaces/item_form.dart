@@ -2,15 +2,22 @@ import 'package:flutter/widgets.dart';
 
 enum ItemFormModifiers { naoNulo, senha }
 
+enum ItemFormTypes { text, select, checks }
+
 class ItemForm {
   final String descricaoForm;
   dynamic valor;
   final Icon? icon;
   String? Function(String? value)? validator;
   List<ItemFormModifiers> modificadores = [];
+  ItemFormTypes type;
 
   ItemForm(
-      {required this.descricaoForm, this.valor, this.icon, this.validator});
+      {required this.descricaoForm,
+      this.valor,
+      this.icon,
+      this.validator,
+      this.type = ItemFormTypes.text});
 
   addModifiers(List<ItemFormModifiers> modificadores) {
     this.modificadores.addAll(modificadores);

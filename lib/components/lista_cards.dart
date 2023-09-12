@@ -1,6 +1,7 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/models/pergunta.dart';
+import 'package:thoth/tema_app.dart';
 
 class ListaCards extends StatelessWidget {
   final List<Pergunta> perguntas;
@@ -22,7 +23,7 @@ class ListaCards extends StatelessWidget {
                   side: CardSide.FRONT,
                   front: Container(
                     decoration: BoxDecoration(
-                        color: Colors.indigo.shade900,
+                        color: TemaApp.darkSecondary,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8.0))),
                     child: Center(
@@ -34,7 +35,7 @@ class ListaCards extends StatelessWidget {
                   ),
                   back: Container(
                     decoration: BoxDecoration(
-                        color: Colors.indigo.shade300,
+                        color: TemaApp.lightPrimary,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8.0))),
                     child: Center(

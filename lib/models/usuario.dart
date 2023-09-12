@@ -9,11 +9,12 @@ import 'package:thoth/models/interfaces/item_form_model.dart';
 class Usuario implements ItemFormModel {
   static const String collection = "usuarios";
 
+  final DocumentReference? id;
   final String nome;
   final String email;
   final List<String> salas;
 
-  static List<ItemForm> getFields({Usuario? usuario}) {
+  static List<ItemForm> getFieldsCadastro({Usuario? usuario}) {
     return [
       ItemForm.build(
           descricao: "nome",
@@ -32,10 +33,25 @@ class Usuario implements ItemFormModel {
     ];
   }
 
+  static List<ItemForm> getFieldsLogin({Usuario? usuario}) {
+    return [
+      ItemForm.build(
+          descricao: "email",
+          valor: usuario?.email,
+          icon: const Icon(Icons.email),
+          modificadores: [ItemFormModifiers.naoNulo]),
+      ItemForm.build(
+          descricao: "senha",
+          icon: const Icon(Icons.password),
+          modificadores: [ItemFormModifiers.naoNulo, ItemFormModifiers.senha])
+    ];
+  }
+
   Usuario({
     required this.nome,
     required this.email,
     required this.salas,
+    this.id,
   });
 
   static Future<Usuario?> login(String email, String senha) async {
@@ -84,7 +100,8 @@ class Usuario implements ItemFormModel {
     return Usuario(
         nome: data?['nome'],
         email: data?['email'],
-        salas: (data?['salas'] is Iterable) ? List.from(data?['salas']) : []);
+        salas: (data?['salas'] is Iterable) ? List.from(data?['salas']) : [],
+        id: snapshot.reference);
   }
 
   Map<String, dynamic> toFirestore() {
@@ -93,6 +110,21 @@ class Usuario implements ItemFormModel {
       "email": email,
       "salas": salas,
     };
+  }
+
+  create({required String uid}) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Usuario.getCollection(db).doc(uid).set(this);
+  }
+
+  update() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Usuario.getCollection(db).doc(id?.id).update(toFirestore());
+  }
+
+  delete() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Usuario.getCollection(db).doc(id?.id).delete();
   }
 
   @override

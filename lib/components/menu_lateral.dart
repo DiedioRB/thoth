@@ -7,20 +7,19 @@ class MenuLateral extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.zero,
-      children: [
+      children: const [
         DrawerHeader(
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.inversePrimary),
-            child: const Text("Thoth")),
-        const ListTile(
+          child: Text("Thoth"),
+        ),
+        ListTile(
           title: Text("Temas"),
           leading: Icon(Icons.collections_bookmark),
         ),
-        const ListTile(
+        ListTile(
           title: Text("Rankings"),
           leading: Icon(Icons.trending_up),
         ),
-        const ListTile(
+        ListTile(
           title: Text("Salas de aula"),
           leading: Icon(Icons.school),
         )

@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:thoth/models/usuario.dart';
 
 class AuthHelper {
   static Future<User?> registerUsingEmailAndPassword(
@@ -15,19 +15,24 @@ class AuthHelper {
     await user.reload();
     user = auth.currentUser;
 
-    saveUser(name: nome, email: email, uid: FirebaseAuth.instance.currentUser!.uid);
+    saveUser(
+        name: nome, email: email, uid: FirebaseAuth.instance.currentUser!.uid);
 
     return user;
   }
 
-  static void saveUser({required String name, required String email, required String uid}) async {
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  static void saveUser(
+      {required String name,
+      required String email,
+      required String uid}) async {
+    // final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    firestore.collection('usuarios').doc(uid).set({
-      'nome':name,
-      'email':email,
-    });
-
+    Usuario usuario = Usuario(nome: name, email: email, salas: []);
+    usuario.create(uid: uid);
+    // firestore.collection('usuarios').doc(uid).set({
+    //   'nome': name,
+    //   'email': email,
+    // });
   }
 
   static Future<User?> signIn(

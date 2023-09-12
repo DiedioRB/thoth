@@ -3,14 +3,15 @@ import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/tema.dart';
 
 class Flashcard {
-  //TODO: corrigir a obtenção para puxar o tema e as perguntas automaticamente
-  //TODO: criar decks e tópicos
   static const String collection = "flashcards";
 
-  final Tema tema;
-  final List<Pergunta> perguntas;
+  final DocumentReference? id;
+  final DocumentReference tema;
+  final List<DocumentReference> perguntasReferences;
+  Tema? _tema;
+  final List<Pergunta> _perguntas = [];
 
-  Flashcard({required this.tema, required this.perguntas});
+  Flashcard({required this.tema, required this.perguntasReferences, this.id});
 
   static CollectionReference getCollection(FirebaseFirestore db) {
     return db.collection(collection).withConverter<Flashcard>(
@@ -23,22 +24,62 @@ class Flashcard {
     SnapshotOptions? options,
   ) {
     final data = snapshot.data();
+    List<DocumentReference> perguntas = [];
+    for (var pergunta in data?['perguntas']) {
+      perguntas.add(pergunta);
+    }
     return Flashcard(
         tema: data?['tema'],
-        perguntas: (data?['perguntas'] is Iterable)
-            ? List.from(data?['respostas'])
-            : []);
+        perguntasReferences: perguntas,
+        id: snapshot.reference);
   }
 
   Map<String, dynamic> toFirestore() {
     return {
       "tema": tema,
-      "perguntas": perguntas,
+      "perguntas": perguntasReferences,
     };
+  }
+
+  Future<List<Pergunta>> get perguntas async {
+    if (_perguntas.isEmpty && perguntasReferences.isNotEmpty) {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      await Pergunta.getCollection(db)
+          .where(FieldPath.documentId, whereIn: perguntasReferences)
+          .get()
+          .then((value) => {
+                _perguntas.clear(),
+                for (var pergunta in value.docs)
+                  {_perguntas.add(pergunta.data() as Pergunta)}
+              });
+    }
+    return _perguntas;
+  }
+
+  atualizaReferencias(List<Pergunta> perguntas) {
+    perguntasReferences.clear();
+    for (var pergunta in perguntas) {
+      perguntasReferences.add(pergunta.id!);
+    }
+  }
+
+  create() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Flashcard.getCollection(db).doc(id?.id).set(this);
+  }
+
+  update() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Flashcard.getCollection(db).doc(id?.id).update(toFirestore());
+  }
+
+  delete() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Flashcard.getCollection(db).doc(id?.id).delete();
   }
 
   @override
   String toString() {
-    return "${tema.descricao}: ${perguntas.length} respostas";
+    return "${_tema?.descricao}: ${perguntasReferences.length} respostas";
   }
 }

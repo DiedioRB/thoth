@@ -1,40 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
-import 'package:thoth/models/pergunta.dart';
-import 'package:thoth/models/quiz.dart';
-import 'package:thoth/routes.dart';
 import 'package:thoth/models/topico.dart';
+import 'package:thoth/models/tema.dart';
+import 'package:thoth/routes.dart';
 
-class ItemQuiz extends StatefulWidget {
-  const ItemQuiz({super.key, required this.quiz, required this.modifiable});
+class ItemTema extends StatefulWidget {
+  const ItemTema({super.key, required this.tema, required this.modifiable});
 
-  final Quiz quiz;
+  final Tema tema;
   final bool modifiable;
 
   @override
-  State<ItemQuiz> createState() => _ItemQuizState();
+  State<ItemTema> createState() => _ItemTemaState();
 }
 
 List<bool> exists = [];
 
-class _ItemQuizState extends State<ItemQuiz> {
-  List<Pergunta> todasPerguntas = [];
-  List<Pergunta> perguntas = [];
-
-  List<DropdownMenuItem<Topico>> topicos = [];
-  Topico? topico;
+class _ItemTemaState extends State<ItemTema> {
+  List<Topico> todosTopicos = [];
+  List<Topico> topicos = [];
 
   void _updateModal(context) async {
-    FormBuilder _form = FormBuilder(Quiz.getFields(quiz: widget.quiz));
+    FormBuilder _form = FormBuilder(Tema.getFields(tema: widget.tema));
     FirebaseFirestore db = FirebaseFirestore.instance;
-    await Pergunta.getCollection(db).get().then((value) => {
-          todasPerguntas.clear(),
-          for (var pergunta in value.docs)
-            {todasPerguntas.add(pergunta.data() as Pergunta)}
+    await Topico.getCollection(db).get().then((value) => {
+          todosTopicos.clear(),
+          for (var topico in value.docs)
+            {todosTopicos.add(topico.data() as Topico)}
         });
-    perguntas = await widget.quiz.perguntas;
-    await fetchTopicos();
+    topicos = await widget.tema.topicos;
 
     showDialog(
       context: context,
@@ -48,35 +43,24 @@ class _ItemQuizState extends State<ItemQuiz> {
                   child: Column(
                     children: [
                       _form.build(),
-                      DropdownButton<Topico>(
-                          disabledHint: const Text("Selecione..."),
-                          items: topicos,
-                          onChanged: (Topico? topico) {
-                            if (topico != null) {
-                              setState(() {
-                                this.topico = topico;
-                              });
-                            }
-                          },
-                          value: topico),
                       Expanded(
                         child: ListView.builder(
-                            itemCount: todasPerguntas.length,
+                            itemCount: todosTopicos.length,
                             itemBuilder: (context, index) {
-                              Pergunta p = todasPerguntas[index];
+                              Topico t = todosTopicos[index];
                               return CheckboxListTile(
-                                title: Text(p.pergunta),
-                                value: perguntas.any(
-                                  (element) => element.id == p.id,
+                                title: Text(t.descricao),
+                                value: topicos.any(
+                                  (element) => element.id == t.id,
                                 ),
                                 onChanged: (value) => {
                                   setState(() {
                                     if (value == false) {
-                                      perguntas.removeWhere((element) {
-                                        return element.id == p.id;
+                                      topicos.removeWhere((element) {
+                                        return element.id == t.id;
                                       });
                                     } else {
-                                      perguntas.add(p);
+                                      topicos.add(t);
                                     }
                                   })
                                 },
@@ -87,14 +71,13 @@ class _ItemQuizState extends State<ItemQuiz> {
                         children: [
                           TextButton(
                               onPressed: () async {
-                                widget.quiz.nome = _form.values['nome'];
-                                widget.quiz.topicoReference = topico?.id;
-                                widget.quiz.atualizaReferencias(perguntas);
-                                widget.quiz.update();
+                                widget.tema.descricao = _form.values['nome'];
+                                widget.tema.atualizaReferencias(topicos);
+                                widget.tema.update();
                                 ScaffoldMessenger.maybeOf(context)
                                     ?.showSnackBar(const SnackBar(
                                         content: Text(
-                                            "Quiz atualizado com sucesso!")));
+                                            "Tema atualizado com sucesso!")));
                                 Navigator.of(context).pop();
                               },
                               child: const Text("Salvar")),
@@ -119,8 +102,8 @@ class _ItemQuizState extends State<ItemQuiz> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Excluir quiz?"),
-          content: const Text("Isso irá remover o quiz do sistema!"),
+          title: const Text("Excluir tema?"),
+          content: const Text("Isso irá remover o tema do sistema!"),
           actions: [
             TextButton(
                 onPressed: () {
@@ -129,10 +112,10 @@ class _ItemQuizState extends State<ItemQuiz> {
                 child: const Text("Não")),
             TextButton(
                 onPressed: () {
-                  widget.quiz.delete();
+                  widget.tema.delete();
                   ScaffoldMessenger.maybeOf(context)?.showSnackBar(
                       const SnackBar(
-                          content: Text("Quiz excluído com sucesso!")));
+                          content: Text("Tema excluído com sucesso!")));
                   Navigator.of(context).pop();
                 },
                 child: const Text("Sim")),
@@ -142,29 +125,20 @@ class _ItemQuizState extends State<ItemQuiz> {
     );
   }
 
-  fetchTopicos() async {
-    List<Topico> topicos = await Topico.todos();
-    topico = null;
-    this.topicos.clear();
-    for (var topico in topicos) {
-      this.topicos.add(DropdownMenuItem(
-            value: topico,
-            key: Key(topico.id.toString()),
-            child: Text(topico.descricao),
-          ));
-    }
-
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(widget.quiz.nome),
+      title: Text(widget.tema.descricao),
       trailing: (widget.modifiable)
           ? Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                IconButton(
+                    icon: const Icon(Icons.featured_play_list),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(Routes.flashcards, arguments: widget.tema);
+                    }),
                 IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () => _updateModal(context)),
@@ -174,8 +148,9 @@ class _ItemQuizState extends State<ItemQuiz> {
               ],
             )
           : null,
+      enabled: true,
       onTap: () {
-        Navigator.of(context).pushNamed(Routes.atividadeQuiz);
+        Navigator.of(context).pushNamed(Routes.topicos, arguments: widget.tema);
       },
     );
   }

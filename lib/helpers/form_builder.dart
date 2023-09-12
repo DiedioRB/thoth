@@ -40,6 +40,7 @@ class FormBuilder {
 
     newController.addListener(() {
       String val = newController.text;
+      print(val);
       _values.update(
         item.descricaoForm,
         (value) => val,

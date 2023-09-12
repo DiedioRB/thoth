@@ -1,11 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:thoth/models/interfaces/item_form.dart';
+import 'package:thoth/models/pergunta.dart';
+import 'package:thoth/models/tema.dart';
 
 class Topico {
   static const String collection = "topicos";
 
-  final String nome;
+  final DocumentReference? id;
+  String descricao;
+  final List<DocumentReference> perguntasReferences;
+  final List<Pergunta> _perguntas = [];
+  DocumentReference? temaReference;
+  Tema? _tema;
 
-  Topico({required this.nome});
+  static List<ItemForm> getFields({Topico? topico}) {
+    return [
+      ItemForm.build(
+          descricao: "nome",
+          valor: topico?.descricao,
+          icon: const Icon(Icons.edit),
+          modificadores: [ItemFormModifiers.naoNulo]),
+    ];
+  }
+
+  Topico(
+      {required this.descricao,
+      required this.perguntasReferences,
+      this.id,
+      this.temaReference});
 
   static CollectionReference getCollection(FirebaseFirestore db) {
     return db.collection(collection).withConverter<Topico>(
@@ -18,12 +41,82 @@ class Topico {
     SnapshotOptions? options,
   ) {
     final data = snapshot.data();
-    return Topico(nome: data?['nome']);
+    List<DocumentReference> perguntas = [];
+    for (var pergunta in data?['perguntas']) {
+      perguntas.add(pergunta);
+    }
+    return Topico(
+        descricao: data?['descricao'],
+        perguntasReferences: perguntas,
+        id: snapshot.reference,
+        temaReference: data?['tema']);
   }
 
   Map<String, dynamic> toFirestore() {
     return {
-      "nome": nome,
+      "descricao": descricao,
+      "perguntas": perguntasReferences,
+      "tema": temaReference
     };
+  }
+
+  Future<List<Pergunta>> get perguntas async {
+    if (_perguntas.isEmpty && perguntasReferences.isNotEmpty) {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      await Pergunta.getCollection(db)
+          .where(FieldPath.documentId, whereIn: perguntasReferences)
+          .get()
+          .then((value) => {
+                _perguntas.clear(),
+                for (var pergunta in value.docs)
+                  {_perguntas.add(pergunta.data() as Pergunta)}
+              });
+    }
+    return _perguntas;
+  }
+
+  Future<Tema?> get tema async {
+    if (_tema == null && temaReference != null) {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      await Tema.getCollection(db)
+          .where(FieldPath.documentId, isEqualTo: temaReference)
+          .get()
+          .then((value) => {_tema = value.docs.first.data() as Tema});
+    }
+    return _tema;
+  }
+
+  atualizaReferencias(List<Pergunta> perguntas) {
+    perguntasReferences.clear();
+    for (var pergunta in perguntas) {
+      perguntasReferences.add(pergunta.id!);
+    }
+  }
+
+  create() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Topico.getCollection(db).doc(id?.id).set(this);
+  }
+
+  update() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Topico.getCollection(db).doc(id?.id).update(toFirestore());
+  }
+
+  delete() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Topico.getCollection(db).doc(id?.id).delete();
+  }
+
+  static Future<List<Topico>> todos() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    List<Topico> topicos = [];
+    await getCollection(db).get().then((value) {
+      topicos.clear();
+      for (var topico in value.docs) {
+        topicos.add(topico.data() as Topico);
+      }
+    });
+    return topicos;
   }
 }

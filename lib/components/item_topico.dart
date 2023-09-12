@@ -2,39 +2,39 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
-import 'package:thoth/models/quiz.dart';
-import 'package:thoth/routes.dart';
+import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
+import 'package:thoth/routes.dart';
 
-class ItemQuiz extends StatefulWidget {
-  const ItemQuiz({super.key, required this.quiz, required this.modifiable});
+class ItemTopico extends StatefulWidget {
+  const ItemTopico({super.key, required this.topico, required this.modifiable});
 
-  final Quiz quiz;
+  final Topico topico;
   final bool modifiable;
 
   @override
-  State<ItemQuiz> createState() => _ItemQuizState();
+  State<ItemTopico> createState() => _ItemTopicoState();
 }
 
 List<bool> exists = [];
 
-class _ItemQuizState extends State<ItemQuiz> {
+class _ItemTopicoState extends State<ItemTopico> {
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
 
-  List<DropdownMenuItem<Topico>> topicos = [];
-  Topico? topico;
+  List<DropdownMenuItem<Tema>> temas = [];
+  Tema? tema;
 
   void _updateModal(context) async {
-    FormBuilder _form = FormBuilder(Quiz.getFields(quiz: widget.quiz));
+    FormBuilder _form = FormBuilder(Topico.getFields(topico: widget.topico));
     FirebaseFirestore db = FirebaseFirestore.instance;
     await Pergunta.getCollection(db).get().then((value) => {
           todasPerguntas.clear(),
           for (var pergunta in value.docs)
             {todasPerguntas.add(pergunta.data() as Pergunta)}
         });
-    perguntas = await widget.quiz.perguntas;
-    await fetchTopicos();
+    perguntas = await widget.topico.perguntas;
+    await fetchTemas();
 
     showDialog(
       context: context,
@@ -48,17 +48,17 @@ class _ItemQuizState extends State<ItemQuiz> {
                   child: Column(
                     children: [
                       _form.build(),
-                      DropdownButton<Topico>(
+                      DropdownButton<Tema>(
                           disabledHint: const Text("Selecione..."),
-                          items: topicos,
-                          onChanged: (Topico? topico) {
-                            if (topico != null) {
+                          items: temas,
+                          onChanged: (Tema? tema) {
+                            if (tema != null) {
                               setState(() {
-                                this.topico = topico;
+                                this.tema = tema;
                               });
                             }
                           },
-                          value: topico),
+                          value: tema),
                       Expanded(
                         child: ListView.builder(
                             itemCount: todasPerguntas.length,
@@ -87,14 +87,14 @@ class _ItemQuizState extends State<ItemQuiz> {
                         children: [
                           TextButton(
                               onPressed: () async {
-                                widget.quiz.nome = _form.values['nome'];
-                                widget.quiz.topicoReference = topico?.id;
-                                widget.quiz.atualizaReferencias(perguntas);
-                                widget.quiz.update();
+                                widget.topico.descricao = _form.values['nome'];
+                                widget.topico.temaReference = tema?.id;
+                                widget.topico.atualizaReferencias(perguntas);
+                                widget.topico.update();
                                 ScaffoldMessenger.maybeOf(context)
                                     ?.showSnackBar(const SnackBar(
                                         content: Text(
-                                            "Quiz atualizado com sucesso!")));
+                                            "Topico atualizado com sucesso!")));
                                 Navigator.of(context).pop();
                               },
                               child: const Text("Salvar")),
@@ -119,8 +119,8 @@ class _ItemQuizState extends State<ItemQuiz> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Excluir quiz?"),
-          content: const Text("Isso irá remover o quiz do sistema!"),
+          title: const Text("Excluir topico?"),
+          content: const Text("Isso irá remover o topico do sistopico!"),
           actions: [
             TextButton(
                 onPressed: () {
@@ -129,10 +129,10 @@ class _ItemQuizState extends State<ItemQuiz> {
                 child: const Text("Não")),
             TextButton(
                 onPressed: () {
-                  widget.quiz.delete();
+                  widget.topico.delete();
                   ScaffoldMessenger.maybeOf(context)?.showSnackBar(
                       const SnackBar(
-                          content: Text("Quiz excluído com sucesso!")));
+                          content: Text("Topico excluído com sucesso!")));
                   Navigator.of(context).pop();
                 },
                 child: const Text("Sim")),
@@ -142,15 +142,15 @@ class _ItemQuizState extends State<ItemQuiz> {
     );
   }
 
-  fetchTopicos() async {
-    List<Topico> topicos = await Topico.todos();
-    topico = null;
-    this.topicos.clear();
-    for (var topico in topicos) {
-      this.topicos.add(DropdownMenuItem(
-            value: topico,
-            key: Key(topico.id.toString()),
-            child: Text(topico.descricao),
+  fetchTemas() async {
+    List<Tema> temas = await Tema.todos();
+    tema = null;
+    this.temas.clear();
+    for (var tema in temas) {
+      this.temas.add(DropdownMenuItem(
+            value: tema,
+            key: Key(tema.id.toString()),
+            child: Text(tema.descricao),
           ));
     }
 
@@ -160,7 +160,7 @@ class _ItemQuizState extends State<ItemQuiz> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(widget.quiz.nome),
+      title: Text(widget.topico.descricao),
       trailing: (widget.modifiable)
           ? Row(
               mainAxisSize: MainAxisSize.min,
@@ -174,8 +174,10 @@ class _ItemQuizState extends State<ItemQuiz> {
               ],
             )
           : null,
+      enabled: true,
       onTap: () {
-        Navigator.of(context).pushNamed(Routes.atividadeQuiz);
+        Navigator.of(context)
+            .pushNamed(Routes.quizzes, arguments: widget.topico);
       },
     );
   }

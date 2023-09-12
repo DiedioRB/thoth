@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
+import 'package:thoth/models/topico.dart';
 
 class CadastroQuiz extends StatefulWidget {
-  const CadastroQuiz ({super.key});
+  const CadastroQuiz({super.key});
 
   @override
   State<CadastroQuiz> createState() => CQuizzesState();
@@ -15,6 +16,9 @@ class CQuizzesState extends State<CadastroQuiz> {
   List<Quiz> cQuizzes = [];
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
+
+  List<DropdownMenuItem<Topico>> topicos = [];
+  Topico? topico;
 
   Quiz novoQuiz = Quiz(nome: "", perguntasReferences: [], id: null);
   late FormBuilder formBuilder;
@@ -29,36 +33,64 @@ class CQuizzesState extends State<CadastroQuiz> {
 
     FirebaseFirestore db = FirebaseFirestore.instance;
     Quiz.getCollection(db).get().then((value) => {
-      if (value.docs.isNotEmpty)
-        {
-          for (var quiz in value.docs) {quizzes.add(quiz.data() as Quiz)},
-          setState(() {
-            cQuizzes = quizzes;
-          })
-        }
+          if (value.docs.isNotEmpty)
+            {
+              for (var quiz in value.docs) {quizzes.add(quiz.data() as Quiz)},
+              setState(() {
+                cQuizzes = quizzes;
+              })
+            }
+        });
+
+    fetchTopicos();
+  }
+
+  fetchTopicos() async {
+    List<Topico> topicos = await Topico.todos();
+    this.topicos.clear();
+    for (var topico in topicos) {
+      this.topicos.add(DropdownMenuItem(
+            value: topico,
+            key: Key(topico.id.toString()),
+            child: Text(topico.descricao),
+          ));
+    }
+    setState(() {
+      topico = topicos[0];
     });
   }
 
   void nQuiz(context) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     await Pergunta.getCollection(db).get().then((value) => {
-      for (var pergunta in value.docs)
-        {todasPerguntas.add(pergunta.data() as Pergunta)}
-    });
+          todasPerguntas.clear(),
+          for (var pergunta in value.docs)
+            {todasPerguntas.add(pergunta.data() as Pergunta)}
+        });
   }
 
   @override
-  Widget build(BuildContext context){
-    nQuiz (context);
+  Widget build(BuildContext context) {
+    nQuiz(context);
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text ("Criar Quiz"),
-        ),
+      appBar: AppBar(
+        title: const Text("Criar Quiz"),
+      ),
       body: Center(
         child: Column(
           children: [
             formBuilder.build(),
+            DropdownButton<Topico>(
+                disabledHint: const Text("Selecione..."),
+                items: topicos,
+                onChanged: (Topico? topico) {
+                  if (topico != null) {
+                    setState(() {
+                      this.topico = topico;
+                    });
+                  }
+                },
+                value: topico),
             Expanded(
               child: ListView.builder(
                   itemCount: todasPerguntas.length,
@@ -67,13 +99,13 @@ class CQuizzesState extends State<CadastroQuiz> {
                     return CheckboxListTile(
                       title: Text(p.pergunta),
                       value: perguntas.any(
-                            (element) => element.pergunta == p.pergunta,
+                        (element) => element.id == p.id,
                       ),
                       onChanged: (value) => {
                         setState(() {
                           if (value == false) {
                             perguntas.removeWhere((element) {
-                              return element.pergunta == p.pergunta;
+                              return element.id == p.id;
                             });
                           } else {
                             perguntas.add(p);
@@ -95,10 +127,9 @@ class CQuizzesState extends State<CadastroQuiz> {
                           nome: formBuilder.values['nome'],
                           perguntasReferences: refs);
                       novoQuiz.create();
-                      ScaffoldMessenger.maybeOf(context)
-                          ?.showSnackBar(const SnackBar(
-                          content:
-                           Text("Quiz criado com sucesso!")));
+                      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+                          const SnackBar(
+                              content: Text("Quiz criado com sucesso!")));
                       Navigator.of(context).pop();
                     },
                     child: const Text("Salvar"))

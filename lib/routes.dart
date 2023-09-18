@@ -4,6 +4,7 @@ import 'package:thoth/models/topico.dart';
 import 'package:thoth/views/cadastro_usuario.dart';
 import 'package:thoth/views/cadastro_tema.dart';
 import 'package:thoth/views/cadastro_topico.dart';
+import 'package:thoth/views/kart.dart';
 import 'package:thoth/views/login.dart';
 import 'package:thoth/views/menu.dart';
 import 'package:thoth/views/quizzes.dart';
@@ -29,8 +30,9 @@ class Routes {
   static const String topicos = "/topicos";
   static const String cadastroTopico = "/topicos/cadastro";
   static const String cadastroPerguntas = "/perguntas/cadastro";
-  static const String atividadeQuiz = "quizzes/quiz";
-  static const String pontuacaoQuiz = "quizzes/quiz/resultado";
+  static const String atividadeQuiz = "/quizzes/quiz";
+  static const String pontuacaoQuiz = "/quizzes/quiz/resultado";
+  static const String kart = "/kart";
 
   static routes(RouteSettings settings) {
     return <String, WidgetBuilder>{
@@ -49,6 +51,7 @@ class Routes {
       atividadeQuiz: (context) => const AtividadeQuiz(),
       pontuacaoQuiz: (context) =>
           PontuacaoQuiz(pontos: settings.arguments as int?),
+      kart: (context) => const Kart()
     };
   }
 }

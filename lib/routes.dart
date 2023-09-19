@@ -14,6 +14,7 @@ import 'package:thoth/views/cadastro_perguntas.dart';
 import 'package:thoth/views/atividade_quiz.dart';
 import 'package:thoth/views/pontuacao_quiz.dart';
 import 'package:thoth/views/flashcards.dart';
+import 'package:thoth/views/decks.dart';
 
 class Routes {
   static const String home = "/";
@@ -31,6 +32,7 @@ class Routes {
   static const String cadastroPerguntas = "/perguntas/cadastro";
   static const String atividadeQuiz = "quizzes/quiz";
   static const String pontuacaoQuiz = "quizzes/quiz/resultado";
+  static const String decks = "/decks";
 
   static routes(RouteSettings settings) {
     return <String, WidgetBuilder>{
@@ -49,6 +51,7 @@ class Routes {
       atividadeQuiz: (context) => const AtividadeQuiz(),
       pontuacaoQuiz: (context) =>
           PontuacaoQuiz(pontos: settings.arguments as int?),
+      decks: (context) => const Decks(),
     };
   }
 }

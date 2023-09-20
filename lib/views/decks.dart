@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/models/deck.dart';
+import 'package:thoth/routes.dart';
 
 class Decks extends StatefulWidget {
   const Decks({super.key});
@@ -58,8 +59,13 @@ class _DecksState extends State<Decks> {
               );
             }
           )
-      )
-
+        )
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {
+          Navigator.of(context).pushNamed(Routes.cadastroDeck)
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

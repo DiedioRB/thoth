@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:thoth/models/pergunta.dart';
-import 'package:thoth/models/flashcard.dart';
 
 class Deck {
   static const String collection = "decks";
@@ -8,7 +7,7 @@ class Deck {
   final DocumentReference? id;
   final String nome;
   final List<DocumentReference> perguntasReferences;
-  final List<Pergunta> _perguntas = [];
+  List<Pergunta> _perguntas = [];
 
   Deck({required this.nome, required this.perguntasReferences, this.id});
 
@@ -37,14 +36,14 @@ class Deck {
     if(_perguntas.isEmpty && perguntasReferences.isNotEmpty) {
       FirebaseFirestore db = FirebaseFirestore.instance;
       await Pergunta.getCollection(db)
-      .where(FieldPath.documentId, whereIn: perguntasReferences)
-      .get()
-      .then((value) => {
+          .where(FieldPath.documentId, whereIn: perguntasReferences)
+          .get()
+          .then((value) => {
         _perguntas.clear(),
-        for(var pergunta in value.docs) {
-          _perguntas.add(pergunta.data() as Pergunta)
-        }
+        for (var pergunta in value.docs)
+          {_perguntas.add(pergunta.data() as Pergunta)}
       });
+
     }
     return _perguntas;
   }

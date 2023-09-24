@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/models/deck.dart';
 import 'package:thoth/routes.dart';
+import 'package:thoth/models/pergunta.dart';
 
 class Decks extends StatefulWidget {
   const Decks({super.key});
@@ -14,12 +15,15 @@ class _DecksState extends State<Decks> {
 
   List<Deck> _decks = [];
 
+  List<Pergunta> _decksPerguntas = [];
+
 
   @override
   void initState() {
     super.initState();
 
     _getDecks();
+
   }
 
   void _getDecks() async {
@@ -31,10 +35,23 @@ class _DecksState extends State<Decks> {
       }
     });
 
+    _getPerguntas(_decks);
+
     setState(() {});
 
     print(_decks);
+
   }
+
+  void _getPerguntas(List<Deck> decks) async {
+    Deck umDeck = decks[0];
+    _decksPerguntas = await umDeck.perguntas;
+
+    setState(() {});
+    print(_decksPerguntas);
+
+  }
+
 
 
   Widget build(BuildContext context) {
@@ -54,7 +71,12 @@ class _DecksState extends State<Decks> {
                 height: 50,
                 padding: EdgeInsets.all(12),
                   child: Card(
-                    child: Text("${_decks[index].nome}"),
+                    child: InkWell(
+                      child: Text("${_decks[index].nome}"),
+                      onTap: () {
+                        Navigator.of(context).pushNamed(Routes.atividadeFlashcard, arguments: _decks[index]);
+                      },
+                    )
                   )
               );
             }

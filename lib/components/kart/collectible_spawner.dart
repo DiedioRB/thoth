@@ -15,7 +15,7 @@ class CollectibleSpawner extends TimerComponent with HasGameRef<KartGame> {
   FutureOr<void> onLoad() {
     timer.repeat = true;
     //Aparece abaixo do topo da tela para simular ponto de escape
-    spawnY = game.size.y * .4;
+    spawnY = game.size.y * .35;
   }
 
   @override

@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/components/lista_cards.dart';
 import 'package:thoth/components/perfil.dart';
+import 'package:thoth/firebase_options.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/usuario.dart';
 import 'package:thoth/routes.dart';
@@ -10,7 +11,7 @@ import 'package:thoth/tema_app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 

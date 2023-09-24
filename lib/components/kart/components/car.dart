@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:flame/particles.dart';
-import 'package:flutter/material.dart';
 import 'package:thoth/components/kart/components/collectible.dart';
 import 'package:thoth/components/kart/kart_game.dart';
 
@@ -13,11 +10,14 @@ class CarComponent extends SpriteComponent
     with CollisionCallbacks, HasGameRef<KartGame> {
   int points = 0;
   late int lane;
+  late MoveEffect shake;
 
   @override
   FutureOr<void> onLoad() async {
-    final sprite = await Sprite.load("car.png");
-    size = Vector2(100, 80);
+    final sprite = await Sprite.load("carro.png");
+    size = Vector2(1, 1);
+    double factor = game.size.x * .06;
+    scale = Vector2(2 * factor, 1 * factor);
     priority = 5;
     this.sprite = sprite;
     anchor = Anchor.center;
@@ -27,6 +27,10 @@ class CarComponent extends SpriteComponent
     add(hitbox);
 
     lane = game.totalLanes ~/ 2;
+    EffectController controller =
+        EffectController(duration: 0.05, infinite: true, alternate: true);
+    shake = MoveEffect.by(Vector2(0, 2), controller);
+    add(shake);
   }
 
   void move(lane) {
@@ -55,8 +59,19 @@ class CarComponent extends SpriteComponent
         game.explodeParticles(other.position);
         other.removeFromParent();
         points++;
+        game.question.solvePartial(amount: 3);
       }
     }
     super.onCollision(intersectionPoints, other);
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    if (isLoaded) {
+      move(lane);
+      double factor = game.size.x * .06;
+      scale = Vector2(2 * factor, 1 * factor);
+    }
+    super.onGameResize(size);
   }
 }

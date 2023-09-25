@@ -86,23 +86,26 @@ class _LoginState extends State<Login> {
                               color: Colors.blueAccent, fontSize: 20.0))),
                 ),
                 Container(
-                    margin: const EdgeInsets.only(top: 25.0),
-                    child: Center(
+                    margin: const EdgeInsets.only(top: 25, left: 100),
                       child: Row(
                         children: [
-                          const Text("Não tem acesso? Cadastre-se "),
-                          TextButton(
-                              onPressed: () => {
-                                    Navigator.pushNamed(
-                                        context, Routes.cadastroUsuario)
-                                  },
-                              child: const Text(
-                                "Aqui",
-                                style: TextStyle(color: Colors.blueAccent),
-                              ))
+                          Center(
+                              child: const Text("Não tem acesso? Cadastre-se ")
+                          ),
+                          Center(
+                              child: InkWell(
+                                onTap: () => {
+                                  Navigator.of(context).pushNamed( Routes.cadastroUsuario)
+                                },
+                                child: const Text(
+                                  "Aqui",
+                                  style: TextStyle(color: Colors.blueAccent),
+                                ),
+                              ),
+                          )
                         ],
                       ),
-                    )),
+                    ),
                 InkWell(
                   onTap: () => {
                     FirebaseAuth.instance.sendPasswordResetEmail(

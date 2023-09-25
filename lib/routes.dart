@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
 import 'package:thoth/views/cadastro_usuario.dart';
@@ -46,7 +47,8 @@ class Routes {
       topicos: (context) => Topicos(tema: settings.arguments as Tema?),
       cadastroTopico: (context) => const CadastroTopico(),
       cadastroPerguntas: (context) => CadastroPerguntas(),
-      atividadeQuiz: (context) => const AtividadeQuiz(),
+      atividadeQuiz: (context) =>
+          AtividadeQuiz(listaPerguntas: settings.arguments as List<Pergunta>),
       pontuacaoQuiz: (context) =>
           PontuacaoQuiz(pontos: settings.arguments as int?),
     };

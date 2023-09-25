@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -6,7 +5,8 @@ import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/routes.dart';
 
 class Atividade extends StatefulWidget {
-  const Atividade({super.key});
+  final List<Pergunta> perguntas;
+  const Atividade({super.key, required this.perguntas});
 
   @override
   State<Atividade> createState() => _AtividadeState();
@@ -32,15 +32,9 @@ class _AtividadeState extends State<Atividade> {
   }
 
   void updatePerguntasQuiz() async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    await Pergunta.getCollection(db).get().then((value) => {
-      _todasPerguntas.clear(),
-      for (var pergunta in value.docs) {
-        _todasPerguntas.add(pergunta.data() as Pergunta)
-      }
-    });
+    _todasPerguntas = widget.perguntas;
 
-    if(qtdPerguntas <= _todasPerguntas.length) {
+    if(qtdPerguntas < _todasPerguntas.length) {
       while(perguntasQuiz.length < qtdPerguntas) {
         int indiceAleatorio = aleatorio.nextInt(_todasPerguntas.length);
         Pergunta perguntaSelecionada = _todasPerguntas[indiceAleatorio];
@@ -48,6 +42,8 @@ class _AtividadeState extends State<Atividade> {
           perguntasQuiz.add(perguntaSelecionada);
         }
       }
+    } else {
+      perguntasQuiz = _todasPerguntas;
     }
 
     setState(() {});

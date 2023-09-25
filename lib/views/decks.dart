@@ -68,15 +68,18 @@ class _DecksState extends State<Decks> {
             itemBuilder: (BuildContext context, int index) {
               return Container(
                 width: 50,
-                height: 50,
+                height: 85,
                 padding: EdgeInsets.all(12),
                   child: Card(
-                    child: InkWell(
-                      child: Text("${_decks[index].nome}"),
-                      onTap: () {
-                        Navigator.of(context).pushNamed(Routes.atividadeFlashcard, arguments: _decks[index]);
-                      },
+                    child:Center(
+                        child: InkWell(
+                          child: Text("${_decks[index].nome}"),
+                          onTap: () {
+                            Navigator.of(context).pushNamed(Routes.atividadeFlashcard, arguments: _decks[index]);
+                          },
+                        )
                     )
+
                   )
               );
             }

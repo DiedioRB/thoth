@@ -14,6 +14,8 @@ import 'package:thoth/components/kart/components/question_text.dart';
 
 class KartGame extends FlameGame
     with TapDetector, HasCollisionDetection, KeyboardEvents {
+  bool keyboardPressed = false;
+
   late final CarComponent player;
   late final Background background;
   //TODO: trocar por componente que mostra a pergunta
@@ -105,8 +107,10 @@ class KartGame extends FlameGame
   KeyEventResult onKeyEvent(
       RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     final isKeyDown = event is RawKeyDownEvent;
+    final isKeyUp = event is RawKeyUpEvent;
 
-    if (isKeyDown) {
+    if (isKeyDown && !keyboardPressed) {
+      keyboardPressed = true;
       if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
           keysPressed.contains(LogicalKeyboardKey.keyA)) {
         player.moveLeft();
@@ -115,6 +119,8 @@ class KartGame extends FlameGame
         player.moveRight();
       }
       return KeyEventResult.handled;
+    } else if (isKeyUp) {
+      keyboardPressed = false;
     }
 
     return KeyEventResult.ignored;

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
+import 'package:thoth/models/deck.dart';
 import 'package:thoth/views/cadastro_usuario.dart';
 import 'package:thoth/views/cadastro_tema.dart';
 import 'package:thoth/views/cadastro_topico.dart';
+import 'package:thoth/views/kart.dart';
 import 'package:thoth/views/login.dart';
 import 'package:thoth/views/menu.dart';
 import 'package:thoth/views/quizzes.dart';
@@ -15,6 +17,9 @@ import 'package:thoth/views/cadastro_perguntas.dart';
 import 'package:thoth/views/atividade_quiz.dart';
 import 'package:thoth/views/pontuacao_quiz.dart';
 import 'package:thoth/views/flashcards.dart';
+import 'package:thoth/views/decks.dart';
+import 'package:thoth/views/cadastro_deck.dart';
+import 'package:thoth/views/atividade_flashcard.dart';
 
 class Routes {
   static const String home = "/";
@@ -30,8 +35,12 @@ class Routes {
   static const String topicos = "/topicos";
   static const String cadastroTopico = "/topicos/cadastro";
   static const String cadastroPerguntas = "/perguntas/cadastro";
-  static const String atividadeQuiz = "quizzes/quiz";
-  static const String pontuacaoQuiz = "quizzes/quiz/resultado";
+  static const String atividadeQuiz = "/quizzes/quiz";
+  static const String pontuacaoQuiz = "/quizzes/quiz/resultado";
+  static const String kart = "/kart";
+  static const String decks = "/decks";
+  static const String cadastroDeck = "/decks/cadastro";
+  static const String atividadeFlashcard = "/flashcards/atividade";
 
   static routes(RouteSettings settings) {
     return <String, WidgetBuilder>{
@@ -51,6 +60,10 @@ class Routes {
           AtividadeQuiz(listaPerguntas: settings.arguments as List<Pergunta>),
       pontuacaoQuiz: (context) =>
           PontuacaoQuiz(pontos: settings.arguments as int?),
+      kart: (context) => const Kart(),
+      decks: (context) => const Decks(),
+      cadastroDeck: (context) => const CadastroDeck(),
+      atividadeFlashcard: (context) => AtividadeFlashcard(deck: settings.arguments as Deck)
     };
   }
 }

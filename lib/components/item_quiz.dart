@@ -157,6 +157,17 @@ class _ItemQuizState extends State<ItemQuiz> {
     setState(() {});
   }
 
+  void getPerguntas() async {
+      perguntas = await widget.quiz.perguntas;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    getPerguntas();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -175,7 +186,10 @@ class _ItemQuizState extends State<ItemQuiz> {
             )
           : null,
       onTap: () {
-        Navigator.of(context).pushNamed(Routes.atividadeQuiz);
+        Navigator.of(context).pushNamed(
+            Routes.atividadeQuiz,
+            arguments: perguntas
+        );
       },
     );
   }

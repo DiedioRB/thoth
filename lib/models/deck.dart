@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:thoth/models/flashcard.dart';
+import 'package:thoth/models/pergunta.dart';
 
 class Deck {
   static const String collection = "decks";
 
   final DocumentReference? id;
   final String nome;
-  final List<DocumentReference> cardsReferences;
-  final List<Flashcard> _cards = [];
+  final List<DocumentReference> perguntasReferences;
+  List<Pergunta> _perguntas = [];
 
-  Deck({required this.nome, required this.cardsReferences, this.id});
+  Deck({required this.nome, required this.perguntasReferences, this.id});
 
   static CollectionReference getCollection(FirebaseFirestore db) {
     return db.collection(collection).withConverter<Deck>(
@@ -18,39 +18,40 @@ class Deck {
   }
 
   factory Deck.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options,
+        DocumentSnapshot<Map<String, dynamic>> snapshot,
+        SnapshotOptions? options,
   ) {
     final data = snapshot.data();
     return Deck(
-        nome: data?['nome'],
-        cardsReferences: List.from(data?['cards']),
-        id: snapshot.reference);
+      nome: data?['nome'],
+      perguntasReferences: List.from(data?['perguntas']),
+      id: snapshot.reference);
   }
 
   Map<String, dynamic> toFirestore() {
-    return {"nome": nome, "cards": cardsReferences};
+    return {"nome": nome, "perguntas": perguntasReferences};
   }
 
-  Future<List<Flashcard>> get flashcards async {
-    if (_cards.isEmpty && cardsReferences.isNotEmpty) {
+  Future<List<Pergunta>> get perguntas async {
+    if(_perguntas.isEmpty && perguntasReferences.isNotEmpty) {
       FirebaseFirestore db = FirebaseFirestore.instance;
-      await Flashcard.getCollection(db)
-          .where(FieldPath.documentId, whereIn: cardsReferences)
+      await Pergunta.getCollection(db)
+          .where(FieldPath.documentId, whereIn: perguntasReferences)
           .get()
           .then((value) => {
-                _cards.clear(),
-                for (var flashcard in value.docs)
-                  {_cards.add(flashcard.data() as Flashcard)}
-              });
+        _perguntas.clear(),
+        for (var pergunta in value.docs)
+          {_perguntas.add(pergunta.data() as Pergunta)}
+      });
+
     }
-    return _cards;
+    return _perguntas;
   }
 
-  atualizaReferencias(List<Flashcard> cards) {
-    cardsReferences.clear();
-    for (var card in cards) {
-      cardsReferences.add(card.id!);
+  atualizaReferencias(List<Pergunta> perguntas) {
+    perguntasReferences.clear();
+    for(var perg in perguntas) {
+      perguntasReferences.add(perg.id!);
     }
   }
 
@@ -68,4 +69,5 @@ class Deck {
     FirebaseFirestore db = FirebaseFirestore.instance;
     Deck.getCollection(db).doc(id?.id).delete();
   }
+
 }

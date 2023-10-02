@@ -167,6 +167,10 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
                         _timer.cancel();
                         _segundos = 0;
                         _verificar = false;
+
+                        if(pontosCard[count] == "") {
+                          pontosCard[count] == "Errou";
+                        }
                       });
                     },
                     child: Center(
@@ -183,7 +187,7 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
               height: double.maxFinite,
               child: Column(
                 children: [
-                  Text("pontosCard[count]"),
+                  Text(pontosCard[count]),
                   Container(
                       margin: const EdgeInsets.only(top: 50),
                       height: 85,
@@ -199,6 +203,7 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
                                 cardKey.currentState!.toggleCard();
                                 resposta = "";
                                 _isCardFlipped = false;
+                                _verificar = true;
                               }
 
                               if(count + 1 < perguntasQuiz.length) {

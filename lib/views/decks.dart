@@ -62,25 +62,30 @@ class _DecksState extends State<Decks> {
       ),
       body: Center(
         child: Container(
+          //height: 350,
           margin: EdgeInsets.only(top:25.0),
           child: ListView.builder(
+            //shrinkWrap: true,
             itemCount: _decks.length,
             itemBuilder: (BuildContext context, int index) {
-              return Container(
-                width: 50,
-                height: 85,
-                padding: EdgeInsets.all(12),
-                  child: Card(
-                    child:Center(
-                        child: InkWell(
-                          child: Text("${_decks[index].nome}"),
-                          onTap: () {
-                            Navigator.of(context).pushNamed(Routes.atividadeFlashcard, arguments: _decks[index]);
-                          },
-                        )
-                    )
-
+              return GridView.extent(
+                shrinkWrap: true,
+                maxCrossAxisExtent: 300,
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
+                children: [
+                  Card(
+                    child: InkWell(
+                      child:Center(
+                        child: Text("${_decks[index].nome}"),
+                      ),
+                      onTap: () {
+                        print("clicou decks");
+                        Navigator.of(context).pushNamed(Routes.atividadeFlashcard, arguments: _decks[index]);
+                      },
+                    ),
                   )
+                ],
               );
             }
           )

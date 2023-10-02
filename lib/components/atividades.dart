@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'package:thoth/models/pergunta.dart';
+import 'package:thoth/models/atividade.dart';
 import 'package:thoth/routes.dart';
 
 class Atividade extends StatefulWidget {

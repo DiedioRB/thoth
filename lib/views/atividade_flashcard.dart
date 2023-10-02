@@ -168,8 +168,8 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
                         _segundos = 0;
                         _verificar = false;
 
-                        if(pontosCard[count] == "") {
-                          pontosCard[count] == "Errou";
+                        if(pontosCard.isEmpty) {
+                          pontosCard.add("Errou!");
                         }
                       });
                     },

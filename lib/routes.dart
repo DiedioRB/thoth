@@ -20,6 +20,8 @@ import 'package:thoth/views/flashcards.dart';
 import 'package:thoth/views/decks.dart';
 import 'package:thoth/views/cadastro_deck.dart';
 import 'package:thoth/views/atividade_flashcard.dart';
+import 'package:thoth/views/ver_perfil.dart';
+import 'package:thoth/views/editar_perfil.dart';
 
 class Routes {
   static const String home = "/";
@@ -41,6 +43,8 @@ class Routes {
   static const String decks = "/decks";
   static const String cadastroDeck = "/decks/cadastro";
   static const String atividadeFlashcard = "/flashcards/atividade";
+  static const String perfil = "/perfil";
+  static const String editarPerfil = "/perfil/editar";
 
   static routes(RouteSettings settings) {
     return <String, WidgetBuilder>{
@@ -63,7 +67,9 @@ class Routes {
       kart: (context) => const Kart(),
       decks: (context) => const Decks(),
       cadastroDeck: (context) => const CadastroDeck(),
-      atividadeFlashcard: (context) => AtividadeFlashcard(deck: settings.arguments as Deck)
+      atividadeFlashcard: (context) => AtividadeFlashcard(deck: settings.arguments as Deck),
+      perfil: (context) => const VerPerfil(),
+      editarPerfil: (context) => const EditarPerfil()
     };
   }
 }

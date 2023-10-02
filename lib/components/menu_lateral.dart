@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thoth/routes.dart';
 
 class MenuLateral extends StatelessWidget {
   const MenuLateral({super.key});
@@ -7,9 +8,16 @@ class MenuLateral extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.zero,
-      children: const [
+      children: [
         DrawerHeader(
           child: Text("Thoth"),
+        ),
+        ListTile(
+          title: Text("Perfil"),
+          leading: Icon(Icons.people),
+            onTap: () {
+              Navigator.of(context).pushNamed(Routes.perfil);
+            },
         ),
         ListTile(
           title: Text("Temas"),

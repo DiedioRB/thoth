@@ -11,12 +11,13 @@ class CarComponent extends SpriteComponent
   int points = 0;
   late int lane;
   late MoveEffect shake;
+  double factor = 1;
 
   @override
   FutureOr<void> onLoad() async {
     final sprite = await Sprite.load("carro.png");
     size = Vector2(1, 1);
-    double factor = game.size.x * .06;
+    factor = game.size.x * .07;
     scale = Vector2(2 * factor, 1 * factor);
     priority = 5;
     this.sprite = sprite;
@@ -69,7 +70,6 @@ class CarComponent extends SpriteComponent
   void onGameResize(Vector2 size) {
     if (isLoaded) {
       move(lane);
-      double factor = game.size.x * .06;
       scale = Vector2(2 * factor, 1 * factor);
     }
     super.onGameResize(size);

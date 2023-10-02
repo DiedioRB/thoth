@@ -8,13 +8,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:thoth/components/kart/background.dart';
 import 'package:thoth/components/kart/collectible_spawner.dart';
+import 'package:thoth/components/kart/components/answer_dialog.dart';
 import 'package:thoth/components/kart/components/car.dart';
 import 'package:thoth/components/kart/components/collectible.dart';
+import 'package:thoth/components/kart/components/game_over_dialog.dart';
+import 'package:thoth/components/kart/components/pause.dart';
 import 'package:thoth/components/kart/components/question_text.dart';
+import 'package:thoth/components/kart/pergunta_manager.dart';
+
+enum State { playing, answering, paused, starting, finishing }
 
 class KartGame extends FlameGame
     with TapDetector, HasCollisionDetection, KeyboardEvents {
   bool keyboardPressed = false;
+
+  State state = State.starting;
 
   late final CarComponent player;
   late final Background background;
@@ -27,14 +35,15 @@ class KartGame extends FlameGame
   late final double carY;
 
   late final CollectibleSpawner spawner;
+  late final PerguntaManager perguntaManager;
+  late final AnswerDialogComponent answerDialog;
 
   @override
   FutureOr<void> onLoad() async {
-    // Sprite s = await Sprite.load("track.png");
-    // add(SpriteComponent(
-    //     sprite: s, size: Vector2.all(50), position: Vector2(size.x / 2, 0)));
     final background = Background();
     add(background);
+
+    add(PauseMenu());
 
     carY = size.y - 100;
 
@@ -46,7 +55,11 @@ class KartGame extends FlameGame
     spawner = CollectibleSpawner(period: 1);
     add(spawner);
 
-    question = QuestionText(hiddenText: "Qual a pergunta mostrada na tela?");
+    perguntaManager = PerguntaManager();
+    answerDialog = AnswerDialogComponent();
+    // answerDialog.updateRespostas(perguntaManager.perguntaAtual.respostas);
+
+    question = QuestionText(hiddenText: perguntaManager.perguntaAtual.pergunta);
     add(question);
   }
 
@@ -67,13 +80,28 @@ class KartGame extends FlameGame
 
   void buildAnswers() {
     spawner.pause();
-    Future.delayed(
-      const Duration(seconds: 3),
-      () {
-        question.newText("Qual a pergunta agora?");
-        spawner.start();
-      },
-    );
+    add(answerDialog);
+    answerDialog.updateRespostas(perguntaManager.perguntaAtual.respostas);
+    for (var component in spawner.onScreenCollectibles) {
+      component.removeFromParent();
+    }
+  }
+
+  void answered(int answer) {
+    for (var button in answerDialog.buttons) {
+      button.removeFromParent();
+    }
+    answerDialog.removeFromParent();
+    perguntaManager.answer(answer);
+    if (perguntaManager.next() != null) {
+      question.newText(perguntaManager.perguntaAtual.pergunta);
+      spawner.start();
+    } else {
+      question.removeFromParent();
+      add(GameOverDialog(
+          corretas: perguntaManager.corretas,
+          erradas: perguntaManager.erradas));
+    }
   }
 
   @override

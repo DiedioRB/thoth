@@ -1,4 +1,5 @@
 import 'package:flame/game.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:thoth/components/kart/kart_game.dart';
 
@@ -7,8 +8,10 @@ class Kart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GameWidget(
-      game: KartGame(),
-    );
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    return GameWidget(game: KartGame());
   }
 }

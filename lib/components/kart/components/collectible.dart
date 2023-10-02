@@ -25,8 +25,8 @@ class CollectibleComponent extends SpriteAnimationComponent
   FutureOr<void> onLoad() async {
     closeSize = Vector2(game.size.x * .1, game.size.x * .1);
     // final sprite = await Sprite.load("temp_item.png");
-    final image = await game.images.load("temp_item.png");
-    final sheet = SpriteSheet(image: image, srcSize: Vector2(56, 56));
+    final image = await game.images.load("item.png");
+    final sheet = SpriteSheet(image: image, srcSize: Vector2(16, 16));
     SpriteAnimation animation = sheet.createAnimation(row: 0, stepTime: 0.1);
     this.animation = animation;
 

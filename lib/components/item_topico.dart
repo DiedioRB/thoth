@@ -166,6 +166,12 @@ class _ItemTopicoState extends State<ItemTopico> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
+                    icon: const Icon(Icons.featured_play_list),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(Routes.decks, arguments: widget.topico);
+                    }),
+                IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () => _updateModal(context)),
                 IconButton(

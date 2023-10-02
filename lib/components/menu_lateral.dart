@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thoth/routes.dart';
 
 class MenuLateral extends StatelessWidget {
   const MenuLateral({super.key});
@@ -7,22 +8,52 @@ class MenuLateral extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.zero,
-      children: const [
-        DrawerHeader(
+      children: [
+        const DrawerHeader(
           child: Text("Thoth"),
         ),
         ListTile(
-          title: Text("Temas"),
-          leading: Icon(Icons.collections_bookmark),
+          title: const Text("Temas"),
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.temas);
+          },
         ),
         ListTile(
-          title: Text("Rankings"),
-          leading: Icon(Icons.trending_up),
+          title: const Text("Tópicos"),
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.topicos);
+          },
         ),
         ListTile(
-          title: Text("Salas de aula"),
-          leading: Icon(Icons.school),
-        )
+          title: const Text("Quizzes"),
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.quizzes);
+          },
+        ),
+        ListTile(
+          title: const Text("Flashcards"),
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.flashcards);
+          },
+        ),
+        ListTile(
+          title: const Text("Cadastrar Perguntas"),
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.cadastroPerguntas);
+          },
+        ),
+        ListTile(
+          title: const Text("Kart"),
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.kart);
+          },
+        ),
+        ListTile(
+          title: const Text("Decks"),
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.decks);
+          },
+        ),
       ],
     );
   }

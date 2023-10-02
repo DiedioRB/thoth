@@ -45,4 +45,10 @@ class CollectibleSpawner extends TimerComponent with HasGameRef<KartGame> {
   void stop() {
     timer.stop();
   }
+
+  @override
+  void onGameResize(Vector2 size) {
+    spawnY = game.size.y * .35;
+    super.onGameResize(size);
+  }
 }

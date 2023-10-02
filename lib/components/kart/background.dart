@@ -7,10 +7,10 @@ import 'package:thoth/components/kart/kart_game.dart';
 class Background extends SpriteAnimationComponent with HasGameRef<KartGame> {
   @override
   FutureOr<void> onLoad() async {
-    final image = await game.images.load("bg_vapor.png");
+    final image = await game.images.load("background_animation.png");
     final sheet = SpriteSheet(image: image, srcSize: Vector2(128, 128));
-    SpriteAnimation animation = sheet.createAnimation(row: 0, stepTime: 0.2);
-    this.animation = animation.reversed();
+    SpriteAnimation animation = sheet.createAnimation(row: 0, stepTime: 0.1);
+    this.animation = animation;
     // anchor = Anchor.topCenter;
     size = Vector2(1, 1);
     scale = Vector2(game.size.x, game.size.y);

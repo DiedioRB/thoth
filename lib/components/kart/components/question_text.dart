@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flame/components.dart';
-import 'package:flutter/material.dart';
 import 'package:thoth/components/kart/kart_game.dart';
 
 class QuestionText extends TextComponent with HasGameRef<KartGame> {
@@ -25,18 +24,17 @@ class QuestionText extends TextComponent with HasGameRef<KartGame> {
   }
 
   void solvePartial({int amount = 1}) {
-    if (parts <= hiddenText!.length) {
-      for (var i = 0; i < amount; i++) {
-        shownText = shownText.replaceRange(
-            min(parts, shownText.length),
-            min(parts + 1, shownText.length),
-            hiddenText?.substring(min(parts, hiddenText!.length),
-                    min(parts + 1, hiddenText!.length)) ??
-                "");
-        parts++;
-      }
-      text = shownText;
-    } else {
+    for (var i = 0; i < amount; i++) {
+      shownText = shownText.replaceRange(
+          min(parts, shownText.length),
+          min(parts + 1, shownText.length),
+          hiddenText?.substring(min(parts, hiddenText!.length),
+                  min(parts + 1, hiddenText!.length)) ??
+              "");
+      parts++;
+    }
+    text = shownText;
+    if (parts >= hiddenText!.length) {
       game.buildAnswers();
     }
   }

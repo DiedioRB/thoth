@@ -25,11 +25,11 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
   bool _isCardFlipped = false;
   GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
   String resposta = "";
-  //String respostaPontos = "";
+  String respostaPontos = "";
   String textoBotao = "Próximo";
   late Timer _timer;
   int _segundos = 0;
-  List<String> pontosCard = [];
+  //List<String> pontosCard = [];
   bool _verificar = true;
 
 
@@ -70,17 +70,30 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
   }
 
   void _calculaPontos(int secs) {
-    if (secs < 5) {
-      pontosCard.add("Muito Bom!");
-    } else if (secs < 10) {
-      pontosCard.add("Bom, mas ainda pode melhorar :D");
+    if (secs < 3) {
+      //pontosCard.add("Muito Bom!");
+      respostaPontos = "Muito Bom!";
+    } else if (secs < 5) {
+      //pontosCard.add("Bom, mas ainda pode melhorar :D");
+      respostaPontos = "Bom, mas ainda pode melhorar :D";
     } else {
-      pontosCard.add("É, essa não foi legal. Continue treinando! :D");
+      //pontosCard.add("É, essa não foi legal. Continue treinando! :D");
+      respostaPontos = "É, essa não foi legal. Continue treinando! :D";
     }
 
     print("segundos: $secs");
 
+  }
 
+  void _attCount() {
+    if(count + 1 < perguntasQuiz.length) {
+      if (count + 2 == perguntasQuiz.length) {
+        textoBotao = "Finalizar";
+      }
+      count++;
+    } else {
+      count = count;
+    }
   }
 
 
@@ -96,15 +109,15 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
                 child: CircularProgressIndicator(),
               ):
       Center(
-        child: Column(
-          children: [
-            Text("TEMPO: $_segundos",
-              style: TextStyle(
-                fontSize: 20,
-                color: TemaApp.contrastSecondary
+          child: Column(
+            children: [
+              Text("TEMPO: $_segundos",
+                style: TextStyle(
+                    fontSize: 20,
+                    color: TemaApp.contrastSecondary
+                ),
               ),
-            ),
-            Container(
+              Container(
                 margin: const EdgeInsets.only(top: 50),
                 padding: const EdgeInsets.all(25),
                 width: 380,
@@ -122,6 +135,8 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
                       }
                       _isCardFlipped = true;
                       resposta = perguntasQuiz[count].resposta;
+
+                      print("debug 1");
                     });
                   },
                   front: Container(
@@ -152,90 +167,98 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
                     ),
                   ),
                 ),
-            ),
-            _verificar?
+              ),
+              _verificar?
               Container(
-                margin: const EdgeInsets.only(top: 50),
-                height: 85,
-                width: 150,
-                decoration: BoxDecoration(
-                    color: TemaApp.darkPrimary
-                ),
-                child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _timer.cancel();
-                        _segundos = 0;
-                        _verificar = false;
+                  margin: const EdgeInsets.only(top: 50),
+                  height: 85,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      color: TemaApp.darkPrimary
+                  ),
+                  child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          _timer.cancel();
+                          _segundos = 0;
+                          //_verificar = false;
 
-                        if(pontosCard.isEmpty) {
-                          pontosCard.add("Errou!");
-                        }
-                      });
-                    },
-                    child: Center(
-                      child: Text("Verificar",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold
+                          if(!_isCardFlipped) {
+                            respostaPontos = "Errou";
+                            _attCount();
+                            _isCardFlipped = false;
+                            _startTimer();
+                            //resposta = perguntasQuiz[count].resposta;
+                          } else {
+                            _verificar = false;
+                          }
+
+                          print("debug 2");
+
+                          //if(pontosCard.isEmpty) {
+                          //  pontosCard.add("Errou!");
+                          //}
+                        });
+                      },
+                      child: const Center(
+                        child: Text("Verificar",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold
+                          ),
                         ),
-                      ),
-                    )
-                )
-            ):
-            Container(
-              height: double.maxFinite,
-              child: Column(
-                children: [
-                  Text(pontosCard[count]),
-                  Container(
-                      margin: const EdgeInsets.only(top: 50),
-                      height: 85,
-                      width: 150,
-                      decoration: BoxDecoration(
-                          color: TemaApp.darkPrimary
-                      ),
-                      child: InkWell(
-                          onTap: () {
-                            setState(() {
-
-                              if (_isCardFlipped) {
-                                cardKey.currentState!.toggleCard();
-                                resposta = "";
-                                _isCardFlipped = false;
-                                _verificar = true;
-                              }
-
-                              if(count + 1 < perguntasQuiz.length) {
-                                if (count + 2 == perguntasQuiz.length) {
-                                  textoBotao = "Finalizar";
-                                }
-                                count++;
-                              } else {
-                                count = count;
-                              }
-
-                              _startTimer();
-
-                            });
-                          },
-                          child: Center(
-                            child: Text(textoBotao,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          )
                       )
                   )
-                ],
-              ),
-            )
+              ):
+              Expanded(
+                child: Container(
+                  height: double.maxFinite,
+                  child: Column(
+                    children: [
+                      Text(respostaPontos),
+                      Container(
+                          margin: const EdgeInsets.only(top: 50),
+                          height: 85,
+                          width: 150,
+                          decoration: BoxDecoration(
+                              color: TemaApp.darkPrimary
+                          ),
+                          child: InkWell(
+                              onTap: () {
+                                setState(() {
 
+                                  if (_isCardFlipped && !_verificar) {
+                                    cardKey.currentState!.toggleCard();
+                                    resposta = "";
+                                    _isCardFlipped = false;
+                                    _verificar = true;
+                                  }
 
-          ],
-        ),
+                                  print("debug 3");
+
+                                  _attCount();
+
+                                  _startTimer();
+
+                                });
+                              },
+                              child: Center(
+                                child: Text(textoBotao,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                              )
+                          )
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+
       )
     );
   }

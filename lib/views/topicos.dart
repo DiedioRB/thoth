@@ -10,9 +10,10 @@ import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/routes.dart';
 
 class Topicos extends StatefulWidget {
+  final bool? isAdmin;
   Tema? tema;
 
-  Topicos({super.key, this.tema});
+  Topicos({super.key, this.tema, this.isAdmin = false});
 
   @override
   State<Topicos> createState() => _TopicosState();
@@ -68,24 +69,39 @@ class _TopicosState extends State<Topicos> {
         title: const Text("Tópicos"),
       ),
       body: Center(
-          child: ListView.builder(
-              itemCount: _topicos.length,
-              prototypeItem: ItemTopico(
-                topico: Topico(descricao: "", perguntasReferences: []),
-                modifiable: true,
-              ),
-              itemBuilder: (context, index) {
-                return ItemTopico(
-                  topico: _topicos[index],
-                  modifiable: true,
-                );
-              })),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(Routes.cadastroTopico);
-        },
-        child: const Icon(Icons.add),
+        child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 400,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20),
+            itemCount: _topicos.length,
+            itemBuilder: (context, index) {
+              return ItemTopico(
+                topico: _topicos[index],
+                modifiable: widget.isAdmin ?? false,
+              );
+            }),
+        // child: ListView.builder(
+        //     itemCount: _topicos.length,
+        //     prototypeItem: ItemTopico(
+        //       topico: Topico(descricao: "", perguntasReferences: []),
+        //       modifiable: true,
+        //     ),
+        //     itemBuilder: (context, index) {
+        //       return ItemTopico(
+        //         topico: _topicos[index],
+        //         modifiable: true,
+        //       );
+        //     }),
       ),
+      floatingActionButton: (widget.isAdmin ?? false)
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(Routes.cadastroTopico);
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 

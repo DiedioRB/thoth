@@ -21,7 +21,8 @@ class MenuLateral extends StatelessWidget {
         ListTile(
           title: const Text("Tópicos"),
           onTap: () {
-            Navigator.of(context).pushNamed(Routes.topicos);
+            Navigator.of(context)
+                .pushNamed(Routes.topicos, arguments: [null, true]);
           },
         ),
         ListTile(

@@ -51,9 +51,12 @@ class Routes {
       quizzes: (context) => Quizzes(topico: settings.arguments as Topico?),
       flashcards: (context) => Flashcards(tema: settings.arguments as Tema?),
       cadastroQuiz: (context) => const CadastroQuiz(),
-      temas: (context) => const Temas(),
+      temas: (context) => Temas(isAdmin: settings.arguments as bool?),
       cadastroTema: (context) => const CadastroTema(),
-      topicos: (context) => Topicos(tema: settings.arguments as Tema?),
+      topicos: (context) => Topicos(
+            tema: (settings.arguments as List?)?[0],
+            isAdmin: (settings.arguments as List?)?[1],
+          ),
       cadastroTopico: (context) => const CadastroTopico(),
       cadastroPerguntas: (context) => CadastroPerguntas(),
       atividadeQuiz: (context) =>
@@ -63,7 +66,8 @@ class Routes {
       kart: (context) => const Kart(),
       decks: (context) => const Decks(),
       cadastroDeck: (context) => const CadastroDeck(),
-      atividadeFlashcard: (context) => AtividadeFlashcard(deck: settings.arguments as Deck)
+      atividadeFlashcard: (context) =>
+          AtividadeFlashcard(deck: settings.arguments as Deck)
     };
   }
 }

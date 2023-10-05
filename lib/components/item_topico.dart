@@ -159,32 +159,71 @@ class _ItemTopicoState extends State<ItemTopico> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(widget.topico.descricao),
-      trailing: (widget.modifiable)
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
+    return Card(
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(widget.topico.descricao),
+            ButtonBar(
+              alignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 IconButton(
-                    icon: const Icon(Icons.featured_play_list),
+                    icon: const Icon(Icons.quiz),
+                    tooltip: "Quizzes",
                     onPressed: () {
                       Navigator.of(context)
-                          .pushNamed(Routes.decks, arguments: widget.topico);
+                          .pushNamed(Routes.quizzes, arguments: widget.topico);
                     }),
                 IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () => _updateModal(context)),
+                    icon: const Icon(Icons.collections_bookmark_outlined),
+                    tooltip: "Flashcards",
+                    onPressed: () async {
+                      Navigator.of(context).pushNamed(Routes.atividadeFlashcard,
+                          arguments:  [await widget.topico, null]);
+                    }),
                 IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => _deleteModal(context)),
+                    icon: const Icon(Icons.drive_eta_outlined),
+                    tooltip: "Kart",
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(Routes.kart);
+                    }),
+                if (widget.modifiable) ...[
+                  IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () => _updateModal(context)),
+                  IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => _deleteModal(context)),
+                ]
               ],
             )
-          : null,
-      enabled: true,
-      onTap: () {
-        Navigator.of(context)
-            .pushNamed(Routes.quizzes, arguments: widget.topico);
-      },
+          ],
+        ),
+      ),
     );
+    // return ListTile(
+    //   title: Text(widget.topico.descricao),
+    //   trailing: (widget.modifiable)
+    //       ? Row(
+    //           mainAxisSize: MainAxisSize.min,
+    //           children: [
+    //             IconButton(
+    //                 icon: const Icon(Icons.edit),
+    //                 onPressed: () => _updateModal(context)),
+    //             IconButton(
+    //                 icon: const Icon(Icons.delete),
+    //                 onPressed: () => _deleteModal(context)),
+    //           ],
+    //         )
+    //       : null,
+    //   enabled: true,
+    //   onTap: () {
+    //     Navigator.of(context)
+    //         .pushNamed(Routes.quizzes, arguments: widget.topico);
+    //   },
+    // );
   }
 }

@@ -33,6 +33,11 @@ abstract class TemaApp {
         surface: branco,
         onSurface: darkSecondary,
       ),
+      tabBarTheme: TabBarTheme(
+        labelColor: contrastPrimary,
+        unselectedLabelColor: lightPrimary,
+        indicatorColor: contrastPrimary,
+      ),
       appBarTheme: AppBarTheme(
         color: appBarPrimary,
         iconTheme: IconThemeData(

@@ -4,6 +4,7 @@ import 'package:thoth/models/deck.dart';
 import 'package:thoth/routes.dart';
 import 'package:thoth/models/pergunta.dart';
 
+
 class Decks extends StatefulWidget {
   const Decks({super.key});
 
@@ -14,10 +15,10 @@ class Decks extends StatefulWidget {
 class _DecksState extends State<Decks> {
 
   List<Deck> _decks = [];
-
   List<Pergunta> _decksPerguntas = [];
 
 
+  
   @override
   void initState() {
     super.initState();
@@ -81,7 +82,7 @@ class _DecksState extends State<Decks> {
                       ),
                       onTap: () {
                         print("clicou decks");
-                        Navigator.of(context).pushNamed(Routes.atividadeFlashcard, arguments: _decks[index]);
+                        Navigator.of(context).pushNamed(Routes.atividadeFlashcard, arguments: [null, _decks[index]]);
                       },
                     ),
                   )

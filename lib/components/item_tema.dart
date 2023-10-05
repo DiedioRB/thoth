@@ -127,26 +127,41 @@ class _ItemTemaState extends State<ItemTema> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(widget.tema.descricao),
-      trailing: (widget.modifiable)
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-
-                IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () => _updateModal(context)),
-                IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => _deleteModal(context)),
-              ],
-            )
-          : null,
-      enabled: true,
-      onTap: () {
-        Navigator.of(context).pushNamed(Routes.topicos, arguments: widget.tema);
-      },
+    return Card(
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).pushNamed(Routes.topicos,
+              arguments: [widget.tema, widget.modifiable]);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(widget.tema.descricao),
+              if (widget.modifiable)
+                ButtonBar(
+                  alignment: MainAxisAlignment.spaceAround,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    IconButton(
+                        icon: const Icon(Icons.featured_play_list),
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(Routes.flashcards,
+                              arguments: widget.tema);
+                        }),
+                    IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () => _updateModal(context)),
+                    IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => _deleteModal(context)),
+                  ],
+                )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

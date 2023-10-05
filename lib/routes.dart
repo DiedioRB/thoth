@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
-import 'package:thoth/models/deck.dart';
 import 'package:thoth/views/cadastro_usuario.dart';
 import 'package:thoth/views/cadastro_tema.dart';
 import 'package:thoth/views/cadastro_topico.dart';
@@ -55,9 +54,12 @@ class Routes {
       quizzes: (context) => Quizzes(topico: settings.arguments as Topico?),
       flashcards: (context) => Flashcards(tema: settings.arguments as Tema?),
       cadastroQuiz: (context) => const CadastroQuiz(),
-      temas: (context) => const Temas(),
+      temas: (context) => Temas(isAdmin: settings.arguments as bool?),
       cadastroTema: (context) => const CadastroTema(),
-      topicos: (context) => Topicos(tema: settings.arguments as Tema?),
+      topicos: (context) => Topicos(
+            tema: (settings.arguments as List?)?[0],
+            isAdmin: (settings.arguments as List?)?[1],
+          ),
       cadastroTopico: (context) => const CadastroTopico(),
       cadastroPerguntas: (context) => CadastroPerguntas(),
       atividadeQuiz: (context) =>
@@ -67,9 +69,12 @@ class Routes {
       kart: (context) => const Kart(),
       decks: (context) => const Decks(),
       cadastroDeck: (context) => const CadastroDeck(),
-      atividadeFlashcard: (context) => AtividadeFlashcard(deck: settings.arguments as Deck),
       perfil: (context) => const VerPerfil(),
-      editarPerfil: (context) => const EditarPerfil()
+      editarPerfil: (context) => const EditarPerfil(),
+      atividadeFlashcard: (context) => AtividadeFlashcard(
+          topico: (settings.arguments as List?)?[0],
+          deck: (settings.arguments as List?)?[1],
+      ),
     };
   }
 }

@@ -9,7 +9,8 @@ import 'package:thoth/models/topico.dart';
 import 'package:thoth/routes.dart';
 
 class Temas extends StatefulWidget {
-  const Temas({super.key});
+  final bool? isAdmin;
+  const Temas({super.key, this.isAdmin = false});
 
   @override
   State<Temas> createState() => _TemasState();
@@ -53,24 +54,39 @@ class _TemasState extends State<Temas> {
         title: const Text("Temas"),
       ),
       body: Center(
-          child: ListView.builder(
-              itemCount: _temas.length,
-              prototypeItem: ItemTema(
-                tema: Tema(descricao: "", topicosReferences: []),
-                modifiable: true,
-              ),
-              itemBuilder: (context, index) {
-                return ItemTema(
-                  tema: _temas[index],
-                  modifiable: true,
-                );
-              })),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(Routes.cadastroTema);
-        },
-        child: const Icon(Icons.add),
+        // child: ListView.builder(
+        //     itemCount: _temas.length,
+        //     prototypeItem: ItemTema(
+        //       tema: Tema(descricao: "", topicosReferences: []),
+        //       modifiable: true,
+        //     ),
+        //     itemBuilder: (context, index) {
+        //       return ItemTema(
+        //         tema: _temas[index],
+        //         modifiable: widget.isAdmin ?? false,
+        //       );
+        //     }),
+        child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 400,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20),
+            itemCount: _temas.length,
+            itemBuilder: (context, index) {
+              return ItemTema(
+                tema: _temas[index],
+                modifiable: widget.isAdmin ?? false,
+              );
+            }),
       ),
+      floatingActionButton: (widget.isAdmin ?? false)
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(Routes.cadastroTema);
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 

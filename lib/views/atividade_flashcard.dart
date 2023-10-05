@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:thoth/models/deck.dart';
 import 'package:thoth/models/pergunta.dart';
+import 'package:thoth/models/topico.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:thoth/tema_app.dart';
 import 'dart:math';
 import 'dart:async';
 
 class AtividadeFlashcard extends StatefulWidget {
-  final Deck deck;
-  AtividadeFlashcard({super.key, required this.deck});
+  final Topico? topico;
+  final Deck? deck;
+  const AtividadeFlashcard({super.key, this.topico, this.deck});
 
   @override
   State<AtividadeFlashcard> createState() => _AtividadeFlashcardState();
 }
 
 class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
-  Deck? _deck;
   List<Pergunta> _perguntas = [];
   List<Pergunta> perguntasQuiz = [];
   Random aleatorio = Random();
@@ -37,13 +38,18 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
   @override
   void initState() {
     super.initState();
-    _deck = widget.deck;
     _getPerguntas();
     _startTimer();
   }
 
   void _getPerguntas() async {
-    _perguntas = await _deck!.perguntas;
+    if (widget.topico != null) {
+      _perguntas = await widget.topico!.perguntas;
+    } else {
+      _perguntas = await widget.deck!.perguntas;
+    }
+
+
     if(qtdPerguntas < _perguntas.length) {
       while(perguntasQuiz.length < qtdPerguntas) {
         int indiceAleatorio = aleatorio.nextInt(_perguntas.length);
@@ -136,7 +142,6 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
                       _isCardFlipped = true;
                       resposta = perguntasQuiz[count].resposta;
 
-                      print("debug 1");
                     });
                   },
                   front: Container(
@@ -193,8 +198,6 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
                             _verificar = false;
                           }
 
-                          print("debug 2");
-
                           //if(pontosCard.isEmpty) {
                           //  pontosCard.add("Errou!");
                           //}
@@ -211,7 +214,7 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
                   )
               ):
               Expanded(
-                child: Container(
+                child: SizedBox(
                   height: double.maxFinite,
                   child: Column(
                     children: [
@@ -233,8 +236,6 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
                                     _isCardFlipped = false;
                                     _verificar = true;
                                   }
-
-                                  print("debug 3");
 
                                   _attCount();
 

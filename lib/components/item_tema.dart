@@ -127,12 +127,12 @@ class _ItemTemaState extends State<ItemTema> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed(Routes.topicos,
-            arguments: [widget.tema, widget.modifiable]);
-      },
-      child: Card(
+    return Card(
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).pushNamed(Routes.topicos,
+              arguments: [widget.tema, widget.modifiable]);
+        },
         child: Container(
           padding: const EdgeInsets.all(10),
           child: Column(

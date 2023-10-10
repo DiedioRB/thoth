@@ -22,7 +22,7 @@ class _ItemTemaState extends State<ItemTema> {
   List<Topico> topicos = [];
 
   void _updateModal(context) async {
-    FormBuilder _form = FormBuilder(Tema.getFields(tema: widget.tema));
+    FormBuilder form = FormBuilder(Tema.getFields(tema: widget.tema));
     FirebaseFirestore db = FirebaseFirestore.instance;
     await Topico.getCollection(db).get().then((value) => {
           todosTopicos.clear(),
@@ -42,7 +42,7 @@ class _ItemTemaState extends State<ItemTema> {
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      _form.build(),
+                      form.build(),
                       Expanded(
                         child: ListView.builder(
                             itemCount: todosTopicos.length,
@@ -71,7 +71,7 @@ class _ItemTemaState extends State<ItemTema> {
                         children: [
                           TextButton(
                               onPressed: () async {
-                                widget.tema.descricao = _form.values['nome'];
+                                widget.tema.descricao = form.values['nome'];
                                 widget.tema.atualizaReferencias(topicos);
                                 widget.tema.update();
                                 ScaffoldMessenger.maybeOf(context)

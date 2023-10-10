@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/components/lista_cards.dart';
 import 'package:thoth/models/pergunta.dart';
@@ -9,8 +8,8 @@ import 'package:thoth/models/tema.dart';
 import 'package:thoth/routes.dart';
 
 class Flashcards extends StatefulWidget {
-  Tema? tema;
-  Flashcards({super.key, this.tema});
+  final Tema? tema;
+  const Flashcards({super.key, this.tema});
 
   @override
   State<Flashcards> createState() => _FlashcardsState();
@@ -54,8 +53,6 @@ class _FlashcardsState extends State<Flashcards> {
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseApp app = Firebase.app();
-    final FirebaseFirestore db = FirebaseFirestore.instanceFor(app: app);
 
     return Scaffold(
       appBar: AppBar(

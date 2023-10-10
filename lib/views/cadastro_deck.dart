@@ -7,7 +7,7 @@ class CadastroDeck extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Adicionar Deck"),
+        title: const Text("Adicionar Deck"),
       ),
       body: Center(
         child: Column(

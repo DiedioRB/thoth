@@ -1,28 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:thoth/models/pergunta.dart';
-import 'package:thoth/components/nossa_snackbar.dart';
+
 
 class CadastroPerguntas extends StatelessWidget {
   CadastroPerguntas({super.key});
 
   final questionController = TextEditingController();
   final answerController = TextEditingController();
-
-  void _teste() async {
-    //final FirebaseApp app = Firebase.app();
-    //final FirebaseFirestore db = FirebaseFirestore.instanceFor(app: app);
-    List<String> teste = ["um", "dois", "três"];
-    //await Pergunta.create("teste", teste, 8);
-    //var perg;
-    //Pergunta.getCollection(db)
-    //    .get()
-    //    .then((value) {
-    //      perg = value.docs.first.data();
-    //      print("\n\n t== ${perg}");
-    //});
-
-    //print("\n\n TESTE: ${perg}");
-  }
 
 
   void _cadastrarPergunta(context, pergunta, resposta) async {

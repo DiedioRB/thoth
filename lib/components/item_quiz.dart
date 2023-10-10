@@ -26,7 +26,7 @@ class _ItemQuizState extends State<ItemQuiz> {
   Topico? topico;
 
   void _updateModal(context) async {
-    FormBuilder _form = FormBuilder(Quiz.getFields(quiz: widget.quiz));
+    FormBuilder form = FormBuilder(Quiz.getFields(quiz: widget.quiz));
     FirebaseFirestore db = FirebaseFirestore.instance;
     await Pergunta.getCollection(db).get().then((value) => {
           todasPerguntas.clear(),
@@ -47,7 +47,7 @@ class _ItemQuizState extends State<ItemQuiz> {
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      _form.build(),
+                      form.build(),
                       DropdownButton<Topico>(
                           disabledHint: const Text("Selecione..."),
                           items: topicos,
@@ -87,7 +87,7 @@ class _ItemQuizState extends State<ItemQuiz> {
                         children: [
                           TextButton(
                               onPressed: () async {
-                                widget.quiz.nome = _form.values['nome'];
+                                widget.quiz.nome = form.values['nome'];
                                 widget.quiz.topicoReference = topico?.id;
                                 widget.quiz.atualizaReferencias(perguntas);
                                 widget.quiz.update();

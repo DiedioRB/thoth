@@ -67,7 +67,7 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
 
 
   void _startTimer() {
-    const umSegundo = const Duration(seconds: 1);
+    const umSegundo = Duration(seconds: 1);
     _timer = Timer.periodic(umSegundo, (Timer timer) {
       setState(() {
         _segundos++;
@@ -87,7 +87,6 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
       respostaPontos = "É, essa não foi legal. Continue treinando! :D";
     }
 
-    print("segundos: $secs");
 
   }
 

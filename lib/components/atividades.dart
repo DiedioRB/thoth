@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'package:thoth/models/pergunta.dart';
-import 'package:thoth/models/atividade.dart';
 import 'package:thoth/routes.dart';
 
 class Atividade extends StatefulWidget {
@@ -62,6 +61,7 @@ class _AtividadeState extends State<Atividade> {
   }
 
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

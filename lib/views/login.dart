@@ -89,8 +89,8 @@ class _LoginState extends State<Login> {
                     margin: const EdgeInsets.only(top: 25, left: 100),
                       child: Row(
                         children: [
-                          Center(
-                              child: const Text("Não tem acesso? Cadastre-se ")
+                          const Center(
+                              child: Text("Não tem acesso? Cadastre-se ")
                           ),
                           Center(
                               child: InkWell(

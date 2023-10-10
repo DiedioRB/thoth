@@ -17,7 +17,6 @@ class CadastroUsuario extends StatelessWidget {
     // adicionar limite mínimo de caracteres pra senha
     //adicionar erros vindos em snackbar. Para isso, transformar Material em Scaffold
     if (senha == senhaRepetida) {
-      print("Okay");
       try {
         AuthHelper.registerUsingEmailAndPassword(
             nome: nome, email: email, senha: senha

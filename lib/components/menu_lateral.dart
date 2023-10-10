@@ -13,8 +13,8 @@ class MenuLateral extends StatelessWidget {
           child: Text("Thoth"),
         ),
         ListTile(
-          title: Text("Perfil"),
-          leading: Icon(Icons.people),
+          title: const Text("Perfil"),
+          leading: const Icon(Icons.people),
             onTap: () {
               Navigator.of(context).pushNamed(Routes.perfil);
             },

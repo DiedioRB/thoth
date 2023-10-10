@@ -7,7 +7,7 @@ class Deck {
   final DocumentReference? id;
   final String nome;
   final List<DocumentReference> perguntasReferences;
-  List<Pergunta> _perguntas = [];
+  final List<Pergunta> _perguntas = [];
 
   Deck({required this.nome, required this.perguntasReferences, this.id});
 

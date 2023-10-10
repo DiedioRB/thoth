@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class PontuacaoQuiz extends StatelessWidget {
-  int? pontos = 0;
+  final int? pontos;
 
-  PontuacaoQuiz({super.key, this.pontos});
+  const PontuacaoQuiz({super.key, this.pontos});
 
   @override
   Widget build(BuildContext context) {
@@ -17,29 +17,26 @@ class PontuacaoQuiz extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.symmetric(vertical: 25.0),
-              child: Text(
+              margin: const EdgeInsets.symmetric(vertical: 25.0),
+              child: const Text(
                 "Parabéns!",
                 style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
               ),
             ),
-            Container(
-              //margin: EdgeInsets.symmetric(vertical: 10.0),
-              child: Text(
+             const Text(
                 "Você fez:",
                 style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
               ),
-            ),
             Container(
-              margin: EdgeInsets.all(15.0),
+              margin: const EdgeInsets.all(15.0),
               child: Text(
-                "${args}",
-                style: TextStyle(fontSize: 55.0, fontWeight: FontWeight.bold),
+                "$args",
+                style: const TextStyle(fontSize: 55.0, fontWeight: FontWeight.bold),
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 5.0, bottom: 50.0),
-              child: Text(
+              margin: const EdgeInsets.only(top: 5.0, bottom: 50.0),
+              child: const Text(
                 "Pontos!",
                 style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
               ),
@@ -48,7 +45,7 @@ class PontuacaoQuiz extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pushNamed("/menu");
                 },
-                child: Text("Menu Principal"))
+                child: const Text("Menu Principal"))
           ],
         ),
       ),

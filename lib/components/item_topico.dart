@@ -26,7 +26,7 @@ class _ItemTopicoState extends State<ItemTopico> {
   Tema? tema;
 
   void _updateModal(context) async {
-    FormBuilder _form = FormBuilder(Topico.getFields(topico: widget.topico));
+    FormBuilder form = FormBuilder(Topico.getFields(topico: widget.topico));
     FirebaseFirestore db = FirebaseFirestore.instance;
     await Pergunta.getCollection(db).get().then((value) => {
           todasPerguntas.clear(),
@@ -47,7 +47,7 @@ class _ItemTopicoState extends State<ItemTopico> {
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      _form.build(),
+                      form.build(),
                       DropdownButton<Tema>(
                           disabledHint: const Text("Selecione..."),
                           items: temas,
@@ -87,7 +87,7 @@ class _ItemTopicoState extends State<ItemTopico> {
                         children: [
                           TextButton(
                               onPressed: () async {
-                                widget.topico.descricao = _form.values['nome'];
+                                widget.topico.descricao = form.values['nome'];
                                 widget.topico.temaReference = tema?.id;
                                 widget.topico.atualizaReferencias(perguntas);
                                 widget.topico.update();

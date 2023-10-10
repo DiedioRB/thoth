@@ -32,47 +32,45 @@ class _EditarPerfil extends State<EditarPerfil> {
       'email': _emailController.text,
     });
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Perfil atualizado com sucesso!')),
+      const SnackBar(content: Text('Perfil atualizado com sucesso!')),
     );
   }
 
-  String _foto = "https://cdn-icons-png.flaticon.com/512/4519/4519678.png";
-  //TODO - Trocar conteúdo da string para um link direcionando para o Firebase Storage
-  //TODO - Habilitar a troca de imagens
+  final String _foto = "https://cdn-icons-png.flaticon.com/512/4519/4519678.png";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Editar Perfil"),
+        title: const Text("Editar Perfil"),
       ),
       body: Center(
         child: Column(
           children: <Widget>[
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             CircleAvatar(
               radius: 50,
               backgroundImage: NetworkImage(_foto),
               backgroundColor: Colors.white,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: TextFormField(
                   controller: _nomeController,
                   enabled: true,
-                  decoration: InputDecoration(
+                  decoration: const  InputDecoration(
                     labelText: "Nome",
                     border: OutlineInputBorder(),
                   ),
                 ),
               ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: TextFormField(
               controller: _emailController,
               enabled: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "E-mail",
                 border: OutlineInputBorder(),
               ),

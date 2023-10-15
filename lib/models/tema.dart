@@ -50,15 +50,27 @@ class Tema {
 
   Future<List<Topico>> get topicos async {
     if (_topicos.isEmpty && topicosReferences.isNotEmpty) {
+      List<List<DocumentReference>> sublist = [];
+      for (var i = 0; i < topicosReferences.length; i += 10) {
+        sublist.add(topicosReferences.sublist(
+            i,
+            i + 10 > topicosReferences.length
+                ? topicosReferences.length
+                : i + 10));
+      }
+
       FirebaseFirestore db = FirebaseFirestore.instance;
-      await Topico.getCollection(db)
-          .where(FieldPath.documentId, whereIn: topicosReferences)
-          .get()
-          .then((value) => {
-                _topicos.clear(),
-                for (var topico in value.docs)
-                  {_topicos.add(topico.data() as Topico)}
-              });
+      _topicos.clear();
+      sublist.forEach((sublista) async {
+        await Topico.getCollection(db)
+            .where(FieldPath.documentId, whereIn: topicosReferences)
+            .get()
+            .then((value) => {
+                  _topicos.clear(),
+                  for (var topico in value.docs)
+                    {_topicos.add(topico.data() as Topico)}
+                });
+      });
     }
     return _topicos;
   }

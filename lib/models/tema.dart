@@ -61,6 +61,7 @@ class Tema {
 
       FirebaseFirestore db = FirebaseFirestore.instance;
       _topicos.clear();
+      // ignore: avoid_function_literals_in_foreach_calls
       sublist.forEach((sublista) async {
         await Topico.getCollection(db)
             .where(FieldPath.documentId, whereIn: topicosReferences)
@@ -97,7 +98,7 @@ class Tema {
     Tema.getCollection(db).doc(id?.id).delete();
   }
 
-  static Future<List<Tema>> todos() async {
+  static Future<List<Tema>> tudo() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     List<Tema> temas = [];
     await getCollection(db).get().then((value) {

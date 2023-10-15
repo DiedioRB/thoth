@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
-import 'package:thoth/models/atividade.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
@@ -144,7 +143,7 @@ class _ItemTopicoState extends State<ItemTopico> {
   }
 
   fetchTemas() async {
-    List<Tema> temas = await Tema.todos();
+    List<Tema> temas = await Tema.tudo();
     tema = null;
     this.temas.clear();
     for (var tema in temas) {
@@ -183,7 +182,7 @@ class _ItemTopicoState extends State<ItemTopico> {
                     tooltip: "Flashcards",
                     onPressed: () async {
                       Navigator.of(context).pushNamed(Routes.atividadeFlashcard,
-                          arguments: [await widget.topico, null]);
+                          arguments: [widget.topico, null]);
                     }),
                 IconButton(
                     icon: const Icon(Icons.drive_eta_outlined),

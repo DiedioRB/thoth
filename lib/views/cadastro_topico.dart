@@ -47,7 +47,7 @@ class CTopicosState extends State<CadastroTopico> {
   }
 
   fetchTemas() async {
-    List<Tema> temas = await Tema.todos();
+    List<Tema> temas = await Tema.tudo();
     this.temas.clear();
     for (var tema in temas) {
       this.temas.add(DropdownMenuItem(

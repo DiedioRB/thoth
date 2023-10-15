@@ -38,7 +38,6 @@ class _QuizzesState extends State<Quizzes> {
     formBuilder = FormBuilder(Quiz.getFields());
 
     FirebaseFirestore db = FirebaseFirestore.instance;
-    print(topico);
     if (topico == null) {
       watcher = Quiz.getCollection(db).snapshots().listen(listen);
     } else {
@@ -61,7 +60,6 @@ class _QuizzesState extends State<Quizzes> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

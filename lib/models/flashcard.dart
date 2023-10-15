@@ -54,6 +54,7 @@ class Flashcard {
 
       FirebaseFirestore db = FirebaseFirestore.instance;
       _perguntas.clear();
+      // ignore: avoid_function_literals_in_foreach_calls
       sublist.forEach((sublista) async {
         await Pergunta.getCollection(db)
             .where(FieldPath.documentId, whereIn: perguntasReferences)

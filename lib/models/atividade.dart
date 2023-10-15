@@ -2,7 +2,6 @@
 import 'package:thoth/models/pergunta.dart';
 import 'dart:math';
 
-import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
 
 //receber perguntas e randomizar array com elas
@@ -111,10 +110,11 @@ class Atividade {
 
   void finalizar() {
     _finalizado = true;
+    //TODO: trabalhar o ranking aqui
   }
 
   void handleRepeticaoEspacada() {
-    //TODO: aplicar a repetição espçada aqui
+    //TODO: aplicar a repetição espaçada aqui
     //Você tem acesso à pergunta atual aqui
     print("Repetição espaçada chamada");
   }

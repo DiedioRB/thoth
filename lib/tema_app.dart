@@ -9,6 +9,7 @@ abstract class TemaApp {
   static Color contrastSecondary = Colors.yellow.shade600;
   static Color errorPrimary = Colors.red.shade400;
   static Color branco = Colors.white;
+  static Color purple = Color.fromARGB(255, 101, 78, 146);
 
   //Cores específicas para componentes
   static Color appBarPrimary = Colors.deepPurple.shade600;

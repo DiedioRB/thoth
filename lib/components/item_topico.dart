@@ -4,6 +4,7 @@ import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
+import 'package:thoth/components/tutorial.dart';
 import 'package:thoth/routes.dart';
 
 class ItemTopico extends StatefulWidget {
@@ -174,21 +175,95 @@ class _ItemTopicoState extends State<ItemTopico> {
                     icon: const Icon(Icons.quiz),
                     tooltip: "Quizzes",
                     onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(Routes.quizzes, arguments: widget.topico);
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Tutorial.quizzTitle,
+                            content: Tutorial.quizzText,
+                            actions: [
+                              TextButton(
+                                onPressed: (){
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("Cancelar"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pushNamed(Routes.quizzes,
+                                      arguments: widget.topico);
+                                },
+                                child: const Text("Entendido",
+                                    style: TextStyle(fontWeight: FontWeight.bold)
+                                ),
+                              )
+                            ],
+                          );
+                        }
+                      );
                     }),
                 IconButton(
                     icon: const Icon(Icons.collections_bookmark_outlined),
                     tooltip: "Flashcards",
-                    onPressed: () async {
-                      Navigator.of(context).pushNamed(Routes.atividadeFlashcard,
-                          arguments: [widget.topico, null]);
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Tutorial.flashcardTitle,
+                              content: Tutorial.flashcardText,
+                              actions: [
+                                TextButton(
+                                  onPressed: (){
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("Cancelar"),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    Navigator.of(context).pushNamed(Routes.atividadeFlashcard,
+                                        arguments:  [await widget.topico, null]);
+                                  },
+                                  child: const Text("Entendido",
+                                      style: TextStyle(fontWeight: FontWeight.bold)
+                                  ),
+                                )
+                              ],
+                            );
+                          }
+                      );
                     }),
                 IconButton(
                     icon: const Icon(Icons.drive_eta_outlined),
                     tooltip: "Kart",
                     onPressed: () {
-                      Navigator.of(context).pushNamed(Routes.kart);
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Tutorial.kartTitle,
+                              content: Tutorial.kartText,
+                              actions: [
+                                TextButton(
+                                  onPressed: (){
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("Cancelar"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pushNamed(Routes.kart);
+                                  },
+                                  child: const Text("Entendido",
+                                      style: TextStyle(fontWeight: FontWeight.bold)
+                                  ),
+                                )
+                              ],
+                            );
+                          }
+                      );
                     }),
                 if (widget.modifiable) ...[
                   IconButton(

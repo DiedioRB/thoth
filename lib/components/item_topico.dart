@@ -22,6 +22,7 @@ List<bool> exists = [];
 class _ItemTopicoState extends State<ItemTopico> {
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
+  late Topico topico = widget.topico;
 
   List<DropdownMenuItem<Tema>> temas = [];
   Tema? tema;
@@ -221,9 +222,10 @@ class _ItemTopicoState extends State<ItemTopico> {
                                   child: const Text("Cancelar"),
                                 ),
                                 TextButton(
-                                  onPressed: () async {
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
                                     Navigator.of(context).pushNamed(Routes.atividadeFlashcard,
-                                        arguments:  [await widget.topico, null]);
+                                        arguments:  [topico, null]);
                                   },
                                   child: const Text("Entendido",
                                       style: TextStyle(fontWeight: FontWeight.bold)

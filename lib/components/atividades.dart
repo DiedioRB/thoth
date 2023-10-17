@@ -158,7 +158,7 @@ class _AtividadeState extends State<Atividade> {
                       }
 
                       Navigator.of(context).pushNamed(
-                          Routes.pontuacaoQuiz,
+                          Routes.pontuacao,
                           arguments: pontos
                       );
                     },

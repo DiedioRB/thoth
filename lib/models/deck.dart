@@ -18,14 +18,14 @@ class Deck {
   }
 
   factory Deck.fromFirestore(
-        DocumentSnapshot<Map<String, dynamic>> snapshot,
-        SnapshotOptions? options,
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
   ) {
     final data = snapshot.data();
     return Deck(
-      nome: data?['nome'],
-      perguntasReferences: List.from(data?['perguntas']),
-      id: snapshot.reference);
+        nome: data?['nome'],
+        perguntasReferences: List.from(data?['perguntas']),
+        id: snapshot.reference);
   }
 
   Map<String, dynamic> toFirestore() {
@@ -33,41 +33,39 @@ class Deck {
   }
 
   Future<List<Pergunta>> get perguntas async {
-    if(_perguntas.isEmpty && perguntasReferences.isNotEmpty) {
+    if (_perguntas.isEmpty && perguntasReferences.isNotEmpty) {
       FirebaseFirestore db = FirebaseFirestore.instance;
       await Pergunta.getCollection(db)
           .where(FieldPath.documentId, whereIn: perguntasReferences)
           .get()
           .then((value) => {
-        _perguntas.clear(),
-        for (var pergunta in value.docs)
-          {_perguntas.add(pergunta.data() as Pergunta)}
-      });
-
+                _perguntas.clear(),
+                for (var pergunta in value.docs)
+                  {_perguntas.add(pergunta.data() as Pergunta)}
+              });
     }
     return _perguntas;
   }
 
   atualizaReferencias(List<Pergunta> perguntas) {
     perguntasReferences.clear();
-    for(var perg in perguntas) {
+    for (var perg in perguntas) {
       perguntasReferences.add(perg.id!);
     }
   }
 
   create() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Deck.getCollection(db).doc(id?.id).set(this);
+    await Deck.getCollection(db).doc(id?.id).set(this);
   }
 
   update() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Deck.getCollection(db).doc(id?.id).update(toFirestore());
+    await Deck.getCollection(db).doc(id?.id).update(toFirestore());
   }
 
   delete() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Deck.getCollection(db).doc(id?.id).delete();
+    await Deck.getCollection(db).doc(id?.id).delete();
   }
-
 }

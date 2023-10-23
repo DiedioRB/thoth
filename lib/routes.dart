@@ -61,7 +61,8 @@ class Routes {
             isAdmin: (settings.arguments as List?)?[1],
           ),
       cadastroTopico: (context) => const CadastroTopico(),
-      cadastroPerguntas: (context) => CadastroPerguntas(),
+      cadastroPerguntas: (context) =>
+          CadastroPerguntas(tema: settings.arguments as Tema),
       atividadeQuiz: (context) =>
           AtividadeQuiz(listaPerguntas: settings.arguments as List<Pergunta>),
       pontuacaoQuiz: (context) =>
@@ -72,9 +73,9 @@ class Routes {
       perfil: (context) => const VerPerfil(),
       editarPerfil: (context) => const EditarPerfil(),
       atividadeFlashcard: (context) => AtividadeFlashcard(
-          topico: (settings.arguments as List?)?[0],
-          deck: (settings.arguments as List?)?[1],
-      ),
+            topico: (settings.arguments as List?)?[0],
+            deck: (settings.arguments as List?)?[1],
+          ),
     };
   }
 }

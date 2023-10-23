@@ -151,6 +151,14 @@ class _ItemTemaState extends State<ItemTema> {
                               arguments: widget.tema);
                         }),
                     IconButton(
+                        icon: const Icon(Icons.add),
+                        tooltip: "Adicionar perguntas",
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(
+                              Routes.cadastroPerguntas,
+                              arguments: widget.tema);
+                        }),
+                    IconButton(
                         icon: const Icon(Icons.edit),
                         onPressed: () => _updateModal(context)),
                     IconButton(

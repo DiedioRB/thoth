@@ -114,17 +114,17 @@ class Usuario implements ItemFormModel {
 
   create({required String uid}) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Usuario.getCollection(db).doc(uid).set(this);
+    await Usuario.getCollection(db).doc(uid).set(this);
   }
 
   update() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Usuario.getCollection(db).doc(id?.id).update(toFirestore());
+    await Usuario.getCollection(db).doc(id?.id).update(toFirestore());
   }
 
   delete() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Usuario.getCollection(db).doc(id?.id).delete();
+    await Usuario.getCollection(db).doc(id?.id).delete();
   }
 
   @override

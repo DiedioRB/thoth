@@ -65,17 +65,17 @@ class Flashcard {
 
   create() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Flashcard.getCollection(db).doc(id?.id).set(this);
+    await Flashcard.getCollection(db).doc(id?.id).set(this);
   }
 
   update() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Flashcard.getCollection(db).doc(id?.id).update(toFirestore());
+    await Flashcard.getCollection(db).doc(id?.id).update(toFirestore());
   }
 
   delete() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Flashcard.getCollection(db).doc(id?.id).delete();
+    await Flashcard.getCollection(db).doc(id?.id).delete();
   }
 
   @override

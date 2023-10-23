@@ -10,6 +10,8 @@ abstract class TemaApp {
   static Color errorPrimary = Colors.red.shade400;
   static Color branco = Colors.white;
 
+  static Color success = Colors.green;
+
   //Cores específicas para componentes
   static Color appBarPrimary = Colors.deepPurple.shade600;
   static Color cardPrimary = Colors.purple.shade50;

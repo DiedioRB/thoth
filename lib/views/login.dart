@@ -30,7 +30,12 @@ class _LoginState extends State<Login> {
 
   void _login(String? email, String? senha) async {
     if (email != null && senha != null) {
-      await Usuario.login(email, senha);
+      Usuario? u;
+      u = await Usuario.login(email, senha);
+      if (u == null) {
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+            const SnackBar(content: Text("Usuário ou senha incorretos!")));
+      }
     }
   }
 
@@ -50,9 +55,9 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        child: Container(
-            color: Colors.white,
-            child: Column(
+        child: Scaffold(
+            appBar: null,
+            body: Column(
               children: [
                 Container(
                   margin: const EdgeInsets.only(top: 100.0),
@@ -86,26 +91,25 @@ class _LoginState extends State<Login> {
                               color: Colors.blueAccent, fontSize: 20.0))),
                 ),
                 Container(
-                    margin: const EdgeInsets.only(top: 25, left: 100),
-                      child: Row(
-                        children: [
-                          const Center(
-                              child: Text("Não tem acesso? Cadastre-se ")
+                  margin: const EdgeInsets.only(top: 25, left: 100),
+                  child: Row(
+                    children: [
+                      const Center(child: Text("Não tem acesso? Cadastre-se ")),
+                      Center(
+                        child: InkWell(
+                          onTap: () => {
+                            Navigator.of(context)
+                                .pushNamed(Routes.cadastroUsuario)
+                          },
+                          child: const Text(
+                            "Aqui",
+                            style: TextStyle(color: Colors.blueAccent),
                           ),
-                          Center(
-                              child: InkWell(
-                                onTap: () => {
-                                  Navigator.of(context).pushNamed( Routes.cadastroUsuario)
-                                },
-                                child: const Text(
-                                  "Aqui",
-                                  style: TextStyle(color: Colors.blueAccent),
-                                ),
-                              ),
-                          )
-                        ],
-                      ),
-                    ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
                 InkWell(
                   onTap: () => {
                     FirebaseAuth.instance.sendPasswordResetEmail(

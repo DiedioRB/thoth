@@ -8,6 +8,7 @@ import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
 import 'package:thoth/models/topico.dart';
 import 'package:thoth/routes.dart';
+import 'package:thoth/tema_app.dart';
 
 class Quizzes extends StatefulWidget {
   final Topico? topico;
@@ -38,7 +39,6 @@ class _QuizzesState extends State<Quizzes> {
     formBuilder = FormBuilder(Quiz.getFields());
 
     FirebaseFirestore db = FirebaseFirestore.instance;
-    print(topico);
     if (topico == null) {
       watcher = Quiz.getCollection(db).snapshots().listen(listen);
     } else {
@@ -62,12 +62,12 @@ class _QuizzesState extends State<Quizzes> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: TemaApp.quizPrimary,
         title: const Text("Quizzes"),
       ),
       body: Center(
@@ -84,6 +84,7 @@ class _QuizzesState extends State<Quizzes> {
                 );
               })),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: TemaApp.quizPrimary,
         onPressed: () {
           Navigator.of(context).pushNamed(Routes.cadastroQuiz);
         },

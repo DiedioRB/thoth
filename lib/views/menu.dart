@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:thoth/components/menu_lateral.dart';
+import 'package:thoth/components/botao.dart';
 import 'package:thoth/helpers/auth_helper.dart';
 import 'package:thoth/routes.dart';
+import 'package:thoth/tema_app.dart';
 
 class Menu extends StatelessWidget {
   const Menu({super.key});
@@ -30,54 +32,59 @@ class Menu extends StatelessWidget {
                   onPressed: () => _logout(context),
                   icon: const Icon(Icons.logout),
                   tooltip: "Desconectar",
-                )
+                ),
               ]),
           body: TabBarView(
             children: [
-              Center(
-                  child: FilledButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed(Routes.temas, arguments: false);
-                },
-                child: Container(
-                    padding: const EdgeInsets.all(10),
-                    child: const Text("Visão do aluno")),
-              )),
+              Expanded(
+                child: Center(
+                  child: Botao(
+                    texto: "Visão do aluno",
+                    corFundo: TemaApp.darkPrimary,
+                    corTexto: TemaApp.branco,
+                    callback: () {
+                      Navigator.of(context)
+                          .pushNamed(Routes.temas, arguments: false);
+                    },
+                  ),
+                )
+              ),
               Center(
                   child: GridView.extent(
-                maxCrossAxisExtent: 300,
-                mainAxisSpacing: 4,
-                crossAxisSpacing: 4,
-                children: [
-                  Card(
-                    child: InkWell(
-                      child: Center(
-                          child: Text(
-                        "Temas",
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      )),
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(Routes.temas, arguments: true);
-                      },
-                    ),
-                  ),
-                  Card(
-                    child: InkWell(
-                      child: Center(
-                          child: Text(
-                        "Tópicos",
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      )),
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(Routes.topicos, arguments: [null, true]);
-                      },
-                    ),
-                  ),
+                    maxCrossAxisExtent: 300,
+                    mainAxisSpacing: 4,
+                    crossAxisSpacing: 4,
+                    children: [
+                      Card(
+                        child: InkWell(
+                          child: Center(
+                              child: Text(
+                                "Temas",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.titleLarge,
+                              )
+                          ),
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(Routes.temas, arguments: true);
+                            },
+                        ),
+                      ),
+                      Card(
+                        child: InkWell(
+                          child: Center(
+                              child: Text(
+                                "Tópicos",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.titleLarge,
+                              )
+                          ),
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(Routes.topicos, arguments: [null, true]);
+                            },
+                        ),
+                      ),
                   Card(
                     child: InkWell(
                       child: Center(

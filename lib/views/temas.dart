@@ -24,6 +24,7 @@ class _TemasState extends State<Temas> {
   Tema novoTema = Tema(descricao: "", topicosReferences: [], id: null);
   late FormBuilder formBuilder;
   StreamSubscription? watcher;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -49,35 +50,43 @@ class _TemasState extends State<Temas> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text("Temas"),
-      ),
-      body: Center(
-        // child: ListView.builder(
-        //     itemCount: _temas.length,
-        //     prototypeItem: ItemTema(
-        //       tema: Tema(descricao: "", topicosReferences: []),
-        //       modifiable: true,
-        //     ),
-        //     itemBuilder: (context, index) {
-        //       return ItemTema(
-        //         tema: _temas[index],
-        //         modifiable: widget.isAdmin ?? false,
-        //       );
-        //     }),
-        child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 400,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20),
-            itemCount: _temas.length,
-            itemBuilder: (context, index) {
-              return ItemTema(
-                tema: _temas[index],
-                modifiable: widget.isAdmin ?? false,
-              );
-            }),
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: <Widget>[
+           SliverAppBar(
+             shape: const RoundedRectangleBorder(
+                 borderRadius:  BorderRadius.all(Radius.circular(20))
+             ),
+            expandedHeight: 250.0,
+            pinned: true,
+            flexibleSpace: LayoutBuilder(
+              builder: (BuildContext context,  BoxConstraints constraints) {
+                return FlexibleSpaceBar(
+                  title: _scrollController.hasClients &&
+                      _scrollController.offset > 100
+                      ? Text("Temas")
+                      : Text("Seja bem vindo!\n\n\nEstudante!")
+                );
+              },
+            ),
+          ),
+           SliverPadding(
+             padding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+             sliver:  SliverList(
+               delegate: SliverChildBuilderDelegate(
+                     (BuildContext context, int index) {
+                   return ItemTema(
+                     tema: _temas[index],
+                     modifiable: widget.isAdmin ?? false,
+                   );
+                 },
+                 childCount: _temas.length,
+               ),
+             )
+           )
+
+
+        ],
       ),
       floatingActionButton: (widget.isAdmin ?? false)
           ? FloatingActionButton(
@@ -96,6 +105,7 @@ class _TemasState extends State<Temas> {
       watcher!.cancel();
       watcher = null;
     }
+    _scrollController.dispose();
     super.dispose();
   }
 }

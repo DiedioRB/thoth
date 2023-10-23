@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:thoth/routes.dart';
-//import 'package:thoth/helpers/auth_helper.dart'; - TODO - Repassar itens de conexão para o Auth Helper
 
 class VerPerfil extends StatefulWidget {
   const VerPerfil({super.key});
 
   @override
-  _VerPerfil createState() => _VerPerfil();
+  State<VerPerfil> createState() => _VerPerfil();
 }
 
 class _VerPerfil extends State<VerPerfil> {
@@ -19,7 +18,8 @@ class _VerPerfil extends State<VerPerfil> {
     return FirebaseAuth.instance.currentUser?.email ?? "";
   }
 
-  final String _foto = "https://cdn-icons-png.flaticon.com/512/4519/4519678.png";
+  final String _foto =
+      "https://cdn-icons-png.flaticon.com/512/4519/4519678.png";
   // TODO - Trocar conteúdo da string para um link direcionando para o Firebase Storage
 
   @override
@@ -38,17 +38,19 @@ class _VerPerfil extends State<VerPerfil> {
               backgroundColor: Colors.white,
             ),
             const SizedBox(height: 20),
-              buildCampo('Nome', getUserName(), false), // TODO - Ajustar atualização dos dados em tela
-              buildCampo('Email', getUserEmail(), false), // TODO - TODO - Ajustar atualização dos dados em tela
+            buildCampo('Nome', getUserName(),
+                false), // TODO - Ajustar atualização dos dados em tela
+            buildCampo('Email', getUserEmail(),
+                false), // TODO - TODO - Ajustar atualização dos dados em tela
             TextButton(
               onPressed: () {
                 Navigator.of(context).pushNamed(Routes.editarPerfil);
               },
               child: const Text("Editar"),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 

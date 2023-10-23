@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class PontuacaoQuiz extends StatelessWidget {
+class Pontuacao extends StatelessWidget {
   final int? pontos;
 
-  const PontuacaoQuiz({super.key, this.pontos});
+  const Pontuacao({super.key, this.pontos});
 
   @override
   Widget build(BuildContext context) {

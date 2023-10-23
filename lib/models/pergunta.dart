@@ -10,15 +10,11 @@ class Pergunta {
   final int respostaCorreta;
 
   static List<ItemForm> getFields({Pergunta? pergunta}) {
-    return[
+    return [
       ItemForm.build(
-        descricao: "Um teste de Pergunta",
-        valor: pergunta?.pergunta
-      ),
+          descricao: "Um teste de Pergunta", valor: pergunta?.pergunta),
       ItemForm.build(
-        descricao: "Talvez uma Resposta",
-        valor: pergunta?.respostas
-      )
+          descricao: "Talvez uma Resposta", valor: pergunta?.respostas)
     ];
   }
 
@@ -73,6 +69,18 @@ class Pergunta {
   delete() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     Pergunta.getCollection(db).doc(id?.id).delete();
+  }
+
+  static Future<List<Pergunta>> tudo() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    List<Pergunta> perguntas = [];
+    await getCollection(db).get().then((value) {
+      perguntas.clear();
+      for (var pergunta in value.docs) {
+        perguntas.add(pergunta.data() as Pergunta);
+      }
+    });
+    return perguntas;
   }
 
   @override

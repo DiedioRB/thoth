@@ -5,6 +5,7 @@ import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
 import 'package:thoth/routes.dart';
 import 'package:thoth/models/topico.dart';
+import 'package:thoth/tema_app.dart';
 
 class ItemQuiz extends StatefulWidget {
   const ItemQuiz({super.key, required this.quiz, required this.modifiable});
@@ -171,16 +172,27 @@ class _ItemQuizState extends State<ItemQuiz> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(widget.quiz.nome),
+      title: Text(
+          widget.quiz.nome,
+        style: TextStyle(
+          color: TemaApp.quizSecondary
+        ),
+      ),
       trailing: (widget.modifiable)
           ? Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                    icon: const Icon(Icons.edit),
+                    icon: Icon(
+                        Icons.edit,
+                      color: TemaApp.quizPrimary,
+                    ),
                     onPressed: () => _updateModal(context)),
                 IconButton(
-                    icon: const Icon(Icons.delete),
+                    icon: Icon(
+                        Icons.delete,
+                      color: TemaApp.quizPrimary,
+                    ),
                     onPressed: () => _deleteModal(context)),
               ],
             )

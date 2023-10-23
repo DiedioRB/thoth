@@ -59,12 +59,16 @@ class _CadastroPerguntasState extends State<CadastroPerguntas> {
       setState(() {
         perguntas.clear();
       });
-      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-          const SnackBar(content: Text("Perguntas salvas com sucesso!")));
+      _mostrarAvisoPerguntasSalvas();
     } else {
       ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-          const SnackBar(content: Text("Nenhuma pergunta selecionada!")));
+          const SnackBar(content: Text("Nenhuma questão selecionada!")));
     }
+  }
+
+  void _mostrarAvisoPerguntasSalvas() {
+    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        const SnackBar(content: Text("Perguntas salvas com sucesso!")));
   }
 
   void _abrirPergunta(Pergunta pergunta) {
@@ -142,46 +146,20 @@ class _CadastroPerguntasState extends State<CadastroPerguntas> {
                 },
                 decoration: const InputDecoration(labelText: "Quantidade"),
               ),
-              Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 100.0),
-                    height: 60,
-                    width: 250,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black54),
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.blue[50]),
-                    child: TextButton(
-                        onPressed: () {
-                          int quantidade = int.parse(quantidadeController.text);
-                          _gerarPerguntas(assuntoController.text, quantidade);
-                        },
-                        child: const Text("Gerar questões",
-                            style: TextStyle(
-                                color: Colors.blueAccent, fontSize: 20.0))),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 100.0),
-                    height: 60,
-                    width: 250,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black54),
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.blue[50]),
-                    child: TextButton(
-                      onPressed: () {
-                        _salvarPerguntas();
-                      },
-                      child: const Text(
-                        "Salvar questões selecionadas",
-                        textAlign: TextAlign.center,
-                        style:
-                            TextStyle(color: Colors.blueAccent, fontSize: 20.0),
-                      ),
-                    ),
-                  ),
-                ],
+              FilledButton(
+                onPressed: () {
+                  int quantidade = int.parse(quantidadeController.text);
+                  _gerarPerguntas(assuntoController.text, quantidade);
+                },
+                child: const Text("Gerar questões"),
+              ),
+              FilledButton(
+                onPressed: () {
+                  _salvarPerguntas();
+                },
+                child: const Text(
+                  "Salvar questões selecionadas",
+                ),
               ),
               fetching
                   ? const Column(

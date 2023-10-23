@@ -29,14 +29,18 @@ class _LoginState extends State<Login> {
   final FormBuilder form = FormBuilder(Usuario.getFieldsLogin());
 
   void _login(String? email, String? senha) async {
+    Usuario? u;
     if (email != null && senha != null) {
-      Usuario? u;
       u = await Usuario.login(email, senha);
-      if (u == null) {
-        ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-            const SnackBar(content: Text("Usuário ou senha incorretos!")));
-      }
     }
+    if (u == null) {
+      _mostrarUsuarioIncorreto();
+    }
+  }
+
+  void _mostrarUsuarioIncorreto() {
+    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        const SnackBar(content: Text("Usuário ou senha incorretos!")));
   }
 
   @override
@@ -57,70 +61,74 @@ class _LoginState extends State<Login> {
     return Material(
         child: Scaffold(
             appBar: null,
-            body: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 100.0),
-                  child: const Text(
-                    "LOGIN",
-                    style: TextStyle(color: Colors.blueAccent, fontSize: 35.0),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 100.0),
+                    child: const Text(
+                      "LOGIN",
+                      style:
+                          TextStyle(color: Colors.blueAccent, fontSize: 35.0),
+                    ),
                   ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(
-                      left: 42.0, right: 42.0, top: 100.0, bottom: 35.0),
-                  child: form.build(),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 100.0),
-                  height: 60,
-                  width: 250,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black54),
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.blue[50]),
-                  child: TextButton(
-                      //onPressed: () => _login("andreribas0511@gmail.com", "yosenha123"),
-                      // onPressed: () =>
-                      //     _login(emailController.text, passwordController.text),
-                      onPressed: () {
-                        _login(form.values['email'], form.values['senha']);
-                      },
-                      child: const Text("Entrar",
-                          style: TextStyle(
-                              color: Colors.blueAccent, fontSize: 20.0))),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 25, left: 100),
-                  child: Row(
-                    children: [
-                      const Center(child: Text("Não tem acesso? Cadastre-se ")),
-                      Center(
-                        child: InkWell(
-                          onTap: () => {
-                            Navigator.of(context)
-                                .pushNamed(Routes.cadastroUsuario)
-                          },
-                          child: const Text(
-                            "Aqui",
-                            style: TextStyle(color: Colors.blueAccent),
+                  Container(
+                    margin: const EdgeInsets.only(
+                        left: 42.0, right: 42.0, top: 100.0, bottom: 35.0),
+                    child: form.build(),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 100.0),
+                    height: 60,
+                    width: 250,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black54),
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.blue[50]),
+                    child: TextButton(
+                        //onPressed: () => _login("andreribas0511@gmail.com", "yosenha123"),
+                        // onPressed: () =>
+                        //     _login(emailController.text, passwordController.text),
+                        onPressed: () async {
+                          _login(form.values['email'], form.values['senha']);
+                        },
+                        child: const Text("Entrar",
+                            style: TextStyle(
+                                color: Colors.blueAccent, fontSize: 20.0))),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 25, left: 100),
+                    child: Row(
+                      children: [
+                        const Center(
+                            child: Text("Não tem acesso? Cadastre-se ")),
+                        Center(
+                          child: InkWell(
+                            onTap: () => {
+                              Navigator.of(context)
+                                  .pushNamed(Routes.cadastroUsuario)
+                            },
+                            child: const Text(
+                              "Aqui",
+                              style: TextStyle(color: Colors.blueAccent),
+                            ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                InkWell(
-                  onTap: () => {
-                    FirebaseAuth.instance.sendPasswordResetEmail(
-                        email: "andreribas0511@gmail.com")
-                  },
-                  child: const Text(
-                    "Esqueci minha senha",
-                    style: TextStyle(color: Colors.blueAccent),
-                  ),
-                )
-              ],
+                  InkWell(
+                    onTap: () => {
+                      FirebaseAuth.instance.sendPasswordResetEmail(
+                          email: "andreribas0511@gmail.com")
+                    },
+                    child: const Text(
+                      "Esqueci minha senha",
+                      style: TextStyle(color: Colors.blueAccent),
+                    ),
+                  )
+                ],
+              ),
             )));
   }
 }

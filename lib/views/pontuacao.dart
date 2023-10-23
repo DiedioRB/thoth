@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:thoth/tema_app.dart';
+import 'package:thoth/components/botao.dart';
 
 class Pontuacao extends StatelessWidget {
   final int? pontos;
@@ -41,11 +43,14 @@ class Pontuacao extends StatelessWidget {
                 style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
               ),
             ),
-            ElevatedButton(
-                onPressed: () {
+            Botao(
+                texto: "Menu Principal",
+                corFundo: TemaApp.darkPrimary,
+                corTexto: TemaApp.branco,
+                callback: () {
                   Navigator.of(context).pushNamed("/menu");
-                },
-                child: const Text("Menu Principal"))
+                }
+            )
           ],
         ),
       ),

@@ -97,11 +97,11 @@ class _LoginState extends State<Login> {
                     flex: 1,
                     //APENAS REPRESENTATIVO
                     child: Container(
-                      child: const Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: 255,
-                      ),
+                      //child: const Icon(
+                      //  Icons.add,
+                      //  color: Colors.white,
+                      //  size: 255,
+                      //),
                     )
                 ),
                 Expanded(

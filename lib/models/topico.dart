@@ -107,17 +107,17 @@ class Topico {
 
   create() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Topico.getCollection(db).doc(id?.id).set(this);
+    await Topico.getCollection(db).doc(id?.id).set(this);
   }
 
   update() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Topico.getCollection(db).doc(id?.id).update(toFirestore());
+    await Topico.getCollection(db).doc(id?.id).update(toFirestore());
   }
 
   delete() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Topico.getCollection(db).doc(id?.id).delete();
+    await Topico.getCollection(db).doc(id?.id).delete();
   }
 
   static Future<List<Topico>> todos() async {

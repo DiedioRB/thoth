@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:thoth/models/interfaces/item_form.dart';
+import 'package:thoth/models/tema.dart';
 
 class Pergunta {
   static const String collection = "perguntas";
@@ -8,6 +9,8 @@ class Pergunta {
   final String pergunta;
   final List<String> respostas;
   final int respostaCorreta;
+  DocumentReference? temaReference;
+  Tema? _tema;
 
   static List<ItemForm> getFields({Pergunta? pergunta}) {
     return [
@@ -26,7 +29,8 @@ class Pergunta {
       {required this.pergunta,
       required this.respostas,
       required this.respostaCorreta,
-      this.id});
+      this.id,
+      this.temaReference});
 
   static CollectionReference getCollection(FirebaseFirestore db) {
     return db.collection(collection).withConverter<Pergunta>(
@@ -45,7 +49,8 @@ class Pergunta {
             ? List.from(data?['respostas'])
             : [],
         respostaCorreta: data?['correta'],
-        id: snapshot.reference);
+        id: snapshot.reference,
+        temaReference: data?['tema']);
   }
 
   Map<String, dynamic> toFirestore() {
@@ -56,19 +61,30 @@ class Pergunta {
     };
   }
 
+  Future<Tema?> get tema async {
+    if (_tema == null && temaReference != null) {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      await Tema.getCollection(db)
+          .where(FieldPath.documentId, isEqualTo: temaReference)
+          .get()
+          .then((value) => {_tema = value.docs.first.data() as Tema});
+    }
+    return _tema;
+  }
+
   create() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Pergunta.getCollection(db).doc(id?.id).set(this);
+    await Pergunta.getCollection(db).doc(id?.id).set(this);
   }
 
   update() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Pergunta.getCollection(db).doc(id?.id).update(toFirestore());
+    await Pergunta.getCollection(db).doc(id?.id).update(toFirestore());
   }
 
   delete() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Pergunta.getCollection(db).doc(id?.id).delete();
+    await Pergunta.getCollection(db).doc(id?.id).delete();
   }
 
   static Future<List<Pergunta>> tudo() async {

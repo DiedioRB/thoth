@@ -85,17 +85,17 @@ class Tema {
 
   create() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Tema.getCollection(db).doc(id?.id).set(this);
+    await Tema.getCollection(db).doc(id?.id).set(this);
   }
 
   update() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Tema.getCollection(db).doc(id?.id).update(toFirestore());
+    await Tema.getCollection(db).doc(id?.id).update(toFirestore());
   }
 
   delete() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Tema.getCollection(db).doc(id?.id).delete();
+    await Tema.getCollection(db).doc(id?.id).delete();
   }
 
   static Future<List<Tema>> tudo() async {

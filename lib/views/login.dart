@@ -31,9 +31,18 @@ class _LoginState extends State<Login> {
   final FormBuilder form = FormBuilder(Usuario.getFieldsLogin());
 
   void _login(String? email, String? senha) async {
+    Usuario? u;
     if (email != null && senha != null) {
-      await Usuario.login(email, senha);
+      u = await Usuario.login(email, senha);
     }
+    if (u == null) {
+      _mostrarUsuarioIncorreto();
+    }
+  }
+
+  void _mostrarUsuarioIncorreto() {
+    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        const SnackBar(content: Text("Usuário ou senha incorretos!")));
   }
 
   void esqueciMinhaSenha() {
@@ -91,102 +100,108 @@ class _LoginState extends State<Login> {
     return Material(
         child: Scaffold(
           backgroundColor: TemaApp.darkPrimary,
-            body: Column(
-              children: [
-                Expanded(
-                    flex: 1,
-                    //APENAS REPRESENTATIVO
-                    child: Container(
-                      //child: const Icon(
-                      //  Icons.add,
-                      //  color: Colors.white,
-                      //  size: 255,
-                      //),
-                    )
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    decoration:BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(50),
-                        topLeft: Radius.circular(50)
-                      ),
-                      color: TemaApp.branco
+            body: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+                child:  Column(
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        //APENAS REPRESENTATIVO
+                        child: Container(
+                          //child: const Icon(
+                          //  Icons.add,
+                          //  color: Colors.white,
+                          //  size: 255,
+                          //),
+                        )
                     ),
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 30),
-                          child: Text(
-                            "LOGIN",
-                            style: TextStyle(
-                                color: TemaApp.darkSecondary,
-                                fontSize: 35,
-                            ),
+                    Expanded(
+                        flex: 2,
+                        child: Container(
+                          decoration:BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(50),
+                                  topLeft: Radius.circular(50)
+                              ),
+                              color: TemaApp.branco
                           ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(
-                              left: 42, right: 42, bottom: 20),
-                          child: form.build(),
-                        ),
-
-                        Container(
-                          margin: const EdgeInsets.only(top: 25),
-                          child:  Botao(
-                              texto: "Entrar",
-                              corFundo: TemaApp.darkPrimary,
-                              corTexto: TemaApp.branco,
-                              callback: () {
-                                _login(form.values['email'], form.values['senha']);
-                              }
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 25),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          child: Column(
                             children: [
-                              const Text(
-                                "Não tem acesso? Cadastre-se ",
-                                style: TextStyle(
-                                    fontSize: 18
+                              Container(
+                                margin: const EdgeInsets.symmetric(vertical: 30),
+                                child: Text(
+                                  "LOGIN",
+                                  style: TextStyle(
+                                    color: TemaApp.darkSecondary,
+                                    fontSize: 35,
+                                  ),
                                 ),
                               ),
-                              InkWell(
-                                onTap: () =>
-                                {Navigator.of(context).pushNamed(Routes.cadastroUsuario)},
-                                child: const Text(
-                                    "aqui",
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 42, right: 42, bottom: 20),
+                                child: form.build(),
+                              ),
+
+                              Container(
+                                margin: const EdgeInsets.only(top: 25),
+                                child:  Botao(
+                                    texto: "Entrar",
+                                    corFundo: TemaApp.darkPrimary,
+                                    corTexto: TemaApp.branco,
+                                    callback: () {
+                                      _login(form.values['email'], form.values['senha']);
+                                    }
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 25),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      "Não tem acesso? Cadastre-se ",
+                                      style: TextStyle(
+                                          fontSize: 18
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () =>
+                                      {Navigator.of(context).pushNamed(Routes.cadastroUsuario)},
+                                      child: const Text(
+                                        "aqui",
+                                        style: TextStyle(
+                                            color: Colors.blueAccent,
+                                            fontSize: 18
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 12),
+                                child: InkWell(
+                                  onTap: () => {esqueciMinhaSenha()},
+                                  child: const Text(
+                                    "Esqueci minha senha",
                                     style: TextStyle(
                                         color: Colors.blueAccent,
-                                      fontSize: 18
+                                        fontSize: 18
                                     ),
                                   ),
                                 ),
+                              ),
                             ],
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 12),
-                          child: InkWell(
-                            onTap: () => {esqueciMinhaSenha()},
-                            child: const Text(
-                              "Esqueci minha senha",
-                              style: TextStyle(
-                                  color: Colors.blueAccent,
-                                fontSize: 18
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                )
-              ],
+                        )
+                    )
+                  ],
+                ),
+              ),
             )
+
         )
     );
   }

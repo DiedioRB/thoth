@@ -26,6 +26,8 @@ abstract class TemaApp {
   static Color kartPrimary = Color(0xFFB01C8B);
   static Color kartSecondary = Color(0xFFCB119C);
 
+  static Color success = Colors.green;
+
   //Cores específicas para componentes
   static Color appBarPrimary = Color(0xFF654E92); //Color.fromARGB(255, 101, 78, 146); //Colors.deepPurple.shade600;
   static Color cardPrimary = Color(0xFFF5F5F5); //Color(0xFFECE4FD);

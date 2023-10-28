@@ -115,20 +115,6 @@ class Menu extends StatelessWidget {
                     child: InkWell(
                       child: Center(
                           child: Text(
-                        "Cadastrar Perguntas",
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      )),
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(Routes.cadastroPerguntas);
-                      },
-                    ),
-                  ),
-                  Card(
-                    child: InkWell(
-                      child: Center(
-                          child: Text(
                         "Kart",
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.titleLarge,

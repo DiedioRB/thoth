@@ -34,28 +34,15 @@ class Deck {
 
   Future<List<Pergunta>> get perguntas async {
     if (_perguntas.isEmpty && perguntasReferences.isNotEmpty) {
-      List<List<DocumentReference>> sublist = [];
-      for (var i = 0; i < perguntasReferences.length; i += 10) {
-        sublist.add(perguntasReferences.sublist(
-            i,
-            i + 10 > perguntasReferences.length
-                ? perguntasReferences.length
-                : i + 10));
-      }
-
       FirebaseFirestore db = FirebaseFirestore.instance;
-
-      _perguntas.clear();
-      // ignore: avoid_function_literals_in_foreach_calls
-      sublist.forEach((sublista) async {
-        await Pergunta.getCollection(db)
-            .where(FieldPath.documentId, whereIn: perguntasReferences)
-            .get()
-            .then((value) => {
-                  for (var pergunta in value.docs)
-                    {_perguntas.add(pergunta.data() as Pergunta)}
-                });
-      });
+      await Pergunta.getCollection(db)
+          .where(FieldPath.documentId, whereIn: perguntasReferences)
+          .get()
+          .then((value) => {
+                _perguntas.clear(),
+                for (var pergunta in value.docs)
+                  {_perguntas.add(pergunta.data() as Pergunta)}
+              });
     }
     return _perguntas;
   }
@@ -69,16 +56,16 @@ class Deck {
 
   create() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Deck.getCollection(db).doc(id?.id).set(this);
+    await Deck.getCollection(db).doc(id?.id).set(this);
   }
 
   update() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Deck.getCollection(db).doc(id?.id).update(toFirestore());
+    await Deck.getCollection(db).doc(id?.id).update(toFirestore());
   }
 
   delete() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Deck.getCollection(db).doc(id?.id).delete();
+    await Deck.getCollection(db).doc(id?.id).delete();
   }
 }

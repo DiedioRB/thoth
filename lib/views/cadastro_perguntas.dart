@@ -6,7 +6,7 @@ import 'package:thoth/models/tema.dart';
 import 'package:thoth/tema_app.dart';
 
 class CadastroPerguntas extends StatefulWidget {
-  Tema tema;
+  final Tema tema;
   CadastroPerguntas({super.key, required this.tema});
 
   @override

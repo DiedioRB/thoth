@@ -14,7 +14,7 @@ import 'package:thoth/views/cadastro_quiz.dart';
 import 'package:thoth/views/topicos.dart';
 import 'package:thoth/views/cadastro_perguntas.dart';
 import 'package:thoth/views/atividade_quiz.dart';
-import 'package:thoth/views/pontuacao_quiz.dart';
+import 'package:thoth/views/pontuacao.dart';
 import 'package:thoth/views/flashcards.dart';
 import 'package:thoth/views/decks.dart';
 import 'package:thoth/views/cadastro_deck.dart';
@@ -37,7 +37,7 @@ class Routes {
   static const String cadastroTopico = "/topicos/cadastro";
   static const String cadastroPerguntas = "/perguntas/cadastro";
   static const String atividadeQuiz = "/quizzes/quiz";
-  static const String pontuacaoQuiz = "/quizzes/quiz/resultado";
+  static const String pontuacao = "/quizzes/quiz/resultado";
   static const String kart = "/kart";
   static const String decks = "/decks";
   static const String cadastroDeck = "/decks/cadastro";
@@ -65,8 +65,8 @@ class Routes {
           CadastroPerguntas(tema: settings.arguments as Tema),
       atividadeQuiz: (context) =>
           AtividadeQuiz(listaPerguntas: settings.arguments as List<Pergunta>),
-      pontuacaoQuiz: (context) =>
-          PontuacaoQuiz(pontos: settings.arguments as int?),
+      pontuacao: (context) =>
+          Pontuacao(pontos: settings.arguments as int?),
       kart: (context) => const Kart(),
       decks: (context) => const Decks(),
       cadastroDeck: (context) => const CadastroDeck(),

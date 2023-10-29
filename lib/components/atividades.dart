@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
-
+import 'package:thoth/tema_app.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/routes.dart';
+import 'package:thoth/components/botao.dart';
+import 'dart:math';
 
 class Atividade extends StatefulWidget {
   final List<Pergunta> perguntas;
@@ -66,6 +67,7 @@ class _AtividadeState extends State<Atividade> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: TemaApp.quizPrimary,
         title: Text("Quiz: $count / ${perguntasQuiz.length}")
       ),
       body:
@@ -84,20 +86,20 @@ class _AtividadeState extends State<Atividade> {
                   margin: const EdgeInsets.all(8),
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                   decoration: BoxDecoration(
-                      color: const Color(0x7f0193F4), //verify use of Colors.transparent
+                      color: TemaApp.quizSecondary, //verify use of Colors.transparent
                       borderRadius: BorderRadius.circular(18)
                   ),
                   child: Center(
                     child: Text(perguntasQuiz[count].pergunta,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 18,
-                          color: Colors.white,
+                          color: TemaApp.branco,
                           fontWeight: FontWeight.bold
                       ),
                     ),
                   ),
                 ),
-                const Divider(height: 25),
+                Divider(height: 25, color: TemaApp.quizPrimary),
                 ListView.builder(
                   shrinkWrap: true,
                   itemCount: perguntasQuiz[count].respostas.length,
@@ -106,7 +108,7 @@ class _AtividadeState extends State<Atividade> {
                       onTap: () {
                         setState(() {
                           indiceListView = index;
-                          cor = Colors.black26;
+                          cor = TemaApp.quizTerciary;
                         });
                         if(perguntasQuiz[count].respostaCorreta == index) {
                           acertou = true;
@@ -137,20 +139,25 @@ class _AtividadeState extends State<Atividade> {
                     );
                     },
                 ),
-                const Divider(height: 25),
+                Divider(height: 25, color: TemaApp.quizPrimary),
                 (count + 1) <  perguntasQuiz.length?
-                ElevatedButton(
-                    onPressed: () {
+                Botao(
+                    texto: "Próximo",
+                    corFundo: TemaApp.quizPrimary,
+                    corTexto: TemaApp.branco,
+                    callback:() {
                       if(acertou) {
                         setState(() {
                           pontos++;
                         });
                       }
                       attCount();
-                    },
-                    child: const Text("Próximo")
-                ): ElevatedButton(
-                    onPressed: () {
+                    })
+              : Botao(
+                    texto: "Finalizar",
+                    corFundo: TemaApp.quizPrimary,
+                    corTexto: TemaApp.branco,
+                    callback: () {
                       if(acertou) {
                         setState(() {
                           pontos++;
@@ -158,12 +165,11 @@ class _AtividadeState extends State<Atividade> {
                       }
 
                       Navigator.of(context).pushNamed(
-                          Routes.pontuacaoQuiz,
+                          Routes.pontuacao,
                           arguments: pontos
                       );
-                    },
-                    child: const Text("Finalizar")
-                )
+                    })
+
               ],
             ),
           ),

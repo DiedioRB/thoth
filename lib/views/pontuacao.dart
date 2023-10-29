@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:thoth/tema_app.dart';
+import 'package:thoth/components/botao.dart';
 
-class PontuacaoQuiz extends StatelessWidget {
+class Pontuacao extends StatelessWidget {
   final int? pontos;
 
-  const PontuacaoQuiz({super.key, this.pontos});
+  const Pontuacao({super.key, this.pontos});
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +43,14 @@ class PontuacaoQuiz extends StatelessWidget {
                 style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
               ),
             ),
-            ElevatedButton(
-                onPressed: () {
+            Botao(
+                texto: "Menu Principal",
+                corFundo: TemaApp.darkPrimary,
+                corTexto: TemaApp.branco,
+                callback: () {
                   Navigator.of(context).pushNamed("/menu");
-                },
-                child: const Text("Menu Principal"))
+                }
+            )
           ],
         ),
       ),

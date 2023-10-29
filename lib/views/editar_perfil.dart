@@ -1,42 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:thoth/helpers/auth_helper.dart'; - TODO -  Repassar itens de conexão para o Auth Helper
 
 class EditarPerfil extends StatefulWidget {
   const EditarPerfil({super.key});
 
   @override
-  _EditarPerfil createState() => _EditarPerfil();
+  State<EditarPerfil> createState() => _EditarPerfil();
 }
 
 class _EditarPerfil extends State<EditarPerfil> {
-
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
   String getUserID() {
     return FirebaseAuth.instance.currentUser?.uid ?? "";
   }
+
   String getUserEmail() {
     return FirebaseAuth.instance.currentUser?.email ?? "";
   }
+
   String getUserName() {
     return FirebaseAuth.instance.currentUser?.displayName ?? "";
   }
 
   void _updatePerfil() async {
-    DocumentReference userRef = FirebaseFirestore.instance.collection('usuarios').doc(getUserID());
+    DocumentReference userRef =
+        FirebaseFirestore.instance.collection('usuarios').doc(getUserID());
     await userRef.update({
       'nome': _nomeController.text,
       'email': _emailController.text,
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Perfil atualizado com sucesso!')),
-    );
   }
 
-  final String _foto = "https://cdn-icons-png.flaticon.com/512/4519/4519678.png";
+  final String _foto =
+      "https://cdn-icons-png.flaticon.com/512/4519/4519678.png";
 
   @override
   Widget build(BuildContext context) {
@@ -55,37 +54,41 @@ class _EditarPerfil extends State<EditarPerfil> {
             ),
             const SizedBox(height: 20),
             Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: TextFormField(
-                  controller: _nomeController,
-                  enabled: true,
-                  decoration: const  InputDecoration(
-                    labelText: "Nome",
-                    border: OutlineInputBorder(),
-                  ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: TextFormField(
+                controller: _nomeController,
+                enabled: true,
+                decoration: const InputDecoration(
+                  labelText: "Nome",
+                  border: OutlineInputBorder(),
                 ),
               ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: TextFormField(
-              controller: _emailController,
-              enabled: true,
-              decoration: const InputDecoration(
-                labelText: "E-mail",
-                border: OutlineInputBorder(),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: TextFormField(
+                controller: _emailController,
+                enabled: true,
+                decoration: const InputDecoration(
+                  labelText: "E-mail",
+                  border: OutlineInputBorder(),
+                ),
               ),
             ),
-          ),
-          TextButton(
+            TextButton(
               onPressed: () {
-                FirebaseAuth.instance.sendPasswordResetEmail(
-                    email: getUserEmail());
+                FirebaseAuth.instance
+                    .sendPasswordResetEmail(email: getUserEmail());
               },
               child: const Text("Reset de Senha"),
             ),
             TextButton(
               onPressed: () {
                 _updatePerfil(); // TODO - Validar a atualização dos dados em tela
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text('Perfil atualizado com sucesso!')),
+                );
               },
               child: const Text("Salvar"),
             ),

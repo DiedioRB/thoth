@@ -87,6 +87,18 @@ class Pergunta {
     await Pergunta.getCollection(db).doc(id?.id).delete();
   }
 
+  static Future<List<Pergunta>> tudo() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    List<Pergunta> perguntas = [];
+    await getCollection(db).get().then((value) {
+      perguntas.clear();
+      for (var pergunta in value.docs) {
+        perguntas.add(pergunta.data() as Pergunta);
+      }
+    });
+    return perguntas;
+  }
+
   @override
   String toString() {
     return pergunta;

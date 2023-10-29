@@ -52,6 +52,7 @@ class _AtividadeState extends State<Atividade> {
 
   void attCount() {
     indiceListView = -1;
+    acertou = false;
     setState(() {
       if((count + 1) < perguntasQuiz.length) {
         count++;
@@ -99,7 +100,6 @@ class _AtividadeState extends State<Atividade> {
                     ),
                   ),
                 ),
-                acertou? Text("ACERTOU") :
                 Divider(height: 25, color: TemaApp.quizPrimary),
                 ListView.builder(
                   shrinkWrap: true,
@@ -152,7 +152,38 @@ class _AtividadeState extends State<Atividade> {
                           pontos++;
                         });
                       }
-                      attCount();
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: acertou?
+                              Text("ACERTOU!",
+                                  style: TextStyle(color: TemaApp.quizSecondary)) :
+                              Text("ERROU!",
+                                  style: TextStyle(color: TemaApp.quizSecondary)),
+                              content: acertou?
+                              Text("Parabéns! Continue estudando!",
+                                  style: TextStyle(color: TemaApp.quizSecondary)) :
+                              Text("Poxa, que pena. A resposta correta era: \n"
+                                  "${perguntasQuiz[count].
+                              respostas[perguntasQuiz[count].respostaCorreta]}",
+                                  style: TextStyle(color: TemaApp.quizSecondary)),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    attCount();
+                                  },
+                                  child: Text("Entendido",
+                                      style: TextStyle(
+                                        color: TemaApp.quizSecondary,
+                                        fontWeight: FontWeight.bold)
+                                  ),
+                                )
+                              ],
+                            );
+                          }
+                      );
                     })
               : Botao(
                     texto: "Finalizar",
@@ -164,13 +195,42 @@ class _AtividadeState extends State<Atividade> {
                           pontos++;
                         });
                       }
-
-                      Navigator.of(context).pushNamed(
-                          Routes.pontuacao,
-                          arguments: pontos
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: acertou?
+                              Text("ACERTOU!",
+                              style: TextStyle(color: TemaApp.quizSecondary)) :
+                              Text("ERROU!",
+                                  style: TextStyle(color: TemaApp.quizSecondary)),
+                              content: acertou?
+                              Text("Parabéns! Continue estudando!",
+                                  style: TextStyle(color: TemaApp.quizSecondary)) :
+                              Text("Poxa, que pena. A resposta correta era: \n"
+                                  "${perguntasQuiz[count].
+                              respostas[perguntasQuiz[count].respostaCorreta]}",
+                                  style: TextStyle(color: TemaApp.quizSecondary)),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pushNamed(
+                                        Routes.pontuacao,
+                                        arguments: [pontos, 0]
+                                    );
+                                  },
+                                  child: Text("Entendido",
+                                      style: TextStyle(
+                                          color: TemaApp.quizSecondary,
+                                          fontWeight: FontWeight.bold)
+                                  ),
+                                )
+                              ],
+                            );
+                          }
                       );
                     })
-
               ],
             ),
           ),

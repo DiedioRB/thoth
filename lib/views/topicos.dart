@@ -69,11 +69,8 @@ class _TopicosState extends State<Topicos> {
         title: const Text("Tópicos"),
       ),
       body: Center(
-        child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 400,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20),
+        child: ListView.builder(
+          padding: EdgeInsets.symmetric(horizontal: 25, vertical: 18),
             itemCount: _topicos.length,
             itemBuilder: (context, index) {
               return ItemTopico(

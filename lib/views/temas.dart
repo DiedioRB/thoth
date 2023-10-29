@@ -71,7 +71,7 @@ class _TemasState extends State<Temas> {
             ),
           ),
            SliverPadding(
-             padding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+             padding: EdgeInsets.symmetric( horizontal: 25, vertical: 18),
              sliver:  SliverList(
                delegate: SliverChildBuilderDelegate(
                      (BuildContext context, int index) {

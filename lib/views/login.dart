@@ -100,49 +100,41 @@ class _LoginState extends State<Login> {
     return Material(
         child: Scaffold(
           backgroundColor: TemaApp.darkPrimary,
-            body: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-                child:  Column(
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        //APENAS REPRESENTATIVO
-                        child: Container(
-                          //child: const Icon(
-                          //  Icons.add,
-                          //  color: Colors.white,
-                          //  size: 255,
-                          //),
-                        )
+            body: Column(
+              children: [
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                      child: Image.asset('assets/images/logo_1.png'),
+                    )
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    decoration:BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(50),
+                        topLeft: Radius.circular(50)
+                      ),
+                      color: TemaApp.branco
                     ),
-                    Expanded(
-                        flex: 2,
-                        child: Container(
-                          decoration:BoxDecoration(
-                              borderRadius: const BorderRadius.only(
-                                  topRight: Radius.circular(50),
-                                  topLeft: Radius.circular(50)
-                              ),
-                              color: TemaApp.branco
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 30),
+                          child: Text(
+                            "LOGIN",
+                            style: TextStyle(
+                                color: TemaApp.darkSecondary,
+                                fontSize: 35,
+                            ),
                           ),
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.symmetric(vertical: 30),
-                                child: Text(
-                                  "LOGIN",
-                                  style: TextStyle(
-                                    color: TemaApp.darkSecondary,
-                                    fontSize: 35,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(
-                                    left: 42, right: 42, bottom: 20),
-                                child: form.build(),
-                              ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 42, right: 42, bottom: 20),
+                          child: form.build(),
+                        ),
 
                               Container(
                                 margin: const EdgeInsets.only(top: 25),
@@ -200,9 +192,6 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ),
-            )
-
-        )
-    );
+            );
   }
 }

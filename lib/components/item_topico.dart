@@ -191,7 +191,9 @@ class _ItemTopicoState extends State<ItemTopico> {
                                 onPressed: (){
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text("Cancelar"),
+                                child: Text("Cancelar",
+                                  style: TextStyle(color: TemaApp.quizSecondary),
+                                ),
                               ),
                               TextButton(
                                 onPressed: () {
@@ -199,8 +201,11 @@ class _ItemTopicoState extends State<ItemTopico> {
                                   Navigator.of(context).pushNamed(Routes.quizzes,
                                       arguments: widget.topico);
                                 },
-                                child: const Text("Entendido",
-                                    style: TextStyle(fontWeight: FontWeight.bold)
+                                child: Text("Entendido",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: TemaApp.quizSecondary
+                                    )
                                 ),
                               )
                             ],
@@ -226,7 +231,9 @@ class _ItemTopicoState extends State<ItemTopico> {
                                   onPressed: (){
                                     Navigator.of(context).pop();
                                   },
-                                  child: const Text("Cancelar"),
+                                  child: Text("Cancelar",
+                                    style: TextStyle(color: TemaApp.flashcardSecondary),
+                                  ),
                                 ),
                                 TextButton(
                                   onPressed: () {
@@ -234,8 +241,11 @@ class _ItemTopicoState extends State<ItemTopico> {
                                     Navigator.of(context).pushNamed(Routes.atividadeFlashcard,
                                         arguments:  [topico, null]);
                                   },
-                                  child: const Text("Entendido",
-                                      style: TextStyle(fontWeight: FontWeight.bold)
+                                  child: Text("Entendido",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: TemaApp.flashcardSecondary
+                                      )
                                   ),
                                 )
                               ],
@@ -261,15 +271,20 @@ class _ItemTopicoState extends State<ItemTopico> {
                                   onPressed: (){
                                     Navigator.of(context).pop();
                                   },
-                                  child: const Text("Cancelar"),
+                                  child: Text("Cancelar",
+                                    style: TextStyle(color: TemaApp.kartSecondary),
+                                  ),
                                 ),
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                     Navigator.of(context).pushNamed(Routes.kart);
                                   },
-                                  child: const Text("Entendido",
-                                      style: TextStyle(fontWeight: FontWeight.bold)
+                                  child: Text("Entendido",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: TemaApp.kartSecondary
+                                      )
                                   ),
                                 )
                               ],

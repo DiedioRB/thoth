@@ -77,7 +77,7 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
     } else if (count + 1 == perguntasQuiz.length) {
       Navigator.of(context).pushNamed(
           Routes.pontuacao,
-          arguments: pontos
+          arguments: [pontos, 1]
       );
     } else {
       count = count;

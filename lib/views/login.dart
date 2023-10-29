@@ -8,6 +8,7 @@ import 'package:thoth/routes.dart';
 import 'package:thoth/tema_app.dart';
 import 'package:thoth/components/botao.dart';
 
+
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -97,11 +98,7 @@ class _LoginState extends State<Login> {
                     flex: 1,
                     //APENAS REPRESENTATIVO
                     child: Container(
-                      //child: const Icon(
-                      //  Icons.add,
-                      //  color: Colors.white,
-                      //  size: 255,
-                      //),
+                      child: Image.asset('assets/images/logo_1.png'),
                     )
                 ),
                 Expanded(

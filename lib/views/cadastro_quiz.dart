@@ -4,6 +4,7 @@ import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
 import 'package:thoth/models/topico.dart';
+import 'package:thoth/tema_app.dart';
 
 class CadastroQuiz extends StatefulWidget {
   const CadastroQuiz({super.key});
@@ -74,6 +75,7 @@ class CQuizzesState extends State<CadastroQuiz> {
     nQuiz(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: TemaApp.quizPrimary,
         title: const Text("Criar Quiz"),
       ),
       body: Center(

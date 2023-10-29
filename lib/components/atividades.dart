@@ -99,6 +99,7 @@ class _AtividadeState extends State<Atividade> {
                     ),
                   ),
                 ),
+                acertou? Text("ACERTOU") :
                 Divider(height: 25, color: TemaApp.quizPrimary),
                 ListView.builder(
                   shrinkWrap: true,

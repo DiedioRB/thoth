@@ -40,29 +40,26 @@ class _DecksState extends State<Decks> {
               //height: 350,
               margin: const EdgeInsets.only(top: 25.0),
               child: ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 18),
                   //shrinkWrap: true,
                   itemCount: _decks.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return GridView.extent(
-                      shrinkWrap: true,
-                      maxCrossAxisExtent: 300,
-                      mainAxisSpacing: 4,
-                      crossAxisSpacing: 4,
-                      children: [
-                        Card(
-                          child: InkWell(
-                            child: Center(
-                              child: Text(_decks[index].nome),
-                            ),
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
-                                  Routes.atividadeFlashcard,
-                                  arguments: [null, _decks[index]]);
-                            },
+                    return Card(
+                        elevation: 2,
+                        child: InkWell(
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.symmetric(vertical: 18),
+                            child: Text(_decks[index].nome),
                           ),
-                        )
-                      ],
-                    );
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                                Routes.atividadeFlashcard,
+                                arguments: [null, _decks[index]]);
+                          },
+                        ),
+                      );
+
                   }))),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {Navigator.of(context).pushNamed(Routes.cadastroDeck)},

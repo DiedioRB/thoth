@@ -27,7 +27,7 @@ class AuthHelper {
       required String uid}) async {
     // final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    Usuario usuario = Usuario(nome: name, email: email, salas: []);
+    Usuario usuario = Usuario(nome: name, email: email, temasReferences: []);
     usuario.create(uid: uid);
     // firestore.collection('usuarios').doc(uid).set({
     //   'nome': name,

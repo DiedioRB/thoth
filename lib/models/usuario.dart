@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -5,6 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:thoth/helpers/auth_helper.dart';
 import 'package:thoth/models/interfaces/item_form.dart';
 import 'package:thoth/models/interfaces/item_form_model.dart';
+import 'package:thoth/models/tema.dart';
+
+enum Perfis { aluno, administrador }
 
 class Usuario implements ItemFormModel {
   static const String collection = "usuarios";
@@ -12,7 +17,9 @@ class Usuario implements ItemFormModel {
   final DocumentReference? id;
   final String nome;
   final String email;
-  final List<String> salas;
+  final List<DocumentReference> temasReferences;
+  final List<Tema> _temas = [];
+  final Perfis perfil;
 
   static List<ItemForm> getFieldsCadastro({Usuario? usuario}) {
     return [
@@ -50,7 +57,8 @@ class Usuario implements ItemFormModel {
   Usuario({
     required this.nome,
     required this.email,
-    required this.salas,
+    required this.temasReferences,
+    this.perfil = Perfis.aluno,
     this.id,
   });
 
@@ -100,7 +108,11 @@ class Usuario implements ItemFormModel {
     return Usuario(
         nome: data?['nome'],
         email: data?['email'],
-        salas: (data?['salas'] is Iterable) ? List.from(data?['salas']) : [],
+        temasReferences:
+            (data?['temas'] is Iterable) ? List.from(data?['temas']) : [],
+        perfil: (data?['perfil'] != null)
+            ? Perfis.values[data?['perfil']]
+            : Perfis.aluno,
         id: snapshot.reference);
   }
 
@@ -108,8 +120,41 @@ class Usuario implements ItemFormModel {
     return {
       "nome": nome,
       "email": email,
-      "salas": salas,
+      "temas": temasReferences,
     };
+  }
+
+  Future<List<Tema>> get temas async {
+    if (_temas.isEmpty && temasReferences.isNotEmpty) {
+      List<List<DocumentReference>> sublist = [];
+      for (var i = 0; i < temasReferences.length; i += 10) {
+        sublist.add(temasReferences.sublist(i,
+            i + 10 > temasReferences.length ? temasReferences.length : i + 10));
+      }
+
+      _temas.clear();
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      // ignore: avoid_function_literals_in_foreach_calls
+      sublist.forEach((sublista) async {
+        await Tema.getCollection(db)
+            .where(FieldPath.documentId, whereIn: sublista)
+            .get()
+            .then((value) {
+          for (var tema in value.docs) {
+            _temas.add(tema.data() as Tema);
+          }
+        });
+      });
+    }
+    return _temas;
+  }
+
+  entrarNoTema(Tema tema) async {
+    if (tema.id != null) {
+      temasReferences.add(tema.id!);
+      _temas.add(tema);
+      await update();
+    }
   }
 
   create({required String uid}) async {

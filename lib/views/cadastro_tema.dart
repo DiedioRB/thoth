@@ -16,7 +16,8 @@ class CTemasState extends State<CadastroTema> {
   List<Topico> todosTopicos = [];
   List<Topico> topicos = [];
 
-  Tema novoTema = Tema(descricao: "", topicosReferences: [], id: null);
+  Tema novoTema =
+      Tema(descricao: "", topicosReferences: [], codigo: "", id: null);
   late FormBuilder formBuilder;
 
   @override
@@ -93,6 +94,7 @@ class CTemasState extends State<CadastroTema> {
                       }
                       Tema novoTema = Tema(
                           descricao: formBuilder.values['nome'],
+                          codigo: formBuilder.values['código'],
                           topicosReferences: refs);
                       novoTema.create();
                       ScaffoldMessenger.maybeOf(context)?.showSnackBar(

@@ -37,54 +37,51 @@ class Menu extends StatelessWidget {
           body: TabBarView(
             children: [
               Expanded(
-                child: Center(
-                  child: Botao(
-                    texto: "Visão do aluno",
-                    corFundo: TemaApp.darkPrimary,
-                    corTexto: TemaApp.branco,
-                    callback: () {
-                      Navigator.of(context)
-                          .pushNamed(Routes.temas, arguments: false);
-                    },
-                  ),
-                )
-              ),
+                  child: Center(
+                child: Botao(
+                  texto: "Visão do aluno",
+                  corFundo: TemaApp.darkPrimary,
+                  corTexto: TemaApp.branco,
+                  callback: () async {
+                    Navigator.of(context)
+                        .pushNamed(Routes.temas, arguments: false);
+                  },
+                ),
+              )),
               Center(
                   child: GridView.extent(
-                    maxCrossAxisExtent: 300,
-                    mainAxisSpacing: 4,
-                    crossAxisSpacing: 4,
-                    children: [
-                      Card(
-                        child: InkWell(
-                          child: Center(
-                              child: Text(
-                                "Temas",
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.titleLarge,
-                              )
-                          ),
-                          onTap: () {
-                            Navigator.of(context)
-                                .pushNamed(Routes.temas, arguments: true);
-                            },
-                        ),
-                      ),
-                      Card(
-                        child: InkWell(
-                          child: Center(
-                              child: Text(
-                                "Tópicos",
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.titleLarge,
-                              )
-                          ),
-                          onTap: () {
-                            Navigator.of(context)
-                                .pushNamed(Routes.topicos, arguments: [null, true]);
-                            },
-                        ),
-                      ),
+                maxCrossAxisExtent: 300,
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
+                children: [
+                  Card(
+                    child: InkWell(
+                      child: Center(
+                          child: Text(
+                        "Temas",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      )),
+                      onTap: () async {
+                        Navigator.of(context)
+                            .pushNamed(Routes.temas, arguments: true);
+                      },
+                    ),
+                  ),
+                  Card(
+                    child: InkWell(
+                      child: Center(
+                          child: Text(
+                        "Tópicos",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      )),
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(Routes.topicos, arguments: [null, true]);
+                      },
+                    ),
+                  ),
                   Card(
                     child: InkWell(
                       child: Center(

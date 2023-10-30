@@ -65,8 +65,7 @@ class Routes {
           CadastroPerguntas(tema: settings.arguments as Tema),
       atividadeQuiz: (context) =>
           AtividadeQuiz(listaPerguntas: settings.arguments as List<Pergunta>),
-      pontuacao: (context) =>
-          Pontuacao(pontos: settings.arguments as int?),
+      pontuacao: (context) => Pontuacao(pontos: settings.arguments as int?),
       kart: (context) => const Kart(),
       decks: (context) => const Decks(),
       cadastroDeck: (context) => const CadastroDeck(),

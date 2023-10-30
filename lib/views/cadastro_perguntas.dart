@@ -4,6 +4,7 @@ import 'package:thoth/helpers/openai_helper.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/tema.dart';
 import 'package:thoth/tema_app.dart';
+import 'package:thoth/components/botao.dart';
 
 class CadastroPerguntas extends StatefulWidget {
   final Tema tema;
@@ -118,7 +119,7 @@ class _CadastroPerguntasState extends State<CadastroPerguntas> {
       ),
       body: Container(
         margin: const EdgeInsets.only(
-            top: 100.0, left: 42.0, right: 42.0, bottom: 35.0),
+            top: 50.0, left: 42.0, right: 42.0, bottom: 35.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -146,21 +147,32 @@ class _CadastroPerguntasState extends State<CadastroPerguntas> {
                 },
                 decoration: const InputDecoration(labelText: "Quantidade"),
               ),
-              FilledButton(
-                onPressed: () {
-                  int quantidade = int.parse(quantidadeController.text);
-                  _gerarPerguntas(assuntoController.text, quantidade);
-                },
-                child: const Text("Gerar questões"),
+              Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(top: 80),
+                child: Botao(
+                    texto: "Gerar questões",
+                    corFundo: TemaApp.darkPrimary,
+                    corTexto: TemaApp.branco,
+                    callback: () {
+                      int quantidade = int.parse(quantidadeController.text);
+                      _gerarPerguntas(assuntoController.text, quantidade);
+                    }
+                )
               ),
-              FilledButton(
-                onPressed: () {
-                  _salvarPerguntas();
-                },
-                child: const Text(
-                  "Salvar questões selecionadas",
-                ),
+              Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(top: 25),
+                  child: Botao(
+                      texto: "Salvar Selecionadas",
+                      corFundo: TemaApp.darkPrimary,
+                      corTexto: TemaApp.branco,
+                      callback: () {
+                        _salvarPerguntas();
+                      }
+                  )
               ),
+
               fetching
                   ? const Column(
                       children: [

@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 //As cores definidas como 'primary' são aquelas de tom mais escuro, usadas em backgrounds
 //As cores definidas como 'secondary' são aquelas de tom mais claro, usadas em fontes daquelas cores
 
-
 abstract class TemaApp {
   //Cores padrão
   static Color lightPrimary = Colors.deepPurple.shade200;
-  static Color darkPrimary =  Color(0xFF654E92); //dark purple
+  static Color darkPrimary = Color(0xFF654E92); //dark purple
   static Color darkSecondary = Color(0xFF501CB0); //Shiny purple
   static Color contrastPrimary = Colors.white;
   static Color contrastSecondary = Colors.yellow.shade600;
@@ -29,7 +28,8 @@ abstract class TemaApp {
   static Color success = Colors.green;
 
   //Cores específicas para componentes
-  static Color appBarPrimary = Color(0xFF654E92); //Color.fromARGB(255, 101, 78, 146); //Colors.deepPurple.shade600;
+  static Color appBarPrimary = Color(
+      0xFF654E92); //Color.fromARGB(255, 101, 78, 146); //Colors.deepPurple.shade600;
   static Color cardPrimary = Color(0xFFF5F5F5); //Color(0xFFECE4FD);
 
   //Tamanhos padrão

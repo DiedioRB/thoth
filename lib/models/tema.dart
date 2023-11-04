@@ -8,6 +8,7 @@ class Tema {
 
   final DocumentReference? id;
   String descricao;
+  String codigo;
   final List<DocumentReference> topicosReferences;
   final List<Topico> _topicos = [];
 
@@ -18,10 +19,19 @@ class Tema {
           valor: tema?.descricao,
           icon: const Icon(Icons.edit),
           modificadores: [ItemFormModifiers.naoNulo]),
+      ItemForm.build(
+          descricao: "código",
+          valor: tema?.codigo,
+          icon: const Icon(Icons.password),
+          modificadores: [ItemFormModifiers.naoNulo]),
     ];
   }
 
-  Tema({required this.descricao, required this.topicosReferences, this.id});
+  Tema(
+      {required this.descricao,
+      required this.topicosReferences,
+      required this.codigo,
+      this.id});
 
   static CollectionReference getCollection(FirebaseFirestore db) {
     return db.collection(collection).withConverter<Tema>(
@@ -41,11 +51,16 @@ class Tema {
     return Tema(
         descricao: data?['descricao'],
         topicosReferences: topicos,
+        codigo: data?['codigo'],
         id: snapshot.reference);
   }
 
   Map<String, dynamic> toFirestore() {
-    return {"descricao": descricao, "topicos": topicosReferences};
+    return {
+      "descricao": descricao,
+      "topicos": topicosReferences,
+      "codigo": codigo
+    };
   }
 
   Future<List<Topico>> get topicos async {

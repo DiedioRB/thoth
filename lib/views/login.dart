@@ -138,14 +138,14 @@ class _LoginState extends State<Login> {
 
                               Container(
                                 margin: const EdgeInsets.only(top: 25),
-                                child:  Botao(
+                                child: Botao(
                                     texto: "Entrar",
                                     corFundo: TemaApp.darkPrimary,
                                     corTexto: TemaApp.branco,
                                     callback: () {
-                                      _login(form.values['email'], form.values['senha']);
-                                    }
-                                ),
+                                      _login(form.values['email'],
+                                          form.values['senha']);
+                                    }),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(top: 25),
@@ -154,13 +154,13 @@ class _LoginState extends State<Login> {
                                   children: [
                                     const Text(
                                       "Não tem acesso? Cadastre-se ",
-                                      style: TextStyle(
-                                          fontSize: 18
-                                      ),
+                                      style: TextStyle(fontSize: 18),
                                     ),
                                     InkWell(
-                                      onTap: () =>
-                                      {Navigator.of(context).pushNamed(Routes.cadastroUsuario)},
+                                      onTap: () => {
+                                        Navigator.of(context)
+                                            .pushNamed(Routes.cadastroUsuario)
+                                      },
                                       child: const Text(
                                         "aqui",
                                         style: TextStyle(

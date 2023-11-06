@@ -36,7 +36,7 @@ class Menu extends StatelessWidget {
               ]),
           body: TabBarView(
             children: [
-              Expanded(
+              Center(
                   child: Center(
                 child: Botao(
                   texto: "Visão do aluno",

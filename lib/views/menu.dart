@@ -36,8 +36,7 @@ class Menu extends StatelessWidget {
               ]),
           body: TabBarView(
             children: [
-              Expanded(
-                  child: Center(
+              Center(
                 child: Botao(
                   texto: "Visão do aluno",
                   corFundo: TemaApp.darkPrimary,
@@ -47,7 +46,7 @@ class Menu extends StatelessWidget {
                         .pushNamed(Routes.temas, arguments: false);
                   },
                 ),
-              )),
+              ),
               Center(
                   child: GridView.extent(
                 maxCrossAxisExtent: 300,

@@ -3,14 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
+import 'package:thoth/models/tema.dart';
 import 'package:thoth/routes.dart';
 import 'package:thoth/models/topico.dart';
 import 'package:thoth/tema_app.dart';
 
 class ItemQuiz extends StatefulWidget {
-  const ItemQuiz({super.key, required this.quiz, required this.modifiable});
+  const ItemQuiz(
+      {super.key,
+      required this.quiz,
+      required this.tema,
+      required this.topico,
+      required this.modifiable});
 
   final Quiz quiz;
+  final Tema tema;
+  final Topico topico;
   final bool modifiable;
 
   @override
@@ -159,7 +167,7 @@ class _ItemQuizState extends State<ItemQuiz> {
   }
 
   void getPerguntas() async {
-      perguntas = await widget.quiz.perguntas;
+    perguntas = await widget.quiz.perguntas;
   }
 
   @override
@@ -169,14 +177,17 @@ class _ItemQuizState extends State<ItemQuiz> {
     getPerguntas();
   }
 
+  _redirecionarParaAtividade(Tema tema, List<Pergunta> perguntas) {
+    Navigator.of(context)
+        .pushNamed(Routes.atividadeQuiz, arguments: [tema, perguntas]);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-          widget.quiz.nome,
-        style: TextStyle(
-          color: TemaApp.quizSecondary
-        ),
+        widget.quiz.nome,
+        style: TextStyle(color: TemaApp.quizSecondary),
       ),
       trailing: (widget.modifiable)
           ? Row(
@@ -184,24 +195,22 @@ class _ItemQuizState extends State<ItemQuiz> {
               children: [
                 IconButton(
                     icon: Icon(
-                        Icons.edit,
+                      Icons.edit,
                       color: TemaApp.quizPrimary,
                     ),
                     onPressed: () => _updateModal(context)),
                 IconButton(
                     icon: Icon(
-                        Icons.delete,
+                      Icons.delete,
                       color: TemaApp.quizPrimary,
                     ),
                     onPressed: () => _deleteModal(context)),
               ],
             )
           : null,
-      onTap: () {
-        Navigator.of(context).pushNamed(
-            Routes.atividadeQuiz,
-            arguments: perguntas
-        );
+      onTap: () async {
+        Tema tema = widget.tema;
+        _redirecionarParaAtividade(tema, perguntas);
       },
     );
   }

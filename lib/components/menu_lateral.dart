@@ -15,14 +15,14 @@ class MenuLateral extends StatelessWidget {
         ListTile(
           title: const Text("Perfil"),
           leading: const Icon(Icons.people),
-            onTap: () {
-              Navigator.of(context).pushNamed(Routes.perfil);
-            },
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.perfil);
+          },
         ),
         ListTile(
           title: const Text("Temas"),
           // leading:  Icon(Icons.space_dashboard),
-          leading:  Icon(Icons.view_quilt),
+          leading: Icon(Icons.view_quilt),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.temas);
           },
@@ -47,13 +47,6 @@ class MenuLateral extends StatelessWidget {
           leading: const Icon(Icons.collections_bookmark_outlined),
           onTap: () {
             Navigator.of(context).pushNamed(Routes.flashcards);
-          },
-        ),
-        ListTile(
-          title: const Text("Kart"),
-          leading: const Icon(Icons.drive_eta_outlined),
-          onTap: () {
-            Navigator.of(context).pushNamed(Routes.kart);
           },
         ),
         ListTile(

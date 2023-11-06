@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/components/item_topico.dart';
 import 'package:thoth/helpers/form_builder.dart';
+import 'package:thoth/models/ranking.dart';
 import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
 import 'package:thoth/models/pergunta.dart';
@@ -42,9 +43,15 @@ class _TopicosState extends State<Topicos> {
       watcher = Topico.getCollection(db).snapshots().listen(listen);
     } else {
       watcher = Topico.getCollection(db)
-          .where("tema", isEqualTo: tema!.id)
+          .where(
+            "tema",
+          )
           .snapshots()
           .listen(listen);
+      watcher = Tema.getCollection(db)
+          .where(FieldPath.documentId, isEqualTo: tema!.id)
+          .snapshots()
+          .listen(listenFromTema);
     }
   }
 
@@ -61,35 +68,45 @@ class _TopicosState extends State<Topicos> {
     }
   }
 
+  void listenFromTema(value) async {
+    List<Topico> topicos = [];
+    if (value.docs.isNotEmpty) {
+      topicos = await (value.docs.first.data() as Tema).topicos;
+      _topicos.clear();
+      setState(() {
+        _topicos = topicos;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text("Tópicos"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamed(Routes.rankingTema, arguments: widget.tema);
+            },
+            icon: const Icon(Icons.format_list_numbered),
+            tooltip: "Ranking",
+          )
+        ],
       ),
       body: Center(
         child: ListView.builder(
-          padding: EdgeInsets.symmetric(horizontal: 25, vertical: 18),
+            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 18),
             itemCount: _topicos.length,
             itemBuilder: (context, index) {
               return ItemTopico(
+                tema: widget.tema!,
                 topico: _topicos[index],
                 modifiable: widget.isAdmin ?? false,
               );
             }),
-        // child: ListView.builder(
-        //     itemCount: _topicos.length,
-        //     prototypeItem: ItemTopico(
-        //       topico: Topico(descricao: "", perguntasReferences: []),
-        //       modifiable: true,
-        //     ),
-        //     itemBuilder: (context, index) {
-        //       return ItemTopico(
-        //         topico: _topicos[index],
-        //         modifiable: true,
-        //       );
-        //     }),
       ),
       floatingActionButton: (widget.isAdmin ?? false)
           ? FloatingActionButton(

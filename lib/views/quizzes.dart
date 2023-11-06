@@ -6,14 +6,17 @@ import 'package:thoth/components/item_quiz.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
+import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
 import 'package:thoth/routes.dart';
 import 'package:thoth/tema_app.dart';
 
 class Quizzes extends StatefulWidget {
+  final Tema? tema;
   final Topico? topico;
+  final bool modifiable;
 
-  const Quizzes({super.key, this.topico});
+  const Quizzes({super.key, this.tema, this.topico, this.modifiable = false});
 
   @override
   State<Quizzes> createState() => _QuizzesState();
@@ -74,22 +77,28 @@ class _QuizzesState extends State<Quizzes> {
           child: ListView.builder(
               itemCount: _quizzes.length,
               prototypeItem: ItemQuiz(
+                tema: widget.tema!,
+                topico: topico!,
                 quiz: Quiz(nome: "", perguntasReferences: []),
-                modifiable: true,
+                modifiable: widget.modifiable,
               ),
               itemBuilder: (context, index) {
                 return ItemQuiz(
+                  tema: widget.tema!,
+                  topico: topico!,
                   quiz: _quizzes[index],
-                  modifiable: true,
+                  modifiable: widget.modifiable,
                 );
               })),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: TemaApp.quizPrimary,
-        onPressed: () {
-          Navigator.of(context).pushNamed(Routes.cadastroQuiz);
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: widget.modifiable
+          ? FloatingActionButton(
+              backgroundColor: TemaApp.quizPrimary,
+              onPressed: () {
+                Navigator.of(context).pushNamed(Routes.cadastroQuiz);
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 

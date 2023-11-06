@@ -98,100 +98,91 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        child: Scaffold(
-          backgroundColor: TemaApp.darkPrimary,
-            body: Column(
-              children: [
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                      child: Image.asset('assets/images/logo_1.png'),
-                    )
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    decoration:BoxDecoration(
+      child: Scaffold(
+        backgroundColor: TemaApp.darkPrimary,
+        body: Column(
+          children: [
+            Expanded(
+                flex: 1,
+                child: Container(
+                  child: Image.asset('images/logo_1.png'),
+                )),
+            Expanded(
+                flex: 2,
+                child: Container(
+                  decoration: BoxDecoration(
                       borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(50),
-                        topLeft: Radius.circular(50)
+                          topRight: Radius.circular(50),
+                          topLeft: Radius.circular(50)),
+                      color: TemaApp.branco),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 30),
+                        child: Text(
+                          "LOGIN",
+                          style: TextStyle(
+                            color: TemaApp.darkSecondary,
+                            fontSize: 35,
+                          ),
+                        ),
                       ),
-                      color: TemaApp.branco
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 30),
-                          child: Text(
-                            "LOGIN",
-                            style: TextStyle(
-                                color: TemaApp.darkSecondary,
-                                fontSize: 35,
+                      Container(
+                        margin: const EdgeInsets.only(
+                            left: 42, right: 42, bottom: 20),
+                        child: form.build(),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 25),
+                        child: Botao(
+                            texto: "Entrar",
+                            corFundo: TemaApp.darkPrimary,
+                            corTexto: TemaApp.branco,
+                            callback: () {
+                              _login(
+                                  form.values['email'], form.values['senha']);
+                            }),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 25),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Não tem acesso? Cadastre-se ",
+                              style: TextStyle(fontSize: 18),
                             ),
+                            InkWell(
+                              onTap: () => {
+                                Navigator.of(context)
+                                    .pushNamed(Routes.cadastroUsuario)
+                              },
+                              child: const Text(
+                                "aqui",
+                                style: TextStyle(
+                                    color: Colors.blueAccent, fontSize: 18),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 12),
+                        child: InkWell(
+                          onTap: () => {esqueciMinhaSenha()},
+                          child: const Text(
+                            "Esqueci minha senha",
+                            style: TextStyle(
+                                color: Colors.blueAccent, fontSize: 18),
                           ),
                         ),
-                        Container(
-                          margin: const EdgeInsets.only(
-                              left: 42, right: 42, bottom: 20),
-                          child: form.build(),
-                        ),
-
-                              Container(
-                                margin: const EdgeInsets.only(top: 25),
-                                child: Botao(
-                                    texto: "Entrar",
-                                    corFundo: TemaApp.darkPrimary,
-                                    corTexto: TemaApp.branco,
-                                    callback: () {
-                                      _login(form.values['email'],
-                                          form.values['senha']);
-                                    }),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(top: 25),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Text(
-                                      "Não tem acesso? Cadastre-se ",
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                    InkWell(
-                                      onTap: () => {
-                                        Navigator.of(context)
-                                            .pushNamed(Routes.cadastroUsuario)
-                                      },
-                                      child: const Text(
-                                        "aqui",
-                                        style: TextStyle(
-                                            color: Colors.blueAccent,
-                                            fontSize: 18
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(top: 12),
-                                child: InkWell(
-                                  onTap: () => {esqueciMinhaSenha()},
-                                  child: const Text(
-                                    "Esqueci minha senha",
-                                    style: TextStyle(
-                                        color: Colors.blueAccent,
-                                        fontSize: 18
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                    )
-                  ],
-                ),
-              ),
-            );
+                      ),
+                    ],
+                  ),
+                ))
+          ],
+        ),
+      ),
+    );
   }
 }

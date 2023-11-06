@@ -15,6 +15,10 @@ import 'package:thoth/components/kart/components/game_over_dialog.dart';
 import 'package:thoth/components/kart/components/pause.dart';
 import 'package:thoth/components/kart/components/question_text.dart';
 import 'package:thoth/components/kart/pergunta_manager.dart';
+import 'package:thoth/models/atividade.dart';
+import 'package:thoth/models/tema.dart';
+import 'package:thoth/models/topico.dart';
+import 'package:thoth/routes.dart';
 
 enum State { playing, answering, paused, starting, finishing }
 
@@ -23,6 +27,10 @@ class KartGame extends FlameGame
   bool keyboardPressed = false;
 
   State state = State.starting;
+
+  late final Atividade atividade;
+  final Topico topico;
+  KartGame({required this.topico});
 
   late final CarComponent player;
   late final Background background;
@@ -35,11 +43,11 @@ class KartGame extends FlameGame
   late final double carY;
 
   late final CollectibleSpawner spawner;
-  late final PerguntaManager perguntaManager;
   late final AnswerDialogComponent answerDialog;
 
   @override
   FutureOr<void> onLoad() async {
+    await carregaAtividade();
     final background = Background();
     add(background);
 
@@ -55,12 +63,18 @@ class KartGame extends FlameGame
     spawner = CollectibleSpawner(period: 1);
     add(spawner);
 
-    perguntaManager = PerguntaManager();
     answerDialog = AnswerDialogComponent();
     // answerDialog.updateRespostas(perguntaManager.perguntaAtual.respostas);
 
-    question = QuestionText(hiddenText: perguntaManager.perguntaAtual.pergunta);
+    question =
+        QuestionText(hiddenText: atividade.pergunta.pergunta, totalParts: 3);
     add(question);
+  }
+
+  Future<void> carregaAtividade() async {
+    Tema tema = await topico.tema as Tema;
+    atividade = Atividade(tema: tema, topico: topico);
+    await atividade.carregarPerguntas();
   }
 
   void explodeParticles(Vector2 position) {
@@ -81,7 +95,7 @@ class KartGame extends FlameGame
   void buildAnswers() {
     spawner.pause();
     add(answerDialog);
-    answerDialog.updateRespostas(perguntaManager.perguntaAtual.respostas);
+    answerDialog.updateRespostas(atividade.pergunta.respostas);
     for (var component in spawner.onScreenCollectibles) {
       component.removeFromParent();
     }
@@ -92,15 +106,15 @@ class KartGame extends FlameGame
       button.removeFromParent();
     }
     answerDialog.removeFromParent();
-    perguntaManager.answer(answer);
-    if (perguntaManager.next() != null) {
-      question.newText(perguntaManager.perguntaAtual.pergunta);
+    atividade.responder(answer);
+    if (!atividade.finalizado) {
+      question.newText(atividade.pergunta.pergunta);
       spawner.start();
     } else {
       question.removeFromParent();
+      overlays.add('Exit');
       add(GameOverDialog(
-          corretas: perguntaManager.corretas,
-          erradas: perguntaManager.erradas));
+          corretas: atividade.acertos, erradas: atividade.erros));
     }
   }
 

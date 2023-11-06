@@ -54,16 +54,15 @@ class Flashcard {
 
       FirebaseFirestore db = FirebaseFirestore.instance;
       _perguntas.clear();
-      // ignore: avoid_function_literals_in_foreach_calls
-      sublist.forEach((sublista) async {
+      for (var sublista in sublist) {
         await Pergunta.getCollection(db)
-            .where(FieldPath.documentId, whereIn: perguntasReferences)
+            .where(FieldPath.documentId, whereIn: sublista)
             .get()
             .then((value) => {
                   for (var pergunta in value.docs)
                     {_perguntas.add(pergunta.data() as Pergunta)}
                 });
-      });
+      }
     }
     return _perguntas;
   }

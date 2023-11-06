@@ -124,6 +124,20 @@ class Usuario implements ItemFormModel {
     };
   }
 
+  static Future<Usuario?> find(DocumentReference id) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Usuario? usuario;
+    await getCollection(db)
+        .where(FieldPath.documentId, isEqualTo: id)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        usuario = value.docs.first.data() as Usuario?;
+      }
+    });
+    return usuario;
+  }
+
   Future<List<Tema>> get temas async {
     if (_temas.isEmpty && temasReferences.isNotEmpty) {
       List<List<DocumentReference>> sublist = [];
@@ -134,8 +148,7 @@ class Usuario implements ItemFormModel {
 
       _temas.clear();
       FirebaseFirestore db = FirebaseFirestore.instance;
-      // ignore: avoid_function_literals_in_foreach_calls
-      sublist.forEach((sublista) async {
+      for (var sublista in sublist) {
         await Tema.getCollection(db)
             .where(FieldPath.documentId, whereIn: sublista)
             .get()
@@ -144,7 +157,7 @@ class Usuario implements ItemFormModel {
             _temas.add(tema.data() as Tema);
           }
         });
-      });
+      }
     }
     return _temas;
   }

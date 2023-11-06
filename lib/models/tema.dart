@@ -76,17 +76,16 @@ class Tema {
 
       FirebaseFirestore db = FirebaseFirestore.instance;
       _topicos.clear();
-      // ignore: avoid_function_literals_in_foreach_calls
-      sublist.forEach((sublista) async {
+      for (var sublista in sublist) {
         await Topico.getCollection(db)
-            .where(FieldPath.documentId, whereIn: topicosReferences)
+            .where(FieldPath.documentId, whereIn: sublista)
             .get()
             .then((value) => {
                   _topicos.clear(),
                   for (var topico in value.docs)
                     {_topicos.add(topico.data() as Topico)}
                 });
-      });
+      }
     }
     return _topicos;
   }
@@ -129,4 +128,10 @@ class Tema {
   String toString() {
     return descricao;
   }
+
+  @override
+  bool operator ==(Object other) => other is Tema && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

@@ -23,7 +23,8 @@ class QuestionText extends TextComponent with HasGameRef<KartGame> {
     text = shownText;
   }
 
-  void solvePartial({int amount = 1}) {
+  void solvePartial({int? amount}) {
+    amount ??= hiddenText!.length ~/ totalParts + 1;
     for (var i = 0; i < amount; i++) {
       shownText = shownText.replaceRange(
           min(parts, shownText.length),

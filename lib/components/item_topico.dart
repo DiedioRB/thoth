@@ -9,9 +9,14 @@ import 'package:thoth/routes.dart';
 import 'package:thoth/tema_app.dart';
 
 class ItemTopico extends StatefulWidget {
-  const ItemTopico({super.key, required this.topico, required this.modifiable});
+  const ItemTopico(
+      {super.key,
+      required this.topico,
+      required this.tema,
+      required this.modifiable});
 
   final Topico topico;
+  final Tema tema;
   final bool modifiable;
 
   @override
@@ -147,8 +152,8 @@ class _ItemTopicoState extends State<ItemTopico> {
 
   fetchTemas() async {
     List<Tema> temas = await Tema.tudo();
-    tema = null;
     this.temas.clear();
+    tema = widget.tema;
     for (var tema in temas) {
       this.temas.add(DropdownMenuItem(
             value: tema,
@@ -175,47 +180,50 @@ class _ItemTopicoState extends State<ItemTopico> {
               children: [
                 IconButton(
                     icon: Icon(
-                        Icons.quiz,
+                      Icons.quiz,
                       color: TemaApp.quizPrimary,
                     ),
                     tooltip: "Quizzes",
                     onPressed: () {
                       showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Tutorial.quizzTitle,
-                            content: Tutorial.quizzText,
-                            actions: [
-                              TextButton(
-                                onPressed: (){
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text("Cancelar",
-                                  style: TextStyle(color: TemaApp.quizSecondary),
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Tutorial.quizzTitle,
+                              content: Tutorial.quizzText,
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text(
+                                    "Cancelar",
+                                    style:
+                                        TextStyle(color: TemaApp.quizSecondary),
+                                  ),
                                 ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pushNamed(Routes.quizzes,
-                                      arguments: widget.topico);
-                                },
-                                child: Text("Entendido",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: TemaApp.quizSecondary
-                                    )
-                                ),
-                              )
-                            ],
-                          );
-                        }
-                      );
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context)
+                                        .pushNamed(Routes.quizzes, arguments: [
+                                      widget.tema,
+                                      topico,
+                                      widget.modifiable
+                                    ]);
+                                  },
+                                  child: Text("Entendido",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: TemaApp.quizSecondary)),
+                                )
+                              ],
+                            );
+                          });
                     }),
                 IconButton(
                     icon: Icon(
-                        Icons.collections_bookmark_outlined,
+                      Icons.collections_bookmark_outlined,
                       color: TemaApp.flashcardPrimary,
                     ),
                     tooltip: "Flashcards",
@@ -228,34 +236,34 @@ class _ItemTopicoState extends State<ItemTopico> {
                               content: Tutorial.flashcardText,
                               actions: [
                                 TextButton(
-                                  onPressed: (){
+                                  onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text("Cancelar",
-                                    style: TextStyle(color: TemaApp.flashcardSecondary),
+                                  child: Text(
+                                    "Cancelar",
+                                    style: TextStyle(
+                                        color: TemaApp.flashcardSecondary),
                                   ),
                                 ),
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    Navigator.of(context).pushNamed(Routes.atividadeFlashcard,
-                                        arguments:  [topico, null]);
+                                    Navigator.of(context).pushNamed(
+                                        Routes.atividadeFlashcard,
+                                        arguments: [widget.tema, topico, null]);
                                   },
                                   child: Text("Entendido",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: TemaApp.flashcardSecondary
-                                      )
-                                  ),
+                                          color: TemaApp.flashcardSecondary)),
                                 )
                               ],
                             );
-                          }
-                      );
+                          });
                     }),
                 IconButton(
                     icon: Icon(
-                        Icons.drive_eta_outlined,
+                      Icons.drive_eta_outlined,
                       color: TemaApp.kartPrimary,
                     ),
                     tooltip: "Kart",
@@ -268,29 +276,29 @@ class _ItemTopicoState extends State<ItemTopico> {
                               content: Tutorial.kartText,
                               actions: [
                                 TextButton(
-                                  onPressed: (){
+                                  onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text("Cancelar",
-                                    style: TextStyle(color: TemaApp.kartSecondary),
+                                  child: Text(
+                                    "Cancelar",
+                                    style:
+                                        TextStyle(color: TemaApp.kartSecondary),
                                   ),
                                 ),
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    Navigator.of(context).pushNamed(Routes.kart);
+                                    Navigator.of(context).pushNamed(Routes.kart,
+                                        arguments: [widget.tema, topico]);
                                   },
                                   child: Text("Entendido",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: TemaApp.kartSecondary
-                                      )
-                                  ),
+                                          color: TemaApp.kartSecondary)),
                                 )
                               ],
                             );
-                          }
-                      );
+                          });
                     }),
                 if (widget.modifiable) ...[
                   IconButton(
@@ -306,26 +314,5 @@ class _ItemTopicoState extends State<ItemTopico> {
         ),
       ),
     );
-    // return ListTile(
-    //   title: Text(widget.topico.descricao),
-    //   trailing: (widget.modifiable)
-    //       ? Row(
-    //           mainAxisSize: MainAxisSize.min,
-    //           children: [
-    //             IconButton(
-    //                 icon: const Icon(Icons.edit),
-    //                 onPressed: () => _updateModal(context)),
-    //             IconButton(
-    //                 icon: const Icon(Icons.delete),
-    //                 onPressed: () => _deleteModal(context)),
-    //           ],
-    //         )
-    //       : null,
-    //   enabled: true,
-    //   onTap: () {
-    //     Navigator.of(context)
-    //         .pushNamed(Routes.quizzes, arguments: widget.topico);
-    //   },
-    // );
   }
 }

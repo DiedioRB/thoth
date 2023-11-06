@@ -60,7 +60,7 @@ class CarComponent extends SpriteComponent
         game.explodeParticles(other.position);
         other.removeFromParent();
         points++;
-        game.question.solvePartial(amount: 3);
+        game.question.solvePartial();
       }
     }
     super.onCollision(intersectionPoints, other);

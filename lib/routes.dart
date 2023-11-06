@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:thoth/models/atividade.dart';
+import 'package:thoth/models/deck.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
@@ -9,6 +11,7 @@ import 'package:thoth/views/kart.dart';
 import 'package:thoth/views/login.dart';
 import 'package:thoth/views/menu.dart';
 import 'package:thoth/views/quizzes.dart';
+import 'package:thoth/views/ranking_tema.dart';
 import 'package:thoth/views/temas.dart';
 import 'package:thoth/views/cadastro_quiz.dart';
 import 'package:thoth/views/topicos.dart';
@@ -44,6 +47,7 @@ class Routes {
   static const String atividadeFlashcard = "/flashcards/atividade";
   static const String perfil = "/perfil";
   static const String editarPerfil = "/perfil/editar";
+  static const String rankingTema = "/temas/ranking";
 
   static routes(RouteSettings settings) {
     return <String, WidgetBuilder>{
@@ -51,33 +55,43 @@ class Routes {
       login: (context) => const Login(),
       cadastroUsuario: (context) => CadastroUsuario(),
       menu: (context) => const Menu(),
-      quizzes: (context) => Quizzes(topico: settings.arguments as Topico?),
+      quizzes: (context) => Quizzes(
+          tema: (settings.arguments as List?)?[0] as Tema?,
+          topico: (settings.arguments as List?)?[1] as Topico?,
+          modifiable: (settings.arguments as List?)?[2] as bool),
       flashcards: (context) => Flashcards(tema: settings.arguments as Tema?),
       cadastroQuiz: (context) => const CadastroQuiz(),
       temas: (context) => Temas(isAdmin: settings.arguments as bool?),
       cadastroTema: (context) => const CadastroTema(),
       topicos: (context) => Topicos(
-            tema: (settings.arguments as List?)?[0],
-            isAdmin: (settings.arguments as List?)?[1],
+            tema: (settings.arguments as List?)?[0] as Tema?,
+            isAdmin: (settings.arguments as List?)?[1] as bool?,
           ),
       cadastroTopico: (context) => const CadastroTopico(),
       cadastroPerguntas: (context) =>
           CadastroPerguntas(tema: settings.arguments as Tema),
-      atividadeQuiz: (context) =>
-          AtividadeQuiz(listaPerguntas: settings.arguments as List<Pergunta>),
+      atividadeQuiz: (context) => AtividadeQuiz(
+            tema: (settings.arguments as List?)?[0] as Tema,
+            perguntas: (settings.arguments as List?)?[1] as List<Pergunta>,
+          ),
       pontuacao: (context) => Pontuacao(
-        pontos: (settings.arguments as List?)?[0],
-        cor: (settings.arguments as List?)?[1],
-      ),
-      kart: (context) => const Kart(),
+            atividade: (settings.arguments as List?)?[0] as Atividade,
+            cor: (settings.arguments as List?)?[1] as CorPontuacao,
+          ),
+      kart: (context) => Kart(
+            tema: (settings.arguments as List?)?[0] as Tema,
+            topico: (settings.arguments as List?)?[1] as Topico,
+          ),
       decks: (context) => const Decks(),
       cadastroDeck: (context) => const CadastroDeck(),
       perfil: (context) => const VerPerfil(),
       editarPerfil: (context) => const EditarPerfil(),
       atividadeFlashcard: (context) => AtividadeFlashcard(
-            topico: (settings.arguments as List?)?[0],
-            deck: (settings.arguments as List?)?[1],
+            tema: (settings.arguments as List?)?[0] as Tema?,
+            topico: (settings.arguments as List?)?[1] as Topico?,
+            deck: (settings.arguments as List?)?[2] as Deck?,
           ),
+      rankingTema: (context) => RankingTema(tema: settings.arguments as Tema),
     };
   }
 }

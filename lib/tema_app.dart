@@ -17,7 +17,7 @@ abstract class TemaApp {
   //Cores específicas para cada atividade
   static Color quizPrimary = Color(0xFF1C69B0);
   static Color quizSecondary = Color(0xFF247CCE);
-  static Color quizTerciary = Color(0xFFDCEBF9);
+  static Color quizTertiary = Color(0xFFDCEBF9);
 
   static Color flashcardPrimary = Color(0xFF654E92);
   static Color flashcardSecondary = Color(0xFF501CB0);
@@ -26,6 +26,10 @@ abstract class TemaApp {
   static Color kartSecondary = Color(0xFFCB119C);
 
   static Color success = Colors.green;
+
+  static Color rankingFirst = Colors.yellow;
+  static Color rankingSecond = Colors.grey.shade700;
+  static Color rankingThird = Colors.orange.shade900;
 
   //Cores específicas para componentes
   static Color appBarPrimary = Color(

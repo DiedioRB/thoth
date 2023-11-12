@@ -138,6 +138,13 @@ class Usuario implements ItemFormModel {
     return usuario;
   }
 
+  CollectionReference? get respostasCollection {
+    String userId = id!.id;
+    FirebaseFirestore.instance.collection('usuarios').doc(userId).collection('respostas');
+    print("teste");
+  }
+
+
   Future<List<Tema>> get temas async {
     if (_temas.isEmpty && temasReferences.isNotEmpty) {
       List<List<DocumentReference>> sublist = [];
@@ -169,6 +176,10 @@ class Usuario implements ItemFormModel {
       await update();
     }
   }
+
+
+
+
 
   create({required String uid}) async {
     FirebaseFirestore db = FirebaseFirestore.instance;

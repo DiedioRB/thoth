@@ -36,17 +36,33 @@ class Menu extends StatelessWidget {
               ]),
           body: TabBarView(
             children: [
-              Center(
-                child: Botao(
-                  texto: "Visão do aluno",
-                  corFundo: TemaApp.darkPrimary,
-                  corTexto: TemaApp.branco,
-                  callback: () async {
-                    Navigator.of(context)
-                        .pushNamed(Routes.temas, arguments: false);
-                  },
-                ),
+              Column(
+                children: [
+                  Center(
+                    child: Botao(
+                      texto: "Visão do aluno",
+                      corFundo: TemaApp.darkPrimary,
+                      corTexto: TemaApp.branco,
+                      callback: () async {
+                        Navigator.of(context)
+                            .pushNamed(Routes.temas, arguments: false);
+                      },
+                    ),
+                  ),
+                  Center(
+                    child: Botao(
+                      texto: "Teste",
+                      corFundo: TemaApp.darkPrimary,
+                      corTexto: TemaApp.branco,
+                      callback: () async {
+                        Navigator.of(context)
+                            .pushNamed(Routes.teste);
+                      },
+                    ),
+                  ),
+                ],
               ),
+
               Center(
                   child: GridView.extent(
                 maxCrossAxisExtent: 300,

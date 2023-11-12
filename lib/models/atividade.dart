@@ -46,6 +46,7 @@ class Atividade {
     }
   }
 
+
   //Essa função apenas chama outras funções para ser mais conveniente de usar
   void responder(int resposta) {
     marcarResposta(resposta);

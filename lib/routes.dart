@@ -24,6 +24,7 @@ import 'package:thoth/views/cadastro_deck.dart';
 import 'package:thoth/views/atividade_flashcard.dart';
 import 'package:thoth/views/ver_perfil.dart';
 import 'package:thoth/views/editar_perfil.dart';
+import 'package:thoth/views/teste.dart';
 
 class Routes {
   static const String home = "/";
@@ -48,6 +49,7 @@ class Routes {
   static const String perfil = "/perfil";
   static const String editarPerfil = "/perfil/editar";
   static const String rankingTema = "/temas/ranking";
+  static const String teste = "/teste";
 
   static routes(RouteSettings settings) {
     return <String, WidgetBuilder>{
@@ -92,6 +94,7 @@ class Routes {
             deck: (settings.arguments as List?)?[2] as Deck?,
           ),
       rankingTema: (context) => RankingTema(tema: settings.arguments as Tema),
+      teste: (context) => Teste(),
     };
   }
 }

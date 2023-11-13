@@ -53,7 +53,6 @@ class _FlashcardsState extends State<Flashcards> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -62,7 +61,9 @@ class _FlashcardsState extends State<Flashcards> {
       body: Center(
         child: Column(
           children: [
-            Expanded(child: ListaCards(perguntas: _perguntas)),
+            (_perguntas.isEmpty)
+                ? const Text("Nenhum registro encontrado")
+                : Expanded(child: ListaCards(perguntas: _perguntas)),
           ],
         ),
       ),
@@ -70,6 +71,7 @@ class _FlashcardsState extends State<Flashcards> {
         onPressed: () {
           Navigator.of(context).pushNamed(Routes.cadastroPerguntas);
         },
+        tooltip: "Novo",
         child: const Icon(Icons.add),
       ),
     );

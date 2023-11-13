@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:thoth/components/botao.dart';
+import 'package:thoth/components/pesquisa.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
@@ -13,7 +15,7 @@ class CadastroQuiz extends StatefulWidget {
   State<CadastroQuiz> createState() => CQuizzesState();
 }
 
-class CQuizzesState extends State<CadastroQuiz> {
+class CQuizzesState extends State<CadastroQuiz> with Pesquisa<Pergunta> {
   List<Quiz> cQuizzes = [];
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
@@ -44,6 +46,12 @@ class CQuizzesState extends State<CadastroQuiz> {
         });
 
     fetchTopicos();
+
+    searchController.addListener(() {
+      setState(() {
+        search(todasPerguntas);
+      });
+    });
   }
 
   fetchTopicos() async {
@@ -56,18 +64,34 @@ class CQuizzesState extends State<CadastroQuiz> {
             child: Text(topico.descricao),
           ));
     }
-    setState(() {
-      topico = topicos[0];
-    });
+    this.topicos.sort(
+          (DropdownMenuItem<Topico> a, DropdownMenuItem<Topico> b) => a
+              .value!.descricao
+              .toLowerCase()
+              .compareTo(b.value!.descricao.toLowerCase()),
+        );
+    if (mounted) {
+      setState(() {
+        topico = topicos[0];
+      });
+    }
   }
 
   void nQuiz(context) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    await Pergunta.getCollection(db).get().then((value) => {
-          todasPerguntas.clear(),
-          for (var pergunta in value.docs)
-            {todasPerguntas.add(pergunta.data() as Pergunta)}
-        });
+    await Pergunta.getCollection(db).get().then((value) {
+      todasPerguntas.clear();
+      for (var pergunta in value.docs) {
+        todasPerguntas.add(pergunta.data() as Pergunta);
+        todasPerguntas.sort((a, b) =>
+            a.pergunta.toLowerCase().compareTo(b.pergunta.toLowerCase()));
+        if (mounted) {
+          setState(() {
+            search(todasPerguntas);
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -93,34 +117,38 @@ class CQuizzesState extends State<CadastroQuiz> {
                   }
                 },
                 value: topico),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: todasPerguntas.length,
-                  itemBuilder: (context, index) {
-                    Pergunta p = todasPerguntas[index];
-                    return CheckboxListTile(
-                      title: Text(p.pergunta),
-                      value: perguntas.any(
-                        (element) => element.id == p.id,
-                      ),
-                      onChanged: (value) => {
-                        setState(() {
-                          if (value == false) {
-                            perguntas.removeWhere((element) {
-                              return element.id == p.id;
-                            });
-                          } else {
-                            perguntas.add(p);
-                          }
-                        })
-                      },
-                    );
-                  }),
-            ),
+            barraPesquisa(),
+            (itensPesquisa.isEmpty)
+                ? const Text("Nenhum registro encontrado")
+                : Expanded(
+                    child: ListView.builder(
+                        itemCount: itensPesquisa.length,
+                        itemBuilder: (context, index) {
+                          Pergunta p = itensPesquisa[index];
+                          return CheckboxListTile(
+                            title: Text(p.pergunta),
+                            value: perguntas.any(
+                              (element) => element.id == p.id,
+                            ),
+                            onChanged: (value) => {
+                              setState(() {
+                                if (value == false) {
+                                  perguntas.removeWhere((element) {
+                                    return element.id == p.id;
+                                  });
+                                } else {
+                                  perguntas.add(p);
+                                }
+                              })
+                            },
+                          );
+                        }),
+                  ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
-                    onPressed: () async {
+                Botao(
+                    callback: () async {
                       List<DocumentReference> refs = [];
                       for (var pergunta in perguntas) {
                         refs.add(pergunta.id!);
@@ -134,7 +162,7 @@ class CQuizzesState extends State<CadastroQuiz> {
                               content: Text("Quiz criado com sucesso!")));
                       Navigator.of(context).pop();
                     },
-                    child: const Text("Salvar"))
+                    texto: "Salvar")
               ],
             )
           ],

@@ -70,16 +70,18 @@ class _RankingTemaState extends State<RankingTema> {
                       child: Text("De $dataInicio a $dataFim",
                           style: TextStyle(fontSize: TemaApp.titleSize)),
                     ),
-                    Expanded(
-                      child: ListView.builder(
-                          itemCount: registros.length,
-                          itemBuilder: (context, index) {
-                            return ItemRanking(
-                              registro: registros[index],
-                              posicao: index,
-                            );
-                          }),
-                    ),
+                    registros.isEmpty
+                        ? const Text("Nenhum registro encontrado")
+                        : Expanded(
+                            child: ListView.builder(
+                                itemCount: registros.length,
+                                itemBuilder: (context, index) {
+                                  return ItemRanking(
+                                    registro: registros[index],
+                                    posicao: index,
+                                  );
+                                }),
+                          ),
                   ],
                 )
               : const CircularProgressIndicator()),

@@ -20,7 +20,7 @@ class Kart extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     return GameWidget(
-      game: KartGame(topico: topico),
+      game: KartGame(tema: tema, topico: topico),
       overlayBuilderMap: {
         'Pause': (BuildContext context, KartGame game) {
           return Text("teste");

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/components/item_quiz.dart';
+import 'package:thoth/components/pesquisa.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
@@ -22,7 +23,7 @@ class Quizzes extends StatefulWidget {
   State<Quizzes> createState() => _QuizzesState();
 }
 
-class _QuizzesState extends State<Quizzes> {
+class _QuizzesState extends State<Quizzes> with Pesquisa<Quiz> {
   List<Quiz> _quizzes = [];
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
@@ -50,6 +51,12 @@ class _QuizzesState extends State<Quizzes> {
           .snapshots()
           .listen(listen);
     }
+
+    searchController.addListener(() {
+      setState(() {
+        search(_quizzes);
+      });
+    });
   }
 
   void listen(value) {
@@ -61,6 +68,7 @@ class _QuizzesState extends State<Quizzes> {
       _quizzes.clear();
       setState(() {
         _quizzes = quizzes;
+        search(_quizzes);
       });
     }
   }
@@ -74,28 +82,38 @@ class _QuizzesState extends State<Quizzes> {
         title: const Text("Quizzes"),
       ),
       body: Center(
-          child: ListView.builder(
-              itemCount: _quizzes.length,
-              prototypeItem: ItemQuiz(
-                tema: widget.tema!,
-                topico: topico!,
-                quiz: Quiz(nome: "", perguntasReferences: []),
-                modifiable: widget.modifiable,
-              ),
-              itemBuilder: (context, index) {
-                return ItemQuiz(
-                  tema: widget.tema!,
-                  topico: topico!,
-                  quiz: _quizzes[index],
-                  modifiable: widget.modifiable,
-                );
-              })),
+          child: Column(
+        children: [
+          barraPesquisa(),
+          (itensPesquisa.isEmpty)
+              ? const Text("Nenhum registro encontrado")
+              : Expanded(
+                  child: ListView.builder(
+                      itemCount: itensPesquisa.length,
+                      prototypeItem: ItemQuiz(
+                        tema: widget.tema,
+                        topico: topico,
+                        quiz: Quiz(nome: "", perguntasReferences: []),
+                        modifiable: widget.modifiable,
+                      ),
+                      itemBuilder: (context, index) {
+                        return ItemQuiz(
+                          tema: widget.tema,
+                          topico: topico,
+                          quiz: itensPesquisa[index],
+                          modifiable: widget.modifiable,
+                        );
+                      }),
+                ),
+        ],
+      )),
       floatingActionButton: widget.modifiable
           ? FloatingActionButton(
               backgroundColor: TemaApp.quizPrimary,
               onPressed: () {
                 Navigator.of(context).pushNamed(Routes.cadastroQuiz);
               },
+              tooltip: "Novo quiz",
               child: const Icon(Icons.add),
             )
           : null,

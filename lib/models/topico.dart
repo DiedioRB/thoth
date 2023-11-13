@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/models/interfaces/item_form.dart';
+import 'package:thoth/models/interfaces/pesquisavel.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/tema.dart';
 
-class Topico {
+class Topico implements Pesquisavel {
   static const String collection = "topicos";
 
   final DocumentReference? id;
@@ -132,4 +133,12 @@ class Topico {
     });
     return topicos;
   }
+
+  @override
+  String toString() {
+    return descricao;
+  }
+
+  @override
+  String textoPesquisavel() => toString();
 }

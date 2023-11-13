@@ -42,6 +42,7 @@ dependencies:
   crypto: ^3.0.3
   firebase_auth: ^4.7.3
   http: ^1.1.0
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/models/interfaces/item_form.dart';
+import 'package:thoth/models/interfaces/pesquisavel.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/topico.dart';
 
-class Quiz {
+class Quiz implements Pesquisavel {
   static const String collection = "quizzes";
 
   final DocumentReference? id;
@@ -120,4 +121,12 @@ class Quiz {
     FirebaseFirestore db = FirebaseFirestore.instance;
     await Quiz.getCollection(db).doc(id?.id).delete();
   }
+
+  @override
+  String toString() {
+    return nome;
+  }
+
+  @override
+  String textoPesquisavel() => toString();
 }

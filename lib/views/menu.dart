@@ -91,7 +91,8 @@ class Menu extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleLarge,
                       )),
                       onTap: () {
-                        Navigator.of(context).pushNamed(Routes.quizzes);
+                        Navigator.of(context).pushNamed(Routes.quizzes,
+                            arguments: [null, null, true]);
                       },
                     ),
                   ),

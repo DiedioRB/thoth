@@ -62,6 +62,7 @@ class Ranking {
     await getCollection(db)
         .where("semana", isGreaterThanOrEqualTo: comecoSemana())
         .where("tema", isEqualTo: tema.id)
+        .limit(10)
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {

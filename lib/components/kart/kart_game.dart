@@ -30,7 +30,8 @@ class KartGame extends FlameGame
 
   late final Atividade atividade;
   final Topico topico;
-  KartGame({required this.topico});
+  final Tema tema;
+  KartGame({required this.tema, required this.topico});
 
   late final CarComponent player;
   late final Background background;
@@ -72,7 +73,6 @@ class KartGame extends FlameGame
   }
 
   Future<void> carregaAtividade() async {
-    Tema tema = await topico.tema as Tema;
     atividade = Atividade(tema: tema, topico: topico);
     await atividade.carregarPerguntas();
   }

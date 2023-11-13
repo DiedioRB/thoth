@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/components/item_topico.dart';
+import 'package:thoth/components/pesquisa.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/ranking.dart';
 import 'package:thoth/models/tema.dart';
@@ -20,7 +21,7 @@ class Topicos extends StatefulWidget {
   State<Topicos> createState() => _TopicosState();
 }
 
-class _TopicosState extends State<Topicos> {
+class _TopicosState extends State<Topicos> with Pesquisa<Topico> {
   List<Topico> _topicos = [];
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
@@ -38,16 +39,20 @@ class _TopicosState extends State<Topicos> {
 
     formBuilder = FormBuilder(Topico.getFields());
 
+    iniciaWatcher();
+
+    searchController.addListener(() {
+      setState(() {
+        search(_topicos);
+      });
+    });
+  }
+
+  void iniciaWatcher() {
     FirebaseFirestore db = FirebaseFirestore.instance;
     if (tema == null) {
       watcher = Topico.getCollection(db).snapshots().listen(listen);
     } else {
-      watcher = Topico.getCollection(db)
-          .where(
-            "tema",
-          )
-          .snapshots()
-          .listen(listen);
       watcher = Tema.getCollection(db)
           .where(FieldPath.documentId, isEqualTo: tema!.id)
           .snapshots()
@@ -64,6 +69,7 @@ class _TopicosState extends State<Topicos> {
       _topicos.clear();
       setState(() {
         _topicos = topicos;
+        search(_topicos);
       });
     }
   }
@@ -75,6 +81,7 @@ class _TopicosState extends State<Topicos> {
       _topicos.clear();
       setState(() {
         _topicos = topicos;
+        search(_topicos);
       });
     }
   }
@@ -85,34 +92,47 @@ class _TopicosState extends State<Topicos> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text("Tópicos"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context)
-                  .pushNamed(Routes.rankingTema, arguments: widget.tema);
-            },
-            icon: const Icon(Icons.format_list_numbered),
-            tooltip: "Ranking",
-          )
-        ],
+        actions: (tema != null)
+            ? [
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushNamed(Routes.rankingTema, arguments: widget.tema);
+                  },
+                  icon: const Icon(Icons.format_list_numbered),
+                  tooltip: "Ranking",
+                )
+              ]
+            : null,
       ),
       body: Center(
-        child: ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 18),
-            itemCount: _topicos.length,
-            itemBuilder: (context, index) {
-              return ItemTopico(
-                tema: widget.tema!,
-                topico: _topicos[index],
-                modifiable: widget.isAdmin ?? false,
-              );
-            }),
+        child: Column(
+          children: [
+            barraPesquisa(),
+            itensPesquisa.isEmpty
+                ? const Text("Nenhum registro encontrado")
+                : Expanded(
+                    child: ListView.builder(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 25, vertical: 18),
+                        itemCount: itensPesquisa.length,
+                        itemBuilder: (context, index) {
+                          return ItemTopico(
+                            tema: widget.tema,
+                            topico: itensPesquisa[index],
+                            modifiable: widget.isAdmin ?? false,
+                          );
+                        }),
+                  ),
+          ],
+        ),
       ),
       floatingActionButton: (widget.isAdmin ?? false)
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).pushNamed(Routes.cadastroTopico);
               },
+              tooltip: "Novo tópico",
               child: const Icon(Icons.add),
             )
           : null,

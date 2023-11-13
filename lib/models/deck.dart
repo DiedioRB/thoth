@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:thoth/models/interfaces/pesquisavel.dart';
 import 'package:thoth/models/pergunta.dart';
 
-class Deck {
+class Deck implements Pesquisavel {
   static const String collection = "decks";
 
   final DocumentReference? id;
@@ -68,4 +69,12 @@ class Deck {
     FirebaseFirestore db = FirebaseFirestore.instance;
     await Deck.getCollection(db).doc(id?.id).delete();
   }
+
+  @override
+  String toString() {
+    return nome;
+  }
+
+  @override
+  String textoPesquisavel() => toString();
 }

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:thoth/components/botao.dart';
+import 'package:thoth/components/pesquisa.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/topico.dart';
 import 'package:thoth/models/tema.dart';
@@ -11,7 +13,7 @@ class CadastroTema extends StatefulWidget {
   State<CadastroTema> createState() => CTemasState();
 }
 
-class CTemasState extends State<CadastroTema> {
+class CTemasState extends State<CadastroTema> with Pesquisa<Topico> {
   List<Tema> cTemas = [];
   List<Topico> todosTopicos = [];
   List<Topico> topicos = [];
@@ -38,15 +40,31 @@ class CTemasState extends State<CadastroTema> {
               })
             }
         });
+
+    searchController.addListener(() {
+      setState(() {
+        search(todosTopicos);
+      });
+    });
   }
 
   void nTema(context) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    await Topico.getCollection(db).get().then((value) => {
-          todosTopicos.clear(),
-          for (var topico in value.docs)
-            {todosTopicos.add(topico.data() as Topico)}
+    await Topico.getCollection(db).get().then((value) {
+      todosTopicos.clear();
+      for (var topico in value.docs) {
+        todosTopicos.add(topico.data() as Topico);
+      }
+      todosTopicos.sort(
+        (a, b) =>
+            a.descricao.toLowerCase().compareTo(b.descricao.toLowerCase()),
+      );
+      if (mounted) {
+        setState(() {
+          search(todosTopicos);
         });
+      }
+    });
   }
 
   @override
@@ -60,34 +78,39 @@ class CTemasState extends State<CadastroTema> {
         child: Column(
           children: [
             formBuilder.build(),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: todosTopicos.length,
-                  itemBuilder: (context, index) {
-                    Topico t = todosTopicos[index];
-                    return CheckboxListTile(
-                      title: Text(t.descricao),
-                      value: topicos.any(
-                        (element) => element.id == t.id,
-                      ),
-                      onChanged: (value) => {
-                        setState(() {
-                          if (value == false) {
-                            topicos.removeWhere((element) {
-                              return element.id == t.id;
-                            });
-                          } else {
-                            topicos.add(t);
-                          }
-                        })
-                      },
-                    );
-                  }),
-            ),
+            const Padding(padding: EdgeInsets.only(top: 30)),
+            barraPesquisa(),
+            (itensPesquisa.isEmpty)
+                ? const Text("Nenhum registro encontrado")
+                : Expanded(
+                    child: ListView.builder(
+                        itemCount: itensPesquisa.length,
+                        itemBuilder: (context, index) {
+                          Topico t = itensPesquisa[index];
+                          return CheckboxListTile(
+                            title: Text(t.descricao),
+                            value: topicos.any(
+                              (element) => element.id == t.id,
+                            ),
+                            onChanged: (value) => {
+                              setState(() {
+                                if (value == false) {
+                                  topicos.removeWhere((element) {
+                                    return element.id == t.id;
+                                  });
+                                } else {
+                                  topicos.add(t);
+                                }
+                              })
+                            },
+                          );
+                        }),
+                  ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
-                    onPressed: () async {
+                Botao(
+                    callback: () async {
                       List<DocumentReference> refs = [];
                       for (var topico in topicos) {
                         refs.add(topico.id!);
@@ -102,7 +125,7 @@ class CTemasState extends State<CadastroTema> {
                               content: Text("Tema criado com sucesso!")));
                       Navigator.of(context).pop();
                     },
-                    child: const Text("Salvar"))
+                    texto: "Salvar")
               ],
             )
           ],

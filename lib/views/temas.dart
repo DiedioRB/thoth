@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/components/item_tema.dart';
+import 'package:thoth/components/pesquisa.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
@@ -18,7 +19,7 @@ class Temas extends StatefulWidget {
   State<Temas> createState() => _TemasState();
 }
 
-class _TemasState extends State<Temas> {
+class _TemasState extends State<Temas> with Pesquisa<Tema> {
   List<Tema> _temas = [];
   List<DocumentReference> _temasUsuario = [];
   List<Topico> todosTopicos = [];
@@ -37,6 +38,12 @@ class _TemasState extends State<Temas> {
     FirebaseFirestore db = FirebaseFirestore.instance;
 
     watcher = Tema.getCollection(db).snapshots().listen(listen);
+
+    searchController.addListener(() {
+      setState(() {
+        search(_temas);
+      });
+    });
   }
 
   void listen(value) async {
@@ -56,6 +63,7 @@ class _TemasState extends State<Temas> {
       _temas.clear();
       setState(() {
         _temas = temas;
+        search(_temas);
       });
     }
   }
@@ -167,19 +175,24 @@ class _TemasState extends State<Temas> {
               },
             ),
           ),
+          SliverToBoxAdapter(child: barraPesquisa()),
           SliverPadding(
               padding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return ItemTema(
-                      tema: _temas[index],
-                      modifiable: widget.isAdmin ?? false,
-                    );
-                  },
-                  childCount: _temas.length,
-                ),
-              ))
+              sliver: itensPesquisa.isEmpty
+                  ? const SliverToBoxAdapter(
+                      child: Text("Nenhum registro encontrado"),
+                    )
+                  : SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          return ItemTema(
+                            tema: itensPesquisa[index],
+                            modifiable: widget.isAdmin ?? false,
+                          );
+                        },
+                        childCount: itensPesquisa.length,
+                      ),
+                    ))
         ],
       ),
       floatingActionButton: (widget.isAdmin ?? false)

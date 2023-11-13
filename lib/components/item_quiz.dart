@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:thoth/components/pesquisa.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
@@ -12,13 +13,13 @@ class ItemQuiz extends StatefulWidget {
   const ItemQuiz(
       {super.key,
       required this.quiz,
-      required this.tema,
-      required this.topico,
+      this.tema,
+      this.topico,
       required this.modifiable});
 
   final Quiz quiz;
-  final Tema tema;
-  final Topico topico;
+  final Tema? tema;
+  final Topico? topico;
   final bool modifiable;
 
   @override
@@ -27,7 +28,7 @@ class ItemQuiz extends StatefulWidget {
 
 List<bool> exists = [];
 
-class _ItemQuizState extends State<ItemQuiz> {
+class _ItemQuizState extends State<ItemQuiz> with Pesquisa<Pergunta> {
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
 
@@ -37,11 +38,20 @@ class _ItemQuizState extends State<ItemQuiz> {
   void _updateModal(context) async {
     FormBuilder form = FormBuilder(Quiz.getFields(quiz: widget.quiz));
     FirebaseFirestore db = FirebaseFirestore.instance;
-    await Pergunta.getCollection(db).get().then((value) => {
-          todasPerguntas.clear(),
-          for (var pergunta in value.docs)
-            {todasPerguntas.add(pergunta.data() as Pergunta)}
+    await Pergunta.getCollection(db).get().then((value) {
+      todasPerguntas.clear();
+      for (var pergunta in value.docs) {
+        todasPerguntas.add(pergunta.data() as Pergunta);
+      }
+      todasPerguntas.sort(
+        (a, b) => a.pergunta.toLowerCase().compareTo(b.pergunta.toLowerCase()),
+      );
+      if (mounted) {
+        setState(() {
+          search(todasPerguntas);
         });
+      }
+    });
     perguntas = await widget.quiz.perguntas;
     await fetchTopicos();
 
@@ -50,6 +60,11 @@ class _ItemQuizState extends State<ItemQuiz> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
+            searchController.addListener(() {
+              setState(() {
+                search(todasPerguntas);
+              });
+            });
             return Dialog(
               child: Center(
                 child: Container(
@@ -68,30 +83,33 @@ class _ItemQuizState extends State<ItemQuiz> {
                             }
                           },
                           value: topico),
-                      Expanded(
-                        child: ListView.builder(
-                            itemCount: todasPerguntas.length,
-                            itemBuilder: (context, index) {
-                              Pergunta p = todasPerguntas[index];
-                              return CheckboxListTile(
-                                title: Text(p.pergunta),
-                                value: perguntas.any(
-                                  (element) => element.id == p.id,
-                                ),
-                                onChanged: (value) => {
-                                  setState(() {
-                                    if (value == false) {
-                                      perguntas.removeWhere((element) {
-                                        return element.id == p.id;
-                                      });
-                                    } else {
-                                      perguntas.add(p);
-                                    }
-                                  })
-                                },
-                              );
-                            }),
-                      ),
+                      barraPesquisa(),
+                      (itensPesquisa.isEmpty)
+                          ? const Text("Nenhum registro encontrado")
+                          : Expanded(
+                              child: ListView.builder(
+                                  itemCount: itensPesquisa.length,
+                                  itemBuilder: (context, index) {
+                                    Pergunta p = itensPesquisa[index];
+                                    return CheckboxListTile(
+                                      title: Text(p.pergunta),
+                                      value: perguntas.any(
+                                        (element) => element.id == p.id,
+                                      ),
+                                      onChanged: (value) => {
+                                        setState(() {
+                                          if (value == false) {
+                                            perguntas.removeWhere((element) {
+                                              return element.id == p.id;
+                                            });
+                                          } else {
+                                            perguntas.add(p);
+                                          }
+                                        })
+                                      },
+                                    );
+                                  }),
+                            ),
                       Row(
                         children: [
                           TextButton(
@@ -109,6 +127,7 @@ class _ItemQuizState extends State<ItemQuiz> {
                               child: const Text("Salvar")),
                           IconButton(
                               icon: const Icon(Icons.delete),
+                              tooltip: "Excluir",
                               onPressed: () => _deleteModal(context)),
                         ],
                       )
@@ -194,23 +213,27 @@ class _ItemQuizState extends State<ItemQuiz> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.edit,
                       color: TemaApp.quizPrimary,
                     ),
+                    tooltip: "Editar",
                     onPressed: () => _updateModal(context)),
                 IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.delete,
                       color: TemaApp.quizPrimary,
                     ),
+                    tooltip: "Excluir",
                     onPressed: () => _deleteModal(context)),
               ],
             )
           : null,
       onTap: () async {
-        Tema tema = widget.tema;
-        _redirecionarParaAtividade(tema, perguntas);
+        Tema? tema = widget.tema;
+        if (tema != null) {
+          _redirecionarParaAtividade(tema, perguntas);
+        }
       },
     );
   }

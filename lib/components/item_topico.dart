@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:thoth/components/pesquisa.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/tema.dart';
@@ -10,13 +11,10 @@ import 'package:thoth/tema_app.dart';
 
 class ItemTopico extends StatefulWidget {
   const ItemTopico(
-      {super.key,
-      required this.topico,
-      required this.tema,
-      required this.modifiable});
+      {super.key, required this.topico, this.tema, required this.modifiable});
 
   final Topico topico;
-  final Tema tema;
+  final Tema? tema;
   final bool modifiable;
 
   @override
@@ -25,7 +23,7 @@ class ItemTopico extends StatefulWidget {
 
 List<bool> exists = [];
 
-class _ItemTopicoState extends State<ItemTopico> {
+class _ItemTopicoState extends State<ItemTopico> with Pesquisa<Pergunta> {
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
   late Topico topico = widget.topico;
@@ -36,11 +34,20 @@ class _ItemTopicoState extends State<ItemTopico> {
   void _updateModal(context) async {
     FormBuilder form = FormBuilder(Topico.getFields(topico: widget.topico));
     FirebaseFirestore db = FirebaseFirestore.instance;
-    await Pergunta.getCollection(db).get().then((value) => {
-          todasPerguntas.clear(),
-          for (var pergunta in value.docs)
-            {todasPerguntas.add(pergunta.data() as Pergunta)}
+    await Pergunta.getCollection(db).get().then((value) {
+      todasPerguntas.clear();
+      for (var pergunta in value.docs) {
+        todasPerguntas.add(pergunta.data() as Pergunta);
+      }
+      todasPerguntas.sort(
+        (a, b) => a.pergunta.toLowerCase().compareTo(b.pergunta.toLowerCase()),
+      );
+      if (mounted) {
+        setState(() {
+          search(todasPerguntas);
         });
+      }
+    });
     perguntas = await widget.topico.perguntas;
     await fetchTemas();
 
@@ -49,6 +56,11 @@ class _ItemTopicoState extends State<ItemTopico> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
+            searchController.addListener(() {
+              setState(() {
+                search(todasPerguntas);
+              });
+            });
             return Dialog(
               child: Center(
                 child: Container(
@@ -67,30 +79,33 @@ class _ItemTopicoState extends State<ItemTopico> {
                             }
                           },
                           value: tema),
-                      Expanded(
-                        child: ListView.builder(
-                            itemCount: todasPerguntas.length,
-                            itemBuilder: (context, index) {
-                              Pergunta p = todasPerguntas[index];
-                              return CheckboxListTile(
-                                title: Text(p.pergunta),
-                                value: perguntas.any(
-                                  (element) => element.id == p.id,
-                                ),
-                                onChanged: (value) => {
-                                  setState(() {
-                                    if (value == false) {
-                                      perguntas.removeWhere((element) {
-                                        return element.id == p.id;
-                                      });
-                                    } else {
-                                      perguntas.add(p);
-                                    }
-                                  })
-                                },
-                              );
-                            }),
-                      ),
+                      barraPesquisa(),
+                      (itensPesquisa.isEmpty)
+                          ? const Text("Nenhum registro encontrado")
+                          : Expanded(
+                              child: ListView.builder(
+                                  itemCount: itensPesquisa.length,
+                                  itemBuilder: (context, index) {
+                                    Pergunta p = itensPesquisa[index];
+                                    return CheckboxListTile(
+                                      title: Text(p.pergunta),
+                                      value: perguntas.any(
+                                        (element) => element.id == p.id,
+                                      ),
+                                      onChanged: (value) => {
+                                        setState(() {
+                                          if (value == false) {
+                                            perguntas.removeWhere((element) {
+                                              return element.id == p.id;
+                                            });
+                                          } else {
+                                            perguntas.add(p);
+                                          }
+                                        })
+                                      },
+                                    );
+                                  }),
+                            ),
                       Row(
                         children: [
                           TextButton(
@@ -108,6 +123,7 @@ class _ItemTopicoState extends State<ItemTopico> {
                               child: const Text("Salvar")),
                           IconButton(
                               icon: const Icon(Icons.delete),
+                              tooltip: "Excluir",
                               onPressed: () => _deleteModal(context)),
                         ],
                       )
@@ -165,6 +181,39 @@ class _ItemTopicoState extends State<ItemTopico> {
     setState(() {});
   }
 
+  void modalTutorial(Widget titulo, Widget texto, Color cor,
+      Function() callback, bool mostrar) {
+    if (mostrar) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: titulo,
+              content: texto,
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "Cancelar",
+                    style: TextStyle(color: cor),
+                  ),
+                ),
+                TextButton(
+                  onPressed: callback,
+                  child: Text("Entendido",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, color: cor)),
+                )
+              ],
+            );
+          });
+    } else {
+      callback.call();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -177,138 +226,79 @@ class _ItemTopicoState extends State<ItemTopico> {
             ButtonBar(
               alignment: MainAxisAlignment.spaceAround,
               mainAxisSize: MainAxisSize.max,
-              children: [
-                IconButton(
-                    icon: Icon(
-                      Icons.quiz,
-                      color: TemaApp.quizPrimary,
-                    ),
-                    tooltip: "Quizzes",
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Tutorial.quizzTitle,
-                              content: Tutorial.quizzText,
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text(
-                                    "Cancelar",
-                                    style:
-                                        TextStyle(color: TemaApp.quizSecondary),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context)
-                                        .pushNamed(Routes.quizzes, arguments: [
-                                      widget.tema,
-                                      topico,
-                                      widget.modifiable
-                                    ]);
-                                  },
-                                  child: Text("Entendido",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: TemaApp.quizSecondary)),
-                                )
-                              ],
-                            );
-                          });
-                    }),
-                IconButton(
-                    icon: Icon(
-                      Icons.collections_bookmark_outlined,
-                      color: TemaApp.flashcardPrimary,
-                    ),
-                    tooltip: "Flashcards",
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Tutorial.flashcardTitle,
-                              content: Tutorial.flashcardText,
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text(
-                                    "Cancelar",
-                                    style: TextStyle(
-                                        color: TemaApp.flashcardSecondary),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).pushNamed(
-                                        Routes.atividadeFlashcard,
-                                        arguments: [widget.tema, topico, null]);
-                                  },
-                                  child: Text("Entendido",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: TemaApp.flashcardSecondary)),
-                                )
-                              ],
-                            );
-                          });
-                    }),
-                IconButton(
-                    icon: Icon(
-                      Icons.drive_eta_outlined,
-                      color: TemaApp.kartPrimary,
-                    ),
-                    tooltip: "Kart",
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Tutorial.kartTitle,
-                              content: Tutorial.kartText,
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text(
-                                    "Cancelar",
-                                    style:
-                                        TextStyle(color: TemaApp.kartSecondary),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).pushNamed(Routes.kart,
-                                        arguments: [widget.tema, topico]);
-                                  },
-                                  child: Text("Entendido",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: TemaApp.kartSecondary)),
-                                )
-                              ],
-                            );
-                          });
-                    }),
-                if (widget.modifiable) ...[
-                  IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () => _updateModal(context)),
-                  IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => _deleteModal(context)),
-                ]
-              ],
+              children: ((widget.tema != null)
+                  ? [
+                      IconButton(
+                          icon: const Icon(
+                            Icons.quiz,
+                            color: TemaApp.quizPrimary,
+                          ),
+                          tooltip: "Quizzes",
+                          onPressed: () async {
+                            modalTutorial(Tutorial.quizTitle, Tutorial.quizText,
+                                TemaApp.quizSecondary, () async {
+                              await Tutorial.naoMostrarNovamente(
+                                  Tutorial.quizKey);
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushNamed(Routes.quizzes,
+                                  arguments: [
+                                    widget.tema,
+                                    topico,
+                                    widget.modifiable
+                                  ]);
+                            }, await Tutorial.deveMostrar(Tutorial.quizKey));
+                          }),
+                      IconButton(
+                          icon: const Icon(
+                            Icons.collections_bookmark_outlined,
+                            color: TemaApp.flashcardPrimary,
+                          ),
+                          tooltip: "Flashcards",
+                          onPressed: () async {
+                            modalTutorial(
+                                Tutorial.flashcardTitle,
+                                Tutorial.flashcardText,
+                                TemaApp.flashcardSecondary, () async {
+                              await Tutorial.naoMostrarNovamente(
+                                  Tutorial.flashcardKey);
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushNamed(
+                                  Routes.atividadeFlashcard,
+                                  arguments: [widget.tema, topico, null]);
+                            },
+                                await Tutorial.deveMostrar(
+                                    Tutorial.flashcardKey));
+                          }),
+                      IconButton(
+                          icon: const Icon(
+                            Icons.drive_eta_outlined,
+                            color: TemaApp.kartPrimary,
+                          ),
+                          tooltip: "Kart",
+                          onPressed: () async {
+                            modalTutorial(Tutorial.kartTitle, Tutorial.kartText,
+                                TemaApp.kartSecondary, () async {
+                              await Tutorial.naoMostrarNovamente(
+                                  Tutorial.kartKey);
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushNamed(Routes.kart,
+                                  arguments: [widget.tema, topico]);
+                            }, await Tutorial.deveMostrar(Tutorial.kartKey));
+                          }),
+                    ]
+                  : [])
+                ..addAll((widget.modifiable)
+                    ? [
+                        IconButton(
+                            icon: const Icon(Icons.edit),
+                            tooltip: "Editar",
+                            onPressed: () => _updateModal(context)),
+                        IconButton(
+                            icon: const Icon(Icons.delete),
+                            tooltip: "Excluir",
+                            onPressed: () => _deleteModal(context)),
+                      ]
+                    : []),
             )
           ],
         ),

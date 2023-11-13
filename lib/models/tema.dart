@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/models/interfaces/item_form.dart';
+import 'package:thoth/models/interfaces/pesquisavel.dart';
 import 'package:thoth/models/topico.dart';
 
-class Tema {
+class Tema implements Pesquisavel {
   static const String collection = "temas";
 
   final DocumentReference? id;
@@ -134,4 +135,7 @@ class Tema {
 
   @override
   int get hashCode => id.hashCode;
+
+  @override
+  String textoPesquisavel() => toString();
 }

@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:thoth/models/interfaces/item_form.dart';
+import 'package:thoth/models/interfaces/pesquisavel.dart';
 import 'package:thoth/models/tema.dart';
 
-class Pergunta {
+class Pergunta implements Pesquisavel {
   static const String collection = "perguntas";
 
   final DocumentReference? id;
@@ -103,4 +104,7 @@ class Pergunta {
   String toString() {
     return pergunta;
   }
+
+  @override
+  String textoPesquisavel() => toString();
 }

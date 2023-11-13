@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:thoth/components/botao.dart';
+import 'package:thoth/components/pesquisa.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/tema.dart';
@@ -12,7 +14,7 @@ class CadastroTopico extends StatefulWidget {
   State<CadastroTopico> createState() => CTopicosState();
 }
 
-class CTopicosState extends State<CadastroTopico> {
+class CTopicosState extends State<CadastroTopico> with Pesquisa<Pergunta> {
   List<Topico> cTopicos = [];
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
@@ -32,18 +34,26 @@ class CTopicosState extends State<CadastroTopico> {
     List<Topico> topicos = [];
 
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Topico.getCollection(db).get().then((value) => {
-          if (value.docs.isNotEmpty)
-            {
-              for (var topico in value.docs)
-                {topicos.add(topico.data() as Topico)},
-              setState(() {
-                cTopicos = topicos;
-              })
-            }
-        });
+    Topico.getCollection(db).get().then((value) {
+      if (value.docs.isNotEmpty) {
+        for (var topico in value.docs) {
+          topicos.add(topico.data() as Topico);
+        }
+        if (mounted) {
+          setState(() {
+            cTopicos = topicos;
+          });
+        }
+      }
+    });
 
     fetchTemas();
+
+    searchController.addListener(() {
+      setState(() {
+        search(todasPerguntas);
+      });
+    });
   }
 
   fetchTemas() async {
@@ -56,18 +66,34 @@ class CTopicosState extends State<CadastroTopico> {
             child: Text(tema.descricao),
           ));
     }
-    setState(() {
-      tema = temas[0];
-    });
+    this.temas.sort(
+          (DropdownMenuItem<Tema> a, DropdownMenuItem<Tema> b) => a
+              .value!.descricao
+              .toLowerCase()
+              .compareTo(b.value!.descricao.toLowerCase()),
+        );
+    if (mounted) {
+      setState(() {
+        tema = temas[0];
+      });
+    }
   }
 
   void nTopico(context) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    await Pergunta.getCollection(db).get().then((value) => {
-          todasPerguntas.clear(),
-          for (var pergunta in value.docs)
-            {todasPerguntas.add(pergunta.data() as Pergunta)}
+    await Pergunta.getCollection(db).get().then((value) {
+      todasPerguntas.clear();
+      for (var pergunta in value.docs) {
+        todasPerguntas.add(pergunta.data() as Pergunta);
+      }
+      todasPerguntas.sort((a, b) =>
+          a.pergunta.toLowerCase().compareTo(b.pergunta.toLowerCase()));
+      if (mounted) {
+        setState(() {
+          search(todasPerguntas);
         });
+      }
+    });
   }
 
   @override
@@ -92,11 +118,12 @@ class CTopicosState extends State<CadastroTopico> {
                   }
                 },
                 value: tema),
+            barraPesquisa(),
             Expanded(
               child: ListView.builder(
-                  itemCount: todasPerguntas.length,
+                  itemCount: itensPesquisa.length,
                   itemBuilder: (context, index) {
-                    Pergunta p = todasPerguntas[index];
+                    Pergunta p = itensPesquisa[index];
                     return CheckboxListTile(
                       title: Text(p.pergunta),
                       value: perguntas.any(
@@ -117,24 +144,26 @@ class CTopicosState extends State<CadastroTopico> {
                   }),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
-                    onPressed: () async {
-                      List<DocumentReference> refs = [];
-                      for (var pergunta in perguntas) {
-                        refs.add(pergunta.id!);
-                      }
-                      Topico novoTopico = Topico(
-                          descricao: formBuilder.values['nome'],
-                          perguntasReferences: refs,
-                          temaReference: tema?.id);
-                      novoTopico.create();
-                      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-                          const SnackBar(
-                              content: Text("Topico criado com sucesso!")));
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("Salvar"))
+                Botao(
+                  callback: () async {
+                    List<DocumentReference> refs = [];
+                    for (var pergunta in perguntas) {
+                      refs.add(pergunta.id!);
+                    }
+                    Topico novoTopico = Topico(
+                        descricao: formBuilder.values['nome'],
+                        perguntasReferences: refs,
+                        temaReference: tema?.id);
+                    novoTopico.create();
+                    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+                        const SnackBar(
+                            content: Text("Topico criado com sucesso!")));
+                    Navigator.of(context).pop();
+                  },
+                  texto: "Salvar",
+                )
               ],
             )
           ],

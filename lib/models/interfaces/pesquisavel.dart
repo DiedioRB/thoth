@@ -1,0 +1,3 @@
+class Pesquisavel {
+  String textoPesquisavel() => "";
+}

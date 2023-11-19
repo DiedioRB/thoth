@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:thoth/models/pergunta.dart';
+import 'package:thoth/models/topico.dart';
+import 'package:thoth/models/interfaces/item_form.dart';
 
 class Deck {
   static const String collection = "decks";
@@ -8,8 +10,24 @@ class Deck {
   final String nome;
   final List<DocumentReference> perguntasReferences;
   final List<Pergunta> _perguntas = [];
+  DocumentReference? topicoReference;
+  Topico? _topico;
 
-  Deck({required this.nome, required this.perguntasReferences, this.id});
+  static List<ItemForm> getFields({Deck? deck}) {
+    return [
+      ItemForm.build(
+          descricao: "nome",
+          valor: deck?.nome
+      )
+    ];
+  }
+
+  Deck({
+    required this.nome,
+    required this.perguntasReferences,
+    this.id,
+    this.topicoReference
+  });
 
   static CollectionReference getCollection(FirebaseFirestore db) {
     return db.collection(collection).withConverter<Deck>(
@@ -28,8 +46,13 @@ class Deck {
         id: snapshot.reference);
   }
 
+
   Map<String, dynamic> toFirestore() {
-    return {"nome": nome, "perguntas": perguntasReferences};
+    return {
+      "nome": nome,
+      "perguntas": perguntasReferences,
+      "topico": topicoReference
+    };
   }
 
   Future<List<Pergunta>> get perguntas async {
@@ -45,6 +68,17 @@ class Deck {
               });
     }
     return _perguntas;
+  }
+
+  Future<Topico?> get tema async {
+    if (_topico == null && topicoReference != null) {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      await Topico.getCollection(db)
+          .where(FieldPath.documentId, isEqualTo: topicoReference)
+          .get()
+          .then((value) => {_topico = value.docs.first.data() as Topico});
+    }
+    return _topico;
   }
 
   atualizaReferencias(List<Pergunta> perguntas) {

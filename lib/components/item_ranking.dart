@@ -27,7 +27,7 @@ class ItemRanking extends StatelessWidget {
         style: TextStyle(color: cor),
       ),
       trailing: Text("${registro["pontuacao"].toString()} pontos"),
-      leading: Text(posicao.toString()),
+      leading: Text((posicao + 1).toString()),
     );
   }
 }

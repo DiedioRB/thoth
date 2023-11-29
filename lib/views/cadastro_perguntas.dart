@@ -35,6 +35,7 @@ class _CadastroPerguntasState extends State<CadastroPerguntas> {
       try {
         perguntas = await OpenAIHelper.gerarQuestoes(
             assunto: assunto, quantidade: quantidade, tema: widget.tema);
+        perguntasSelecionadas.addAll(perguntas);
       } catch (exception) {
         ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(
             content: Text(
@@ -148,18 +149,16 @@ class _CadastroPerguntasState extends State<CadastroPerguntas> {
                 decoration: const InputDecoration(labelText: "Quantidade"),
               ),
               Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(top: 80),
-                child: Botao(
-                    texto: "Gerar questões",
-                    corFundo: TemaApp.darkPrimary,
-                    corTexto: TemaApp.branco,
-                    callback: () {
-                      int quantidade = int.parse(quantidadeController.text);
-                      _gerarPerguntas(assuntoController.text, quantidade);
-                    }
-                )
-              ),
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(top: 80),
+                  child: Botao(
+                      texto: "Gerar questões",
+                      corFundo: TemaApp.darkPrimary,
+                      corTexto: TemaApp.branco,
+                      callback: () {
+                        int quantidade = int.parse(quantidadeController.text);
+                        _gerarPerguntas(assuntoController.text, quantidade);
+                      })),
               Container(
                   alignment: Alignment.center,
                   margin: const EdgeInsets.only(top: 25),
@@ -169,15 +168,13 @@ class _CadastroPerguntasState extends State<CadastroPerguntas> {
                       corTexto: TemaApp.branco,
                       callback: () {
                         _salvarPerguntas();
-                      }
-                  )
-              ),
-
+                      })),
               fetching
                   ? const Column(
                       children: [
                         CircularProgressIndicator(),
                         Text("Gerando perguntas, aguarde!"),
+                        Text("Isso pode levar alguns minutos..."),
                       ],
                     )
                   : Expanded(

@@ -1,22 +1,39 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:thoth/models/usuario.dart';
 
 class AuthHelper {
-  static Future<User?> registerUsingEmailAndPassword(
+  static Future<User?> registerUsingEmailAndPassword(BuildContext context,
       {required String nome,
       required String email,
       required String senha}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
-    UserCredential credential = await auth.createUserWithEmailAndPassword(
-        email: email, password: senha);
-    user = credential.user;
-    await user!.updateDisplayName(nome);
-    await user.reload();
-    user = auth.currentUser;
+    try {
+      UserCredential credential = await auth.createUserWithEmailAndPassword(
+          email: email, password: senha);
+      user = credential.user;
+      await user!.updateDisplayName(nome);
+      await user.reload();
+      user = auth.currentUser;
 
-    saveUser(
-        name: nome, email: email, uid: FirebaseAuth.instance.currentUser!.uid);
+      saveUser(
+          name: nome,
+          email: email,
+          uid: FirebaseAuth.instance.currentUser!.uid);
+    } on FirebaseAuthException catch (e) {
+      String message = "";
+      if (e.code == 'weak-password') {
+        message = "A senha é muito fraca!";
+      } else if (e.code == 'email-already-in-use') {
+        message = "E-mail já está em uso!";
+      }
+      ScaffoldMessenger.maybeOf(context)
+          ?.showSnackBar(SnackBar(content: Text(message)));
+    } catch (e) {
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(
+          content: Text("Ocorreu um erro! Tente novamente mais tarde...")));
+    }
 
     return user;
   }

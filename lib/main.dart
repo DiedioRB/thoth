@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Projeto Thoth',
+      title: 'Projeto Dédalo',
       theme: TemaApp.tema,
       onGenerateRoute: (RouteSettings settings) {
         var routes = Routes.routes(settings);

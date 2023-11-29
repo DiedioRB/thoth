@@ -262,9 +262,8 @@ class _ItemTopicoState extends State<ItemTopico> with Pesquisa<Pergunta> {
                               await Tutorial.naoMostrarNovamente(
                                   Tutorial.flashcardKey);
                               Navigator.of(context).pop();
-                              Navigator.of(context).pushNamed(
-                                  Routes.atividadeFlashcard,
-                                  arguments: [widget.tema, topico, null]);
+                              Navigator.of(context).pushNamed(Routes.decks,
+                                  arguments: [widget.tema, topico]);
                             },
                                 await Tutorial.deveMostrar(
                                     Tutorial.flashcardKey));

@@ -2,10 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/components/pesquisa.dart';
 import 'package:thoth/models/deck.dart';
+import 'package:thoth/models/tema.dart';
+import 'package:thoth/models/topico.dart';
 import 'package:thoth/routes.dart';
 
 class Decks extends StatefulWidget {
-  const Decks({super.key});
+  final Tema? tema;
+  final Topico? topico;
+  const Decks({super.key, this.tema, this.topico});
 
   @override
   State<Decks> createState() => _DecksState();
@@ -28,16 +32,32 @@ class _DecksState extends State<Decks> with Pesquisa<Deck> {
 
   void _getDecks() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    await Deck.getCollection(db).get().then((value) {
-      _decks.clear();
-      for (var deck in value.docs) {
-        _decks.add(deck.data() as Deck);
-      }
+    if (widget.topico != null) {
+      await Deck.getCollection(db)
+          .where("topico", isEqualTo: widget.topico!.id)
+          .get()
+          .then((value) {
+        _decks.clear();
+        for (var deck in value.docs) {
+          _decks.add(deck.data() as Deck);
+        }
 
-      setState(() {
-        search(_decks);
+        setState(() {
+          search(_decks);
+        });
       });
-    });
+    } else {
+      await Deck.getCollection(db).get().then((value) {
+        _decks.clear();
+        for (var deck in value.docs) {
+          _decks.add(deck.data() as Deck);
+        }
+
+        setState(() {
+          search(_decks);
+        });
+      });
+    }
   }
 
   @override
@@ -68,9 +88,19 @@ class _DecksState extends State<Decks> with Pesquisa<Deck> {
                                 child: Text(itensPesquisa[index].nome),
                               ),
                               onTap: () {
-                                Navigator.of(context).pushNamed(
-                                    Routes.atividadeFlashcard,
-                                    arguments: [null, itensPesquisa[index]]);
+                                if (widget.tema != null) {
+                                  Navigator.of(context).pushNamed(
+                                      Routes.atividadeFlashcard,
+                                      arguments: [
+                                        widget.tema,
+                                        widget.topico,
+                                        itensPesquisa[index]
+                                      ]);
+                                } else {
+                                  Navigator.of(context).pushNamed(
+                                      Routes.flashcards,
+                                      arguments: [null, itensPesquisa[index]]);
+                                }
                               },
                             ),
                           );

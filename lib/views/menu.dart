@@ -4,6 +4,7 @@ import 'package:thoth/components/botao.dart';
 import 'package:thoth/helpers/auth_helper.dart';
 import 'package:thoth/routes.dart';
 import 'package:thoth/tema_app.dart';
+import 'package:thoth/views/temas.dart';
 
 class Menu extends StatelessWidget {
   const Menu({super.key});
@@ -36,18 +37,9 @@ class Menu extends StatelessWidget {
               ]),
           body: TabBarView(
             children: [
-              Center(
-                  child: Center(
-                child: Botao(
-                  texto: "Visão do aluno",
-                  corFundo: TemaApp.darkPrimary,
-                  corTexto: TemaApp.branco,
-                  callback: () async {
-                    Navigator.of(context)
-                        .pushNamed(Routes.temas, arguments: false);
-                  },
-                ),
-              )),
+              const Temas(
+                isAdmin: false,
+              ),
               Center(
                   child: GridView.extent(
                 maxCrossAxisExtent: 300,
@@ -118,7 +110,8 @@ class Menu extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleLarge,
                       )),
                       onTap: () {
-                        Navigator.of(context).pushNamed(Routes.decks);
+                        Navigator.of(context)
+                            .pushNamed(Routes.decks, arguments: [null, null]);
                       },
                     ),
                   ),

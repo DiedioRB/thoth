@@ -92,6 +92,7 @@ class Atividade {
     _perguntas.addAll(usarPerguntas!);
     quantidadePerguntas = usarPerguntas!.length;
     carregado = true;
+    onLoad?.call();
   }
 
   //Recebe o index da resposta selecionada e verifica se está correta

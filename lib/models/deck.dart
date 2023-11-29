@@ -15,20 +15,14 @@ class Deck implements Pesquisavel {
   Topico? _topico;
 
   static List<ItemForm> getFields({Deck? deck}) {
-    return [
-      ItemForm.build(
-          descricao: "nome",
-          valor: deck?.nome
-      )
-    ];
+    return [ItemForm.build(descricao: "nome", valor: deck?.nome)];
   }
 
-  Deck({
-    required this.nome,
-    required this.perguntasReferences,
-    this.id,
-    this.topicoReference
-  });
+  Deck(
+      {required this.nome,
+      required this.perguntasReferences,
+      this.id,
+      this.topicoReference});
 
   static CollectionReference getCollection(FirebaseFirestore db) {
     return db.collection(collection).withConverter<Deck>(
@@ -46,7 +40,6 @@ class Deck implements Pesquisavel {
         perguntasReferences: List.from(data?['perguntas']),
         id: snapshot.reference);
   }
-
 
   Map<String, dynamic> toFirestore() {
     return {
@@ -71,7 +64,7 @@ class Deck implements Pesquisavel {
     return _perguntas;
   }
 
-  Future<Topico?> get tema async {
+  Future<Topico?> get topico async {
     if (_topico == null && topicoReference != null) {
       FirebaseFirestore db = FirebaseFirestore.instance;
       await Topico.getCollection(db)

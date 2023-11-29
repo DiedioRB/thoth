@@ -176,4 +176,29 @@ Sua capacidade de relacionar informações e seu amor por aprender sobre uma amp
           ))
     ],
   );
+
+  static const String rankingKey = "tutorial_ranking";
+  static Widget rankingTitle = const Text(
+    "O ranking",
+    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+  );
+
+  static Widget rankingText = Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Container(
+        margin: const EdgeInsets.only(bottom: 4),
+        child: const Text(
+          "O que é?",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ),
+      const Divider(),
+      const Text(
+        "O ranking é uma forma de comparar seu desempenho semanal com outros alunos. \n"
+        "Todas as questões respondidas corretamente te dão pontos e sobem seu placar.\n"
+        "O ranking é redefinido toda segunda-feira!",
+      ),
+    ],
+  );
 }

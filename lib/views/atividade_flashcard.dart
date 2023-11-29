@@ -37,12 +37,23 @@ class _AtividadeFlashcardState extends State<AtividadeFlashcard> {
 
   void carregaAtividade() async {
     Tema tema = widget.tema!;
-    atividade = Atividade(
-        tema: tema,
-        topico: widget.topico,
-        onLoad: () {
-          setState(() {});
-        });
+    List<Pergunta> perguntas = await widget.deck?.perguntas ?? [];
+    if (perguntas.isNotEmpty) {
+      atividade = Atividade(
+          tema: tema,
+          topico: widget.topico,
+          usarPerguntas: perguntas,
+          onLoad: () {
+            setState(() {});
+          });
+    } else {
+      atividade = Atividade(
+          tema: tema,
+          topico: widget.topico,
+          onLoad: () {
+            setState(() {});
+          });
+    }
   }
 
   void _registraResposta(int pts) {

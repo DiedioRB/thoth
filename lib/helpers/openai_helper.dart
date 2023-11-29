@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:thoth/models/pergunta.dart';
 import 'package:http/http.dart' as http;
 import 'package:thoth/models/tema.dart';
+import 'package:thoth/options.dart';
 
 class OpenAIHelper {
-  static const String _secret =
-      "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";
+  static const String _secret = Options.OPENAI_KEY;
 
   static Future<List<Pergunta>> gerarQuestoes(
       {required String assunto,

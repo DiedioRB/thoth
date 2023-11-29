@@ -167,11 +167,13 @@ class _TemasState extends State<Temas> with Pesquisa<Tema> {
             pinned: true,
             flexibleSpace: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
+                String perfil =
+                    widget.isAdmin ?? false ? "Administrador" : "Estudante";
                 return FlexibleSpaceBar(
                     title: _scrollController.hasClients &&
                             _scrollController.offset > 100
                         ? Text("Temas")
-                        : Text("Seja bem vindo!\n\n\nEstudante!"));
+                        : Text("Seja bem vindo!\n\n\n$perfil!"));
               },
             ),
           ),

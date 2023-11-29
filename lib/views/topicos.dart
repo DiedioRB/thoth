@@ -4,12 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/components/item_topico.dart';
 import 'package:thoth/components/pesquisa.dart';
+import 'package:thoth/components/tutorial.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/ranking.dart';
 import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/routes.dart';
+import 'package:thoth/tema_app.dart';
 
 class Topicos extends StatefulWidget {
   final bool? isAdmin;
@@ -86,6 +88,39 @@ class _TopicosState extends State<Topicos> with Pesquisa<Topico> {
     }
   }
 
+  void modalTutorial(Widget titulo, Widget texto, Color cor,
+      Function() callback, bool mostrar) {
+    if (mostrar) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: titulo,
+              content: texto,
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "Cancelar",
+                    style: TextStyle(color: cor),
+                  ),
+                ),
+                TextButton(
+                  onPressed: callback,
+                  child: Text("Entendido",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, color: cor)),
+                )
+              ],
+            );
+          });
+    } else {
+      callback.call();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,16 +128,21 @@ class _TopicosState extends State<Topicos> with Pesquisa<Topico> {
         automaticallyImplyLeading: false,
         title: const Text("Tópicos"),
         actions: (tema != null)
-            ? [
+            ? ([
                 IconButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed(Routes.rankingTema, arguments: widget.tema);
+                  onPressed: () async {
+                    modalTutorial(Tutorial.rankingTitle, Tutorial.rankingText,
+                        TemaApp.darkPrimary, () async {
+                      await Tutorial.naoMostrarNovamente(Tutorial.rankingKey);
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushNamed(Routes.rankingTema,
+                          arguments: widget.tema);
+                    }, await Tutorial.deveMostrar(Tutorial.rankingKey));
                   },
                   icon: const Icon(Icons.format_list_numbered),
                   tooltip: "Ranking",
                 )
-              ]
+              ])
             : null,
       ),
       body: Center(

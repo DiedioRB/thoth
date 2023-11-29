@@ -160,7 +160,10 @@ class _ItemTemaState extends State<ItemTema> with Pesquisa<Topico> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(widget.tema.descricao),
+              Text(
+                widget.tema.descricao,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
               if (widget.modifiable)
                 ButtonBar(
                   alignment: MainAxisAlignment.spaceAround,

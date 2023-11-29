@@ -59,7 +59,10 @@ class Routes {
           tema: (settings.arguments as List?)?[0] as Tema?,
           topico: (settings.arguments as List?)?[1] as Topico?,
           modifiable: (settings.arguments as List?)?[2] as bool),
-      flashcards: (context) => Flashcards(tema: settings.arguments as Tema?),
+      flashcards: (context) => Flashcards(
+            tema: (settings.arguments as List?)?[0] as Tema?,
+            deck: (settings.arguments as List?)?[1] as Deck?,
+          ),
       cadastroQuiz: (context) => const CadastroQuiz(),
       temas: (context) => Temas(isAdmin: settings.arguments as bool?),
       cadastroTema: (context) => const CadastroTema(),
@@ -82,7 +85,10 @@ class Routes {
             tema: (settings.arguments as List?)?[0] as Tema,
             topico: (settings.arguments as List?)?[1] as Topico,
           ),
-      decks: (context) => const Decks(),
+      decks: (context) => Decks(
+            tema: (settings.arguments as List?)?[0] as Tema?,
+            topico: (settings.arguments as List?)?[1] as Topico?,
+          ),
       cadastroDeck: (context) => const CadastroDeck(),
       perfil: (context) => const VerPerfil(),
       editarPerfil: (context) => const EditarPerfil(),

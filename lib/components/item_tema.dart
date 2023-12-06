@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:thoth/components/pesquisa.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/topico.dart';
 import 'package:thoth/models/tema.dart';
@@ -17,18 +18,28 @@ class ItemTema extends StatefulWidget {
 
 List<bool> exists = [];
 
-class _ItemTemaState extends State<ItemTema> {
+class _ItemTemaState extends State<ItemTema> with Pesquisa<Topico> {
   List<Topico> todosTopicos = [];
   List<Topico> topicos = [];
 
   void _updateModal(context) async {
-    FormBuilder _form = FormBuilder(Tema.getFields(tema: widget.tema));
+    FormBuilder form = FormBuilder(Tema.getFields(tema: widget.tema));
     FirebaseFirestore db = FirebaseFirestore.instance;
-    await Topico.getCollection(db).get().then((value) => {
-          todosTopicos.clear(),
-          for (var topico in value.docs)
-            {todosTopicos.add(topico.data() as Topico)}
+    await Topico.getCollection(db).get().then((value) {
+      todosTopicos.clear();
+      for (var topico in value.docs) {
+        todosTopicos.add(topico.data() as Topico);
+      }
+      todosTopicos.sort(
+        (a, b) =>
+            a.descricao.toLowerCase().compareTo(b.descricao.toLowerCase()),
+      );
+      if (mounted) {
+        setState(() {
+          search(todosTopicos);
         });
+      }
+    });
     topicos = await widget.tema.topicos;
 
     showDialog(
@@ -36,42 +47,50 @@ class _ItemTemaState extends State<ItemTema> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
+            searchController.addListener(() {
+              setState(() {
+                search(todosTopicos);
+              });
+            });
             return Dialog(
               child: Center(
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      _form.build(),
-                      Expanded(
-                        child: ListView.builder(
-                            itemCount: todosTopicos.length,
-                            itemBuilder: (context, index) {
-                              Topico t = todosTopicos[index];
-                              return CheckboxListTile(
-                                title: Text(t.descricao),
-                                value: topicos.any(
-                                  (element) => element.id == t.id,
-                                ),
-                                onChanged: (value) => {
-                                  setState(() {
-                                    if (value == false) {
-                                      topicos.removeWhere((element) {
-                                        return element.id == t.id;
-                                      });
-                                    } else {
-                                      topicos.add(t);
-                                    }
-                                  })
-                                },
-                              );
-                            }),
-                      ),
+                      form.build(),
+                      barraPesquisa(),
+                      (itensPesquisa.isEmpty)
+                          ? const Text("Nenhum registro encontrado")
+                          : Expanded(
+                              child: ListView.builder(
+                                  itemCount: itensPesquisa.length,
+                                  itemBuilder: (context, index) {
+                                    Topico t = itensPesquisa[index];
+                                    return CheckboxListTile(
+                                      title: Text(t.descricao),
+                                      value: topicos.any(
+                                        (element) => element.id == t.id,
+                                      ),
+                                      onChanged: (value) => {
+                                        setState(() {
+                                          if (value == false) {
+                                            topicos.removeWhere((element) {
+                                              return element.id == t.id;
+                                            });
+                                          } else {
+                                            topicos.add(t);
+                                          }
+                                        })
+                                      },
+                                    );
+                                  }),
+                            ),
                       Row(
                         children: [
                           TextButton(
                               onPressed: () async {
-                                widget.tema.descricao = _form.values['nome'];
+                                widget.tema.descricao = form.values['nome'];
                                 widget.tema.atualizaReferencias(topicos);
                                 widget.tema.update();
                                 ScaffoldMessenger.maybeOf(context)
@@ -83,6 +102,7 @@ class _ItemTemaState extends State<ItemTema> {
                               child: const Text("Salvar")),
                           IconButton(
                               icon: const Icon(Icons.delete),
+                              tooltip: "Excluir",
                               onPressed: () => _deleteModal(context)),
                         ],
                       )
@@ -127,31 +147,57 @@ class _ItemTemaState extends State<ItemTema> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(widget.tema.descricao),
-      trailing: (widget.modifiable)
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                    icon: const Icon(Icons.featured_play_list),
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(Routes.flashcards, arguments: widget.tema);
-                    }),
-                IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () => _updateModal(context)),
-                IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => _deleteModal(context)),
-              ],
-            )
-          : null,
-      enabled: true,
-      onTap: () {
-        Navigator.of(context).pushNamed(Routes.topicos, arguments: widget.tema);
-      },
+    return Container(
+      height: 100,
+      width: double.infinity,
+      child: Card(
+        elevation: 2,
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.topicos,
+                arguments: [widget.tema, widget.modifiable]);
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                widget.tema.descricao,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              if (widget.modifiable)
+                ButtonBar(
+                  alignment: MainAxisAlignment.spaceAround,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    IconButton(
+                        icon: const Icon(Icons.featured_play_list),
+                        tooltip: "Flashcards",
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(Routes.flashcards,
+                              arguments: widget.tema);
+                        }),
+                    IconButton(
+                        icon: const Icon(Icons.add),
+                        tooltip: "Adicionar perguntas",
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(
+                              Routes.cadastroPerguntas,
+                              arguments: widget.tema);
+                        }),
+                    IconButton(
+                        icon: const Icon(Icons.edit),
+                        tooltip: "Editar",
+                        onPressed: () => _updateModal(context)),
+                    IconButton(
+                        icon: const Icon(Icons.delete),
+                        tooltip: "Excluir",
+                        onPressed: () => _deleteModal(context)),
+                  ],
+                )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

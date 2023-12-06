@@ -3,22 +3,27 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/components/item_quiz.dart';
+import 'package:thoth/components/pesquisa.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/pergunta.dart';
 import 'package:thoth/models/quiz.dart';
+import 'package:thoth/models/tema.dart';
 import 'package:thoth/models/topico.dart';
 import 'package:thoth/routes.dart';
+import 'package:thoth/tema_app.dart';
 
 class Quizzes extends StatefulWidget {
-  Topico? topico;
+  final Tema? tema;
+  final Topico? topico;
+  final bool modifiable;
 
-  Quizzes({super.key, this.topico});
+  const Quizzes({super.key, this.tema, this.topico, this.modifiable = false});
 
   @override
   State<Quizzes> createState() => _QuizzesState();
 }
 
-class _QuizzesState extends State<Quizzes> {
+class _QuizzesState extends State<Quizzes> with Pesquisa<Quiz> {
   List<Quiz> _quizzes = [];
   List<Pergunta> todasPerguntas = [];
   List<Pergunta> perguntas = [];
@@ -38,7 +43,6 @@ class _QuizzesState extends State<Quizzes> {
     formBuilder = FormBuilder(Quiz.getFields());
 
     FirebaseFirestore db = FirebaseFirestore.instance;
-    print(topico);
     if (topico == null) {
       watcher = Quiz.getCollection(db).snapshots().listen(listen);
     } else {
@@ -47,6 +51,12 @@ class _QuizzesState extends State<Quizzes> {
           .snapshots()
           .listen(listen);
     }
+
+    searchController.addListener(() {
+      setState(() {
+        search(_quizzes);
+      });
+    });
   }
 
   void listen(value) {
@@ -58,84 +68,9 @@ class _QuizzesState extends State<Quizzes> {
       _quizzes.clear();
       setState(() {
         _quizzes = quizzes;
+        search(_quizzes);
       });
     }
-  }
-
-  void _novoModal(context) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    await Pergunta.getCollection(db).get().then((value) => {
-          todasPerguntas.clear(),
-          for (var pergunta in value.docs)
-            {todasPerguntas.add(pergunta.data() as Pergunta)}
-        });
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Dialog(
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      formBuilder.build(),
-                      Expanded(
-                        child: ListView.builder(
-                            itemCount: todasPerguntas.length,
-                            itemBuilder: (context, index) {
-                              Pergunta p = todasPerguntas[index];
-                              return CheckboxListTile(
-                                title: Text(p.pergunta),
-                                value: perguntas.any(
-                                  (element) => element.id == p.id,
-                                ),
-                                onChanged: (value) => {
-                                  setState(() {
-                                    if (value == false) {
-                                      perguntas.removeWhere((element) {
-                                        return element.id == p.id;
-                                      });
-                                    } else {
-                                      perguntas.add(p);
-                                    }
-                                  })
-                                },
-                              );
-                            }),
-                      ),
-                      Row(
-                        children: [
-                          TextButton(
-                              onPressed: () async {
-                                List<DocumentReference> refs = [];
-                                for (var pergunta in perguntas) {
-                                  refs.add(pergunta.id!);
-                                }
-                                Quiz novoQuiz = Quiz(
-                                    nome: formBuilder.values['nome'],
-                                    perguntasReferences: refs);
-                                novoQuiz.create();
-                                ScaffoldMessenger.maybeOf(context)
-                                    ?.showSnackBar(const SnackBar(
-                                        content:
-                                            Text("Quiz criado com sucesso!")));
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text("Salvar"))
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
   }
 
   @override
@@ -143,27 +78,45 @@ class _QuizzesState extends State<Quizzes> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: TemaApp.quizPrimary,
         title: const Text("Quizzes"),
       ),
       body: Center(
-          child: ListView.builder(
-              itemCount: _quizzes.length,
-              prototypeItem: ItemQuiz(
-                quiz: Quiz(nome: "", perguntasReferences: []),
-                modifiable: true,
-              ),
-              itemBuilder: (context, index) {
-                return ItemQuiz(
-                  quiz: _quizzes[index],
-                  modifiable: true,
-                );
-              })),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(Routes.cadastroQuiz);
-        },
-        child: const Icon(Icons.add),
-      ),
+          child: Column(
+        children: [
+          barraPesquisa(),
+          (itensPesquisa.isEmpty)
+              ? const Text("Nenhum registro encontrado")
+              : Expanded(
+                  child: ListView.builder(
+                      itemCount: itensPesquisa.length,
+                      prototypeItem: ItemQuiz(
+                        tema: widget.tema,
+                        topico: topico,
+                        quiz: Quiz(nome: "", perguntasReferences: []),
+                        modifiable: widget.modifiable,
+                      ),
+                      itemBuilder: (context, index) {
+                        return ItemQuiz(
+                          tema: widget.tema,
+                          topico: topico,
+                          quiz: itensPesquisa[index],
+                          modifiable: widget.modifiable,
+                        );
+                      }),
+                ),
+        ],
+      )),
+      floatingActionButton: widget.modifiable
+          ? FloatingActionButton(
+              backgroundColor: TemaApp.quizPrimary,
+              onPressed: () {
+                Navigator.of(context).pushNamed(Routes.cadastroQuiz);
+              },
+              tooltip: "Novo quiz",
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 

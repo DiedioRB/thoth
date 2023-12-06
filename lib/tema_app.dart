@@ -1,18 +1,40 @@
 import 'package:flutter/material.dart';
 
+//As cores definidas como 'primary' são aquelas de tom mais escuro, usadas em backgrounds
+//As cores definidas como 'secondary' são aquelas de tom mais claro, usadas em fontes daquelas cores
+
 abstract class TemaApp {
   //Cores padrão
-  static Color lightPrimary = Colors.deepPurple.shade200;
-  static Color darkPrimary = Colors.deepPurple.shade800;
-  static Color darkSecondary = Colors.deepPurple.shade600;
-  static Color contrastPrimary = Colors.yellow.shade600;
-  static Color contrastSecondary = Colors.yellow.shade600;
-  static Color errorPrimary = Colors.red.shade400;
-  static Color branco = Colors.white;
+  static const Color lightPrimary = Color(0xFFB39DDB);
+  static const Color darkPrimary = Color(0xFF654E92); //dark purple
+  static const Color darkSecondary = Color(0xFF501CB0); //Shiny purple
+  static const Color contrastPrimary = Colors.white;
+  static const Color contrastSecondary = Color(0xFFFFD835);
+  static const Color errorPrimary = Color(0xFFEF5350);
+  static const Color branco = Colors.white;
+  static const Color purple = Color.fromARGB(255, 101, 78, 146);
+
+  //Cores específicas para cada atividade
+  static const Color quizPrimary = Color(0xFF1C69B0);
+  static const Color quizSecondary = Color(0xFF247CCE);
+  static const Color quizTertiary = Color(0xFFDCEBF9);
+
+  static const Color flashcardPrimary = Color(0xFF654E92);
+  static const Color flashcardSecondary = Color(0xFF501CB0);
+
+  static const Color kartPrimary = Color(0xFFB01C8B);
+  static const Color kartSecondary = Color(0xFFCB119C);
+
+  static const Color success = Colors.green;
+
+  static const Color rankingFirst = Color(0xFFFBC02D);
+  static const Color rankingSecond = Color(0xFF616161);
+  static const Color rankingThird = Color(0xFFE65100);
 
   //Cores específicas para componentes
-  static Color appBarPrimary = Colors.deepPurple.shade600;
-  static Color cardPrimary = Colors.purple.shade50;
+  static Color appBarPrimary = Color(
+      0xFF654E92); //Color.fromARGB(255, 101, 78, 146); //Colors.deepPurple.shade600;
+  static Color cardPrimary = Color(0xFFF5F5F5); //Color(0xFFECE4FD);
 
   //Tamanhos padrão
   static double titleSize = 22;
@@ -23,7 +45,7 @@ abstract class TemaApp {
       colorScheme: ColorScheme(
         brightness: Brightness.light,
         primary: darkPrimary,
-        onPrimary: contrastPrimary,
+        onPrimary: branco,
         secondary: darkSecondary,
         onSecondary: contrastSecondary,
         error: errorPrimary,
@@ -32,6 +54,11 @@ abstract class TemaApp {
         onBackground: darkSecondary,
         surface: branco,
         onSurface: darkSecondary,
+      ),
+      tabBarTheme: TabBarTheme(
+        labelColor: contrastPrimary,
+        unselectedLabelColor: lightPrimary,
+        indicatorColor: contrastPrimary,
       ),
       appBarTheme: AppBarTheme(
         color: appBarPrimary,

@@ -43,15 +43,26 @@ class Flashcard {
 
   Future<List<Pergunta>> get perguntas async {
     if (_perguntas.isEmpty && perguntasReferences.isNotEmpty) {
+      List<List<DocumentReference>> sublist = [];
+      for (var i = 0; i < perguntasReferences.length; i += 10) {
+        sublist.add(perguntasReferences.sublist(
+            i,
+            i + 10 > perguntasReferences.length
+                ? perguntasReferences.length
+                : i + 10));
+      }
+
       FirebaseFirestore db = FirebaseFirestore.instance;
-      await Pergunta.getCollection(db)
-          .where(FieldPath.documentId, whereIn: perguntasReferences)
-          .get()
-          .then((value) => {
-                _perguntas.clear(),
-                for (var pergunta in value.docs)
-                  {_perguntas.add(pergunta.data() as Pergunta)}
-              });
+      _perguntas.clear();
+      for (var sublista in sublist) {
+        await Pergunta.getCollection(db)
+            .where(FieldPath.documentId, whereIn: sublista)
+            .get()
+            .then((value) => {
+                  for (var pergunta in value.docs)
+                    {_perguntas.add(pergunta.data() as Pergunta)}
+                });
+      }
     }
     return _perguntas;
   }
@@ -65,17 +76,17 @@ class Flashcard {
 
   create() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Flashcard.getCollection(db).doc(id?.id).set(this);
+    await Flashcard.getCollection(db).doc(id?.id).set(this);
   }
 
   update() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Flashcard.getCollection(db).doc(id?.id).update(toFirestore());
+    await Flashcard.getCollection(db).doc(id?.id).update(toFirestore());
   }
 
   delete() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Flashcard.getCollection(db).doc(id?.id).delete();
+    await Flashcard.getCollection(db).doc(id?.id).delete();
   }
 
   @override

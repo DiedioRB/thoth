@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:thoth/models/interfaces/item_form.dart';
+import 'package:thoth/models/interfaces/pesquisavel.dart';
 import 'package:thoth/models/topico.dart';
 
-class Tema {
+class Tema implements Pesquisavel {
   static const String collection = "temas";
 
   final DocumentReference? id;
   String descricao;
+  String codigo;
   final List<DocumentReference> topicosReferences;
   final List<Topico> _topicos = [];
 
@@ -18,10 +20,19 @@ class Tema {
           valor: tema?.descricao,
           icon: const Icon(Icons.edit),
           modificadores: [ItemFormModifiers.naoNulo]),
+      ItemForm.build(
+          descricao: "código",
+          valor: tema?.codigo,
+          icon: const Icon(Icons.password),
+          modificadores: [ItemFormModifiers.naoNulo]),
     ];
   }
 
-  Tema({required this.descricao, required this.topicosReferences, this.id});
+  Tema(
+      {required this.descricao,
+      required this.topicosReferences,
+      required this.codigo,
+      this.id});
 
   static CollectionReference getCollection(FirebaseFirestore db) {
     return db.collection(collection).withConverter<Tema>(
@@ -41,24 +52,41 @@ class Tema {
     return Tema(
         descricao: data?['descricao'],
         topicosReferences: topicos,
+        codigo: data?['codigo'],
         id: snapshot.reference);
   }
 
   Map<String, dynamic> toFirestore() {
-    return {"descricao": descricao, "topicos": topicosReferences};
+    return {
+      "descricao": descricao,
+      "topicos": topicosReferences,
+      "codigo": codigo
+    };
   }
 
   Future<List<Topico>> get topicos async {
     if (_topicos.isEmpty && topicosReferences.isNotEmpty) {
+      List<List<DocumentReference>> sublist = [];
+      for (var i = 0; i < topicosReferences.length; i += 10) {
+        sublist.add(topicosReferences.sublist(
+            i,
+            i + 10 > topicosReferences.length
+                ? topicosReferences.length
+                : i + 10));
+      }
+
       FirebaseFirestore db = FirebaseFirestore.instance;
-      await Topico.getCollection(db)
-          .where(FieldPath.documentId, whereIn: topicosReferences)
-          .get()
-          .then((value) => {
-                _topicos.clear(),
-                for (var topico in value.docs)
-                  {_topicos.add(topico.data() as Topico)}
-              });
+      _topicos.clear();
+      for (var sublista in sublist) {
+        await Topico.getCollection(db)
+            .where(FieldPath.documentId, whereIn: sublista)
+            .get()
+            .then((value) => {
+                  _topicos.clear(),
+                  for (var topico in value.docs)
+                    {_topicos.add(topico.data() as Topico)}
+                });
+      }
     }
     return _topicos;
   }
@@ -72,20 +100,20 @@ class Tema {
 
   create() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Tema.getCollection(db).doc(id?.id).set(this);
+    await Tema.getCollection(db).doc(id?.id).set(this);
   }
 
   update() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Tema.getCollection(db).doc(id?.id).update(toFirestore());
+    await Tema.getCollection(db).doc(id?.id).update(toFirestore());
   }
 
   delete() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    Tema.getCollection(db).doc(id?.id).delete();
+    await Tema.getCollection(db).doc(id?.id).delete();
   }
 
-  static Future<List<Tema>> todos() async {
+  static Future<List<Tema>> tudo() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     List<Tema> temas = [];
     await getCollection(db).get().then((value) {
@@ -101,4 +129,13 @@ class Tema {
   String toString() {
     return descricao;
   }
+
+  @override
+  bool operator ==(Object other) => other is Tema && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  String textoPesquisavel() => toString();
 }

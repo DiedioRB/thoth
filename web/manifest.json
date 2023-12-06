@@ -1,6 +1,6 @@
 {
-    "name": "thoth",
-    "short_name": "thoth",
+    "name": "Dédalo",
+    "short_name": "dedalo",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

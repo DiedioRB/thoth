@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:thoth/helpers/form_builder.dart';
 import 'package:thoth/models/usuario.dart';
 import 'package:thoth/routes.dart';
+import 'package:thoth/tema_app.dart';
+import 'package:thoth/components/botao.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -29,9 +31,55 @@ class _LoginState extends State<Login> {
   final FormBuilder form = FormBuilder(Usuario.getFieldsLogin());
 
   void _login(String? email, String? senha) async {
+    Usuario? u;
     if (email != null && senha != null) {
-      await Usuario.login(email, senha);
+      u = await Usuario.login(email, senha);
     }
+    if (u == null) {
+      _mostrarUsuarioIncorreto();
+    }
+  }
+
+  void _mostrarUsuarioIncorreto() {
+    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        const SnackBar(content: Text("Usuário ou senha incorretos!")));
+  }
+
+  void esqueciMinhaSenha() {
+    TextEditingController emailController =
+        TextEditingController(text: form.values['email']);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Esqueci minha senha"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: emailController,
+                decoration:
+                    const InputDecoration(labelText: "Digite seu e-mail"),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  FirebaseAuth.instance.sendPasswordResetEmail(
+                      email: emailController.value.text);
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+                      const SnackBar(
+                          content: Text(
+                              "Uma mensagem foi enviada ao e-mail digitado")));
+                },
+                child: const Text("Enviar"))
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -50,70 +98,91 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        child: Container(
-            color: Colors.white,
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 100.0),
-                  child: const Text(
-                    "LOGIN",
-                    style: TextStyle(color: Colors.blueAccent, fontSize: 35.0),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(
-                      left: 42.0, right: 42.0, top: 100.0, bottom: 35.0),
-                  child: form.build(),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 100.0),
-                  height: 60,
-                  width: 250,
+      child: Scaffold(
+        backgroundColor: TemaApp.darkPrimary,
+        body: Column(
+          children: [
+            Expanded(
+                flex: 1,
+                child: Container(
+                  child: Image.asset('images/logo_1.png'),
+                )),
+            Expanded(
+                flex: 2,
+                child: Container(
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black54),
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.blue[50]),
-                  child: TextButton(
-                      //onPressed: () => _login("andreribas0511@gmail.com", "yosenha123"),
-                      // onPressed: () =>
-                      //     _login(emailController.text, passwordController.text),
-                      onPressed: () {
-                        _login(form.values['email'], form.values['senha']);
-                      },
-                      child: const Text("Entrar",
+                      borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(50),
+                          topLeft: Radius.circular(50)),
+                      color: TemaApp.branco),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 30),
+                        child: Text(
+                          "LOGIN",
                           style: TextStyle(
-                              color: Colors.blueAccent, fontSize: 20.0))),
-                ),
-                Container(
-                    margin: const EdgeInsets.only(top: 25.0),
-                    child: Center(
-                      child: Row(
-                        children: [
-                          const Text("Não tem acesso? Cadastre-se "),
-                          TextButton(
-                              onPressed: () => {
-                                    Navigator.pushNamed(
-                                        context, Routes.cadastroUsuario)
-                                  },
-                              child: const Text(
-                                "Aqui",
-                                style: TextStyle(color: Colors.blueAccent),
-                              ))
-                        ],
+                            color: TemaApp.darkSecondary,
+                            fontSize: 35,
+                          ),
+                        ),
                       ),
-                    )),
-                InkWell(
-                  onTap: () => {
-                    FirebaseAuth.instance.sendPasswordResetEmail(
-                        email: "andreribas0511@gmail.com")
-                  },
-                  child: const Text(
-                    "Esqueci minha senha",
-                    style: TextStyle(color: Colors.blueAccent),
+                      Container(
+                        margin: const EdgeInsets.only(
+                            left: 42, right: 42, bottom: 20),
+                        child: form.build(),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 25),
+                        child: Botao(
+                            texto: "Entrar",
+                            corFundo: TemaApp.darkPrimary,
+                            corTexto: TemaApp.branco,
+                            callback: () {
+                              _login(
+                                  form.values['email'], form.values['senha']);
+                            }),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 25),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Não tem acesso? Cadastre-se ",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            InkWell(
+                              onTap: () => {
+                                Navigator.of(context)
+                                    .pushNamed(Routes.cadastroUsuario)
+                              },
+                              child: const Text(
+                                "aqui",
+                                style: TextStyle(
+                                    color: Colors.blueAccent, fontSize: 18),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 12),
+                        child: InkWell(
+                          onTap: () => {esqueciMinhaSenha()},
+                          child: const Text(
+                            "Esqueci minha senha",
+                            style: TextStyle(
+                                color: Colors.blueAccent, fontSize: 18),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                )
-              ],
-            )));
+                ))
+          ],
+        ),
+      ),
+    );
   }
 }
